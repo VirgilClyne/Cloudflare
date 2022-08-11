@@ -1,0 +1,6 @@
+#!name=☁️ Cloudflare DNS
+#!desc=(BETA) Cloudflare DNS Records Management and Auto Update DDNS
+
+[Script]
+Cloudflare DNS = type=event, network-changed, timeout=60, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/beta/js/Cloudflare_DNS.beta.js, argument=
+Cloudflare DNS = type=cron, cronexp="*/5 * * * *", timeout=60, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/beta/js/Cloudflare_DNS.beta.js, argument=
