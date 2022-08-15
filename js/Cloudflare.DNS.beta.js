@@ -4,7 +4,7 @@ README:https://github.com/VirgilClyne/GetSomeFries
 
 // refer:https://github.com/phil-r/node-cloudflare-ddns
 
-const $ = new Env('Cloudflare DNS v2.0.0-beta');
+const $ = new Env("Cloudflare DNS v2.0.0-beta");
 const DataBase = {
 	"DNS": {
 		"Settings": {
@@ -57,7 +57,7 @@ const DataBase = {
 						// DNS record content
 						"content": "",
 						// ttl
-						// Time to live, in seconds, of the DNS record. Must be between 60 and 86400, or 1 for 'automatic'
+						// Time to live, in seconds, of the DNS record. Must be between 60 and 86400, or 1 for "automatic"
 						"ttl": 1,
 						// priority
 						// Required for MX, SRV and URI records; unused by other record types.
@@ -86,16 +86,18 @@ const DataBase = {
 /***************** Async *****************/
 !(async () => {
 	const { Settings, Caches, Configs } = await setENV("Cloudflare", "DNS", DataBase);
-	//Step 1
+	// Step 1
 	let status = await Verify(Configs.Request, Settings.Verify);
 	//let status = true;
 	if (status === true) {
-		$.log('验证成功');
-		//Step 2
+		$.log("验证成功");
+		// Step 2
 		Settings.zone = await checkZoneInfo(Configs.Request, Settings.zone)
-		//Step 3 4 5
-		for (let i in Settings.zone.dns_records) { await DDNS(Configs.Request, Settings.zone, Settings.zone.dns_records[i]); }
-	} else throw new Error('验证失败')
+		// Step 3 4 5
+		Settings.zone.dns_records.forEach(async Record => {
+			await DDNS(Configs.Request, Settings.zone, Record);
+		})
+	} else throw new Error("验证失败")
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => $.done())
@@ -112,11 +114,11 @@ async function DDNS(Request, Zone, Record) {
 		let oldRecord = await checkRecordInfo(Request, Zone, Record);
 		//Step 5
 		let newRecord = await setupRecord(Request, Zone, oldRecord, Record)
-		$.log(`${newRecord.name}上的${newRecord.type}记录${newRecord.content}更新完成`, '');
+		$.log(`${newRecord.name}上的${newRecord.type}记录${newRecord.content}更新完成`, "");
 	} catch (e) {
 		$.logErr(e);
 	} finally {
-		return $.log(`${DDNS.name}完成`, `名称:${Record.name}`, `type:${Record.type}`, `content:${Record.content}`, '');
+		return $.log(`${DDNS.name}完成`, `名称:${Record.name}`, `type:${Record.type}`, `content:${Record.content}`, "");
 	}
 };
 
@@ -124,40 +126,42 @@ async function DDNS(Request, Zone, Record) {
 //Step 1
 //Verify API Token/Key
 async function Verify(Request, Verify) {
-	$.log('验证授权');
+	$.log("验证授权");
 	let result = {};
 	switch (Verify.Mode) {
 		case "Token":
 			result = await Cloudflare("verifyToken", Request);
-			if (result.status === 'active') return true
-			else return false;
+			break;
 		case "ServiceKey":
 		case "Key":
 			result = await Cloudflare("getUser", Request);
-			return result.suspended;
+			break;
 		default:
-			$.logErr('无可用授权方式', `Mode=${Verify.Mode}`, `Content=${Verify.Content}`, '');
-			$.done();
+			$.log("无可用授权方式", `Mode=${Verify.Mode}`, `Content=${Verify.Content}`, "");
+			break;
 	}
+	if (result?.status === "active") return true;
+	else if (result?.suspended === false) return true;
+	else return false;
 };
 
 //Step 2
 async function checkZoneInfo(Request, Zone) {
-	$.log('查询区域信息');
+	$.log("查询区域信息");
 	if (Zone?.id && Zone?.name) {
-		$.log(`有区域ID${Zone.id}和区域名称${Zone.name}, 继续`, '');
+		$.log(`有区域ID${Zone.id}和区域名称${Zone.name}, 继续`, "");
 		newZone = Zone;
 	} else if (Zone?.id) {
-		$.log(`有区域ID${Zone.id}, 继续`, '');
+		$.log(`有区域ID${Zone.id}, 继续`, "");
 		newZone = await Cloudflare("getZone", Request, Zone);
 	} else if (Zone?.name) {
-		$.log(`有区域名称${Zone.name}, 继续`, '');
+		$.log(`有区域名称${Zone.name}, 继续`, "");
 		newZone = await Cloudflare("listZones", Request, Zone);
 	} else {
-		$.logErr('未提供记录ID和名称, 终止', '');
+		$.logErr("未提供记录ID和名称, 终止", "");
 		$.done();
 	}
-	$.log(`区域查询结果:`, `ID:${newZone.id}`, `名称:${newZone.name}`, `状态:${newZone.status}`, `仅DNS服务:${newZone.paused}`, `类型:${newZone.type}`, `开发者模式:${newZone.development_mode}`, `名称服务器:${newZone.name_servers}`, `原始名称服务器:${newZone.original_name_servers}`, '');
+	$.log(`区域查询结果:`, `ID:${newZone.id}`, `名称:${newZone.name}`, `状态:${newZone.status}`, `仅DNS服务:${newZone.paused}`, `类型:${newZone.type}`, `开发者模式:${newZone.development_mode}`, `名称服务器:${newZone.name_servers}`, `原始名称服务器:${newZone.original_name_servers}`, "");
 	const result = await Object.assign(Zone, newZone);
 	return result
 };
@@ -165,64 +169,64 @@ async function checkZoneInfo(Request, Zone) {
 //Step 3
 async function checkRecordContent(Record) {
 	if (Record.type) {
-		$.log(`有类型${Record.type}, 继续`, '');
-		Record.type = Record.type;
+		$.log(`有类型${Record.type}, 继续`, "");
+		//Record.type = Record.type;
 		if (Record.content) {
-			$.log(`有内容${Record.content}, 跳过`, '');
-			Record.content = Record.content;
+			$.log(`有内容${Record.content}, 跳过`, "");
+			//Record.content = Record.content;
 		} else {
-			$.log(`无内容, 获取`, '');
-			if (Record.type == 'A') Record.content = await getPublicIP(4);
-			else if (Record.type == 'AAAA') Record.content = await getPublicIP(6);
+			$.log(`无内容, 获取`, "");
+			if (Record.type === "A") Record.content = await getPublicIP(4);
+			else if (Record.type === "AAAA") Record.content = await getPublicIP(6);
 			else {
-				$.log(`类型${Record.type}, 无内容，也不需要获取外部IP,中止`, '');
+				$.log(`类型${Record.type}, 无内容，也不需要获取外部IP,中止`, "");
 				$.done();
 			}
 		}
 	} else {
-		$.log(`无类型${Record.type},中止`, '');
+		$.log(`无类型${Record.type},中止`, "");
 		$.done();
 	}
-	$.log(`${Record.type}类型内容:${Record.content}`, '');
+	$.log(`${Record.type}类型内容:${Record.content}`, "");
 	return Record;
 };
 
 //Step 4
 async function checkRecordInfo(Request, Zone, Record) {
-	$.log('查询记录信息');
+	$.log("查询记录信息");
 	if (Record.id) {
-		$.log(`有记录ID${Record.id}, 继续`, '');
+		$.log(`有记录ID${Record.id}, 继续`, "");
 		var oldRecord = await Cloudflare("getDNSRecord", Request, Zone, Record);
 	} else if (Record.name) {
-		$.log(`有记录名称${Record.name}, 继续`, '');
+		$.log(`有记录名称${Record.name}, 继续`, "");
 		var oldRecord = await Cloudflare("listDNSRecords", Request, Zone, Record);
 	} else {
-		$.log('未提供记录ID和名称, 终止', '');
+		$.log("未提供记录ID和名称, 终止", "");
 		$.done();
 	}
-	$.log(`记录查询结果:`, `ID:${oldRecord.id}`, `名称:${oldRecord.name}`, `类型:${oldRecord.type}`, `内容:${oldRecord.content}`, `代理状态:${oldRecord.proxied}`, `TTL:${oldRecord.ttl}`, '');
+	$.log(`记录查询结果:`, `ID:${oldRecord.id}`, `名称:${oldRecord.name}`, `类型:${oldRecord.type}`, `内容:${oldRecord.content}`, `代理状态:${oldRecord.proxied}`, `TTL:${oldRecord.ttl}`, "");
 	return oldRecord
 }
 
 //Step 5
 async function setupRecord(Request, Zone, oldRecord, Record) {
-	$.log('开始更新内容');
+	$.log("开始更新内容");
 	if (!oldRecord.content) {
-		$.log('无记录');
+		$.log("无记录");
 		var newRecord = await Cloudflare("createDNSRecord", Request, Zone, Record);
 	} else if (oldRecord.content !== Record.content) {
-		$.log('有记录且IP地址不同');
+		$.log("有记录且IP地址不同");
 		var newRecord = await Cloudflare("updateDNSRecord", Request, Zone, { ...oldRecord, ...Record });
 	} else if (oldRecord.content === Record.content) {
-		$.log('有记录且IP地址相同');
+		$.log("有记录且IP地址相同");
 		var newRecord = oldRecord
 	}
-	$.log(`记录更新结果:`, `ID:${newRecord.id}`, `名称:${newRecord.name}`, `类型:${newRecord.type}`, `内容:${newRecord.content}`, `可代理:${newRecord.proxiable}`, `代理状态:${newRecord.proxied}`, `TTL:${newRecord.ttl}`, `已锁定:${newRecord.locked}`, '');
+	$.log(`记录更新结果:`, `ID:${newRecord.id}`, `名称:${newRecord.name}`, `类型:${newRecord.type}`, `内容:${newRecord.content}`, `可代理:${newRecord.proxiable}`, `代理状态:${newRecord.proxied}`, `TTL:${newRecord.ttl}`, `已锁定:${newRecord.locked}`, "");
 	return newRecord
 }
 
 /***************** Cloudflare API v4 *****************/
-async function Cloudflare(opt, Request, Zone = {}, Record = { type, name, content, "ttl": 1, "priority": 10, "proxied": true }) {
+async function Cloudflare(opt, Request, Zone = {}, Record = { "type": "", name: "", content: "", "ttl": 1, "priority": 10, "proxied": true }) {
 	/*
 	let Request = {
 		// Endpoints
@@ -234,36 +238,36 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { type, name, conten
 		}
 	}
 	*/
-	let _Request = Request
+	let _Request = JSON.parse(JSON.stringify(Request));
 	switch (opt) {
 		case "verifyToken":
 			// Verify Token
 			// https://api.cloudflare.com/#user-api-tokens-verify-token
-			$.log('验证令牌');
+			$.log("验证令牌");
 			_Request.url += "/user/tokens/verify";
 			return await getCFjson(_Request);
 		case "getUser":
 			// User Details
 			// https://api.cloudflare.com/#user-user-details
-			$.log('获取用户信息');
+			$.log("获取用户信息");
 			_Request.url += "/user";
 			return await getCFjson(_Request);
 		case "getZone":
 			// Zone Details
 			// https://api.cloudflare.com/#zone-zone-details
-			$.log('获取区域详情');
+			$.log("获取区域详情");
 			_Request.url += `/zones/${Zone.id}`;
 			return await getCFjson(_Request);
 		case "listZones":
 			// List Zones
 			// https://api.cloudflare.com/#zone-list-zones
-			$.log('列出区域');
+			$.log("列出区域");
 			_Request.url += `/zones?name=${Zone.name}`;
 			return await getCFjson(_Request);
 		case "createDNSRecord":
 			// Create DNS Record
 			// https://api.cloudflare.com/#dns-records-for-a-zone-create-dns-record
-			$.log('创建新记录');
+			$.log("创建新记录");
 			_Request.method = "post";
 			_Request.url += `/zones/${Zone.id}/dns_records`;
 			_Request.body = Record;
@@ -271,25 +275,25 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { type, name, conten
 		case "getDNSRecord":
 			// DNS Record Details
 			// https://api.cloudflare.com/#dns-records-for-a-zone-dns-record-details
-			$.log('获取记录详情');
+			$.log("获取记录详情");
 			_Request.url += `/zones/${Zone.id}/dns_records/${Record.id}`;
 			return await getCFjson(_Request);
 		case "listDNSRecords":
 			// List DNS Records
 			// https://api.cloudflare.com/#dns-records-for-a-zone-list-dns-records
-			$.log('列出记录');
+			$.log("列出记录");
 			_Request.url += `/zones/${Zone.id}/dns_records?type=${Record.type}&name=${Record.name}.${Zone.name}&order=type`;
 			return await getCFjson(_Request);
 		case "updateDNSRecord":
 			// Update DNS Record
 			// https://api.cloudflare.com/#dns-records-for-a-zone-update-dns-record
-			$.log('更新记录');
+			$.log("更新记录");
 			_Request.method = "put";
 			_Request.url += `/zones/${Zone.id}/dns_records/${Record.id}`;
 			_Request.body = Record;
 			return await fatchCFjson(_Request);
 		default:
-			$.logErr('未设置操作类型', `opt=${opt}`, `Request=${JSON.stringify(Request)}`, '');
+			$.logErr("未设置操作类型", `opt=${opt}`, `Request=${JSON.stringify(Request)}`, "");
 			return $.done();
 	};
 	/***************** Cloudflare API v4 *****************/
@@ -314,9 +318,9 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { type, name, conten
 						}
 					} else throw new Error(response);
 				} catch (e) {
-					$.logErr(`❗️${$.name}, ${getCFjson.name}执行失败`, `url = ${JSON.stringify(url)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
+					$.logErr(`❗️${$.name}, ${getCFjson.name}执行失败`, `url = ${JSON.stringify(url)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
 				} finally {
-					$.log(`🚧 ${$.name}, ${getCFjson.name}调试信息`, `url = ${JSON.stringify(url)}`, `data = ${data}`, '')
+					$.log(`🚧 ${$.name}, ${getCFjson.name}调试信息`, `url = ${JSON.stringify(url)}`, `data = ${data}`, "")
 					resolve()
 				}
 			})
@@ -341,9 +345,9 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { type, name, conten
 						}
 					} else throw new Error(response);
 				} catch (e) {
-					$.logErr(`❗️${$.name}, ${fatchCFjson.name}执行失败`, `url = ${JSON.stringify(url)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
+					$.logErr(`❗️${$.name}, ${fatchCFjson.name}执行失败`, `url = ${JSON.stringify(url)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
 				} finally {
-					$.log(`🚧 ${$.name}, ${fatchCFjson.name}调试信息`, `url = ${JSON.stringify(url)}`, `data = ${data}`, '')
+					$.log(`🚧 ${$.name}, ${fatchCFjson.name}调试信息`, `url = ${JSON.stringify(url)}`, `data = ${data}`, "")
 					resolve()
 				}
 			})
@@ -355,7 +359,7 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { type, name, conten
 // Get Public IP / External IP address
 // https://www.my-ip.io/api
 async function getPublicIP(type) {
-	$.log('获取公共IP');
+	$.log("获取公共IP");
 	let _Request = { url: `https://api${type}.my-ip.io/ip.json` };
 	return await getCFjson(_Request);
 
@@ -378,9 +382,9 @@ async function getPublicIP(type) {
 						}
 					} else throw new Error(response);
 				} catch (e) {
-					$.logErr(`❗️${$.name}, ${getCFjson.name}执行失败`, `url = ${JSON.stringify(url)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
+					$.logErr(`❗️${$.name}, ${getCFjson.name}执行失败`, `url = ${JSON.stringify(url)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
 				} finally {
-					$.log(`🚧 ${$.name}, ${getCFjson.name}调试信息`, `url = ${JSON.stringify(url)}`, `data = ${data}`, '')
+					$.log(`🚧 ${$.name}, ${getCFjson.name}调试信息`, `url = ${JSON.stringify(url)}`, `data = ${data}`, "")
 					resolve()
 				}
 			})
@@ -415,17 +419,20 @@ async function setENV(name, platform, database) {
 	Settings.Switch = JSON.parse(Settings.Switch) // BoxJs字符串转Boolean
 	switch (Settings.Verify.Mode) {
 		case "Token":
-			Configs.Request.headers['Authorization'] = `Bearer ${Settings.Verify.Content}`;
+			Configs.Request.headers["Authorization"] = `Bearer ${Settings.Verify.Content}`;
+			break;
 		case "ServiceKey":
-			Configs.Request.headers['X-Auth-User-Service-Key'] = Settings.Verify.Content;
+			Configs.Request.headers["X-Auth-User-Service-Key"] = Settings.Verify.Content;
+			break;
 		case "Key":
 			Settings.Verify.Content = Array.from(Settings.Verify.Content.split("\n"))
 			//$.log(JSON.stringify(Settings.Verify.Content))
-			Configs.Request.headers['X-Auth-Key'] = Settings.Verify.Content[0];
-			Configs.Request.headers['X-Auth-Email'] = Settings.Verify.Content[1];
+			Configs.Request.headers["X-Auth-Key"] = Settings.Verify.Content[0];
+			Configs.Request.headers["X-Auth-Email"] = Settings.Verify.Content[1];
+			break;
 		default:
-			$.logErr('无可用授权方式', `Mode=${Settings.Verify.Mode}`, `Content=${Settings.Verify.Content}`, '');
-			$.done();
+			$.log("无可用授权方式", `Mode=${Settings.Verify.Mode}`, `Content=${Settings.Verify.Content}`, "");
+			break;
 	}
 	Settings.zone.dns_records = Array.from(Settings.zone.dns_records.split("\n"))
 	//$.log(JSON.stringify(Settings.zone.dns_records))
