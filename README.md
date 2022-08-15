@@ -107,21 +107,21 @@
   * BoxJs:
     * [Cloudflare.boxjs.json](./box/Cloudflare.boxjs.json?raw=true "☁️ Cloudflare")
   * Loon:
-    * [Cloudflare_DNS.plugin](./plugins/Cloudflare_DNS.plugin?raw=true "☁️ Cloudflare DNS")
+    * [Cloudflare.DNS.plugin](./plugins/Cloudflare.DNS.plugin?raw=true "☁️ Cloudflare DNS")
   * Quantumult X:
-    * 下载脚本[Cloudflare_DNS.js](./js/Cloudflare_DNS.js?raw=true "☁️ Cloudflare DNS")并保存至`Quantumult X`的`Scripts`文件夹下
+    * 下载脚本[Cloudflare.DNS.js](./js/Cloudflare.DNS.js?raw=true "☁️ Cloudflare DNS")并保存至`Quantumult X`的`Scripts`文件夹下
       * 修改配置文件，在`[task_local]`段添加如下内容：
       ```
-      event-network https://github.com/VirgilClyne/GetSomeFries/blob/main/js/Cloudflare_DNS.js?raw=true, tag=Cloudflare DNS, img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png, enabled=true
-      */10 * * * * https://github.com/VirgilClyne/GetSomeFries/blob/main/js/Cloudflare_DNS.js?raw=true, tag=Cloudflare DNS, img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png, enabled=true
+      event-network https://github.com/VirgilClyne/Cloudflare/blob/main/js/Cloudflare.DNS.js?raw=true, tag=Cloudflare DNS, img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png, enabled=true
+      */10 * * * * https://github.com/VirgilClyne/Cloudflare/blob/main/js/Cloudflare.DNS.js?raw=true, tag=Cloudflare DNS, img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png, enabled=true
       ```
   * Surge:
-    * [Cloudflare_DNS.sgmodule](./sgmodule/Cloudflare_DNS.sgmodule?raw=true "☁️ Cloudflare DNS")
+    * [Cloudflare.DNS.sgmodule](./sgmodule/Cloudflare.DNS.sgmodule?raw=true "☁️ Cloudflare DNS")
 ### 🧪测试版
   * BoxJs:
     * [Cloudflare.beta.boxjs.json](./box/Cloudflare.beta.boxjs.json?raw=true "☁️ Cloudflare β")
   * Surge:
-    * [Cloudflare_DNS.beta.sgmodule](./sgmodule/Cloudflare_DNS.beta.sgmodule?raw=true "☁️ Cloudflare DNS")
+    * [Cloudflare.DNS.beta.sgmodule](./sgmodule/Cloudflare.DNS.beta.sgmodule?raw=true "☁️ Cloudflare DNS")
 
 ---
 
