@@ -251,6 +251,16 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { "type": "", name: 
 	*/
 	let _Request = JSON.parse(JSON.stringify(Request));
 	switch (opt) {
+		case "trace":
+			_Request.url = "https://1.1.1.1/cdn-cgi/trace"
+			//_Request.url = "https://[2606:4700:4700::1111]/cdn-cgi/trace"
+			return await getCloudflareJSON(_Request);
+			async function getCloudflareJSON(request) {
+				return await $.http.get(request).then(data => {
+					let arr = data.trim().split('\n').map(e => e.split('='))
+					return Object.fromEntries(arr)
+				})
+			};
 		case "verifyToken":
 			// Verify Token
 			// https://api.cloudflare.com/#user-api-tokens-verify-token
