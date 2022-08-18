@@ -380,15 +380,17 @@ async function getPublicIP(type) {
 					if (error) throw new Error(error)
 					else if (data) {
 						const _data = JSON.parse(data)
-						if (Array.isArray(_data.messages) && _data.messages.length != 0) _data.messages.forEach(element => {
-							if (element.code !== 10000) $.msg($.name, `code: ${element.code}`, `message: ${element.message}`);
-						})
-						if (_data.success === true) {
-							if (_data.ip) resolve(_data.ip);
-							else if (Array.isArray(_data.result) && _data.result.length != 0) resolve(_data.result[0]);
-							else resolve(_data.result);
-						} else if (_data.success === false) {
-							if (Array.isArray(_data.errors) && _data.errors.length != 0) _data.errors.forEach(element => { $.msg($.name, `code: ${element.code}`, `message: ${element.message}`); })
+						switch (_data.success) {
+							case true:
+								resolve(_data.ip);
+								break;
+							case false:
+								if (Array.isArray(_data.errors) && _data.errors.length != 0) _data.errors.forEach(element => { $.msg($.name, `code: ${element.code}`, `message: ${element.message}`); })
+								break;
+							default:
+								if (Array.isArray(_data.result) && _data.result.length != 0) resolve(_data.result[0]);
+								else resolve(_data.result);
+								break;
 						}
 					} else throw new Error(response);
 				} catch (e) {
