@@ -94,9 +94,17 @@ const DataBase = {
 		// Step 2
 		Settings.zone = await checkZoneInfo(Configs.Request, Settings.zone)
 		// Step 3 4 5
-		Settings.zone.dns_records.forEach(async Record => {
-			await DDNS(Configs.Request, Settings.zone, Record);
-		})
+		Promise.all(Settings.zone.dns_records.map(async Record => {
+			//await DDNS(Configs.Request, Settings.zone, Record);
+			$.log(`开始更新${Record.type}类型记录`);
+			//Step 3
+			Record = await checkRecordContent(Record);
+			//Step 4
+			let oldRecord = await checkRecordInfo(Configs.Request, Settings.zone, Record);
+			//Step 5
+			let newRecord = await setupRecord(Configs.Request, Settings.zone, oldRecord, Record);
+			$.log(`${newRecord.name}上的${newRecord.type}记录${newRecord.content}更新完成`, "");
+		}))
 	} else throw new Error("验证失败")
 })()
 	.catch((e) => $.logErr(e))
