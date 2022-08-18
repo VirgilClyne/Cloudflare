@@ -253,7 +253,7 @@ peer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips =
 ## 安装链接
 ### 正式版
   * Surge:
-    * [1.1.1.1_by_Cloudflare.sgmodule](./sgmodule/1.1.1.1_by_Cloudflare.sgmodule?raw=true "☁️ 1.1.1.1 by Cloudflare APP与WARP客户端配置管理")
+    * [Cloudflare.1.1.1.1.sgmodule](./sgmodule/Cloudflare.1.1.1.1.sgmodule?raw=true "☁️ 1.1.1.1 by Cloudflare APP与WARP客户端配置管理")
     * 此模块功能:
       * 可查询1.1.1.1 APP的配置信息,其他增删改功能请用上方BoxJs订阅或APP客户端
         * 安装模块后，重新打开一次1.1.1.1的APP，即可在通知中看到配置信息，在Surge的日志中也会输出完整配置文件内容
@@ -265,7 +265,7 @@ peer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips =
     * [Cloudflare.beta.boxjs.json](./box/Cloudflare.beta.boxjs.json?raw=true "☁️ Cloudflare β")
 
   * Surge:
-    * [1.1.1.1_by_Cloudflare.beta.sgmodule](./sgmodule/1.1.1.1_by_Cloudflare.beta.sgmodule?raw=true "☁️ 1.1.1.1_by_Cloudflare APP与WARP客户端配置管理")
+    * [Cloudflare.1.1.1.1.beta.sgmodule](./sgmodule/Cloudflare.1.1.1.1.beta.sgmodule?raw=true "☁️ 1.1.1.1_by_Cloudflare APP与WARP客户端配置管理")
     * 此模块功能:
       * 可查询1.1.1.1 APP的配置信息,其他增删改功能请用上方BoxJs订阅或APP客户端
         * 安装模块后，重新打开一次1.1.1.1的APP，即可在通知中看到配置信息，在Surge的日志中也会输出完整配置文件内容
