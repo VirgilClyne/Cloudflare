@@ -310,9 +310,9 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { "type": "", name: 
 	/***************** Cloudflare API v4 *****************/
 	// Function 0A
 	// Get Cloudflare JSON
-	function getCFjson(url) {
+	function getCFjson(request) {
 		return new Promise((resolve) => {
-			$.get(url, (error, response, data) => {
+			$.get(request, (error, response, data) => {
 				try {
 					if (error) throw new Error(error)
 					else if (data) {
@@ -321,17 +321,16 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { "type": "", name: 
 							if (element.code !== 10000) $.msg($.name, `code: ${element.code}`, `message: ${element.message}`);
 						})
 						if (_data.success === true) {
-							if (_data.ip) resolve(_data.ip);
-							else if (Array.isArray(_data.result) && _data.result.length != 0) resolve(_data.result[0]);
+							if (Array.isArray(_data.result) && _data.result.length != 0) resolve(_data.result[0]);
 							else resolve(_data.result);
 						} else if (_data.success === false) {
 							if (Array.isArray(_data.errors) && _data.errors.length != 0) _data.errors.forEach(element => { $.msg($.name, `code: ${element.code}`, `message: ${element.message}`); })
 						}
 					} else throw new Error(response);
 				} catch (e) {
-					$.logErr(`❗️${$.name}, ${getCFjson.name}执行失败`, `url = ${JSON.stringify(url)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
+					$.logErr(`❗️${$.name}, ${getCFjson.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
 				} finally {
-					$.log(`🚧 ${$.name}, ${getCFjson.name}调试信息`, `url = ${JSON.stringify(url)}`, `data = ${data}`, "")
+					$.log(`🚧 ${$.name}, ${getCFjson.name}调试信息`, `request = ${JSON.stringify(request)}`, `data = ${data}`, "")
 					resolve()
 				}
 			})
@@ -340,9 +339,9 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { "type": "", name: 
 
 	// Function 0B
 	// Fatch Cloudflare JSON
-	function fatchCFjson(url) {
+	function fatchCFjson(request) {
 		return new Promise((resolve) => {
-			$.post(url, (error, response, data) => {
+			$.post(request, (error, response, data) => {
 				try {
 					if (error) throw new Error(error)
 					else if (data) {
@@ -356,9 +355,9 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { "type": "", name: 
 						}
 					} else throw new Error(response);
 				} catch (e) {
-					$.logErr(`❗️${$.name}, ${fatchCFjson.name}执行失败`, `url = ${JSON.stringify(url)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
+					$.logErr(`❗️${$.name}, ${fatchCFjson.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
 				} finally {
-					$.log(`🚧 ${$.name}, ${fatchCFjson.name}调试信息`, `url = ${JSON.stringify(url)}`, `data = ${data}`, "")
+					$.log(`🚧 ${$.name}, ${fatchCFjson.name}调试信息`, `request = ${JSON.stringify(request)}`, `data = ${data}`, "")
 					resolve()
 				}
 			})
@@ -374,9 +373,9 @@ async function getPublicIP(type) {
 	let _Request = { url: `https://api${type}.my-ip.io/ip.json` };
 	return await getCFjson(_Request);
 
-	function getCFjson(url) {
+	function getCFjson(request) {
 		return new Promise((resolve) => {
-			$.get(url, (error, response, data) => {
+			$.get(request, (error, response, data) => {
 				try {
 					if (error) throw new Error(error)
 					else if (data) {
@@ -393,9 +392,9 @@ async function getPublicIP(type) {
 						}
 					} else throw new Error(response);
 				} catch (e) {
-					$.logErr(`❗️${$.name}, ${getCFjson.name}执行失败`, `url = ${JSON.stringify(url)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
+					$.logErr(`❗️${$.name}, ${getCFjson.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
 				} finally {
-					$.log(`🚧 ${$.name}, ${getCFjson.name}调试信息`, `url = ${JSON.stringify(url)}`, `data = ${data}`, "")
+					$.log(`🚧 ${$.name}, ${getCFjson.name}调试信息`, `request = ${JSON.stringify(request)}`, `data = ${data}`, "")
 					resolve()
 				}
 			})
