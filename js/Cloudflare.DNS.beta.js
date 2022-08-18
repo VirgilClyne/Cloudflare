@@ -178,24 +178,27 @@ async function checkZoneInfo(Request, Zone) {
 async function checkRecordContent(Record) {
 	if (Record.type) {
 		$.log(`有类型${Record.type}, 继续`, "");
-		//Record.type = Record.type;
-		if (Record.content) {
-			$.log(`有内容${Record.content}, 跳过`, "");
-			//Record.content = Record.content;
-		} else {
-			$.log(`无内容, 获取`, "");
-			if (Record.type === "A") Record.content = await getPublicIP(4);
-			else if (Record.type === "AAAA") Record.content = await getPublicIP(6);
-			else {
-				$.log(`类型${Record.type}, 无内容，也不需要获取外部IP,中止`, "");
-				$.done();
+		if (!Record.content) {
+			$.log("无内容, 继续", "");
+			switch (Record.type) {
+				case "A":
+					Record.content = await getPublicIP(4);
+					break;
+				case "AAAA":
+					Record.content = await getPublicIP(6);
+					break;
+				case undefined:
+					$.log("无类型, 跳过", "");
+					break;
+				default:
+					$.log(`类型${Record.type}, 跳过`, "");
+					break;
 			}
-		}
+		} else $.log(`有内容${Record.content}, 跳过`, "");
 	} else {
-		$.log(`无类型${Record.type},中止`, "");
-		$.done();
+		$.log(`无类型${Record.type}, 跳过`, "");
 	}
-	$.log(`${Record.type}类型内容:${Record.content}`, "");
+	$.log(`${Record.type}类型内容: ${Record.content}`, "");
 	return Record;
 };
 
