@@ -252,6 +252,8 @@ peer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips =
 
 ## 安装链接
 ### 正式版
+  * BoxJs:
+    * [Cloudflare.boxjs.json](./box/Cloudflare.boxjs.json?raw=true "☁️ Cloudflare")
   * Surge:
     * [Cloudflare.1.1.1.1.sgmodule](./sgmodule/Cloudflare.1.1.1.1.sgmodule?raw=true "☁️ 1.1.1.1 by Cloudflare APP与WARP客户端配置管理")
     * 此模块功能:

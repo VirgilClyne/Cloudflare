@@ -1,0 +1,334 @@
+{
+  "id": "Cloudflare.app.sub",
+  "name": "☁️ Cloudflare",
+  "author": "@VirgilClyne",
+  "description": "Cloudflare相关插件/模块",
+  "icon": "https://avatars.githubusercontent.com/u/2111377?s=100&v=4",
+  "repo": "https://github.com/VirgilClyne/Cloudflare",
+  "apps": [
+    {
+      "id": "Cloudflare.DNS",
+      "name": "☁️ Cloudflare DNS",
+      "descs_html": [
+        "使用说明请见<a href=\"https://github.com/VirgilClyne/Cloudflare#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F\">使用说明</a>进行配置",
+        "填写完成后请先点击此页面底端右下角的\"保存\"后，再点击此页面右上角的圆箭头按钮\"运行\"。"
+      ],
+      "keys": [
+        "@Cloudflare.DNS.Settings",
+        "@Cloudflare.DNS.Caches"
+      ],
+      "settings": [
+        {
+          "id": "@Cloudflare.DNS.Settings.Switch",
+          "name": "总功能开关",
+          "val": true,
+          "type": "boolean",
+          "desc": "是否启用此模块"
+        },
+        {
+          "id": "@Cloudflare.DNS.Settings.Verify.Mode",
+          "name": "验证方式",
+          "val": "Token",
+          "type": "radios",
+          "items": [
+            {
+              "key": "Token",
+              "label": "令牌"
+            },
+            {
+              "key": "Key",
+              "label": "密钥"
+            },
+            {
+              "key": "ServiceKey",
+              "label": "用户服务密钥"
+            }
+          ],
+          "desc": "验证方式三选一"
+        },
+        {
+          "id": "@Cloudflare.DNS.Settings.Verify.Content",
+          "name": "验证内容",
+          "val": "",
+          "type": "textarea",
+          "placeholder": "1234567893feefc5f0q5000bfo0c38d90bbeb,\nexample@example.com",
+          "autoGrow": false,
+          "rows": 2,
+          "desc": "‘令牌’与‘用户服务密钥’验证方式的值写一行即可, ‘密钥’验证方式的key与email以换行分隔写两行"
+        },
+        {
+          "id": "@Cloudflare.DNS.Settings.zone.id",
+          "name": "区域ID",
+          "val": "",
+          "type": "text",
+          "placeholder": "023e105f4ecef8ad9ca31a8372d0c353",
+          "desc": "区域ID和区域名称至少提供一个"
+        },
+        {
+          "id": "@Cloudflare.DNS.Settings.zone.name",
+          "name": "区域名称",
+          "val": "",
+          "type": "text",
+          "placeholder": "example.com",
+          "desc": "区域ID和区域名称至少提供一个"
+        },
+        {
+          "id": "@Cloudflare.DNS.Settings.zone.dns_records",
+          "name": "DNS记录内容",
+          "val": "",
+          "type": "textarea",
+          "placeholder": "id=记录ID&type=类型&name=名称&content=内容&ttl=TTL&priority=优先级&proxied=是否代理\ntype=A&name=www&proxied=false",
+          "autoGrow": true,
+          "rows": 2,
+          "desc": "一行一个记录内容，以回车分隔多行记录, 名称仅是子域名, 类型与名称是必填项, 没有的项目就删掉别写, 内容为空的A与AAAA记录会自动获取当前外部IP地址"
+        }
+      ],
+      "author": "@VirgilClyne",
+      "repo": "https://github.com/VirgilClyne/Cloudflare/blob/main/js/Cloudflare.DNS.js",
+      "script": "https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.DNS.js",
+      "icons": [
+        "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Cloudflare.png",
+        "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png"
+      ]
+    },
+    {
+      "id": "Cloudflare.WARP",
+      "name": "☁️ Cloudflare WARP",
+      "descs_html": [
+        "不同运行方式所要填写的内容也不相同",
+        "使用说明请见<a href=\"https://github.com/VirgilClyne/Cloudflare#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F-1\">使用说明</a>",
+        "填写完成后请先点击此页面底端右下角的\"保存\"后，再点击此页面右上角的圆箭头按钮\"运行\"。"
+      ],
+      "keys": [
+        "@Cloudflare.WARP.Settings",
+        "@Cloudflare.WARP.Caches"
+      ],
+      "settings": [
+        {
+					"id": "@Cloudflare.WARP.Settings.Switch",
+					"name": "总功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此模块"
+				},
+        {
+          "id": "@Cloudflare.WARP.Settings.setupMode",
+          "name": "WARP: 运行方式/setupMode",
+          "val": "RegisterNewAccountwithPublicKey",
+          "type": "radios",
+          "items": [
+            {
+              "key": "RegisterNewAccount",
+              "label": "注册新账户/Register New Account"
+            },
+            {
+              "key": "RegisterNewAccountwithPublicKey",
+              "label": "注册新账户(用自定义密钥对)并生成WireGuard配置文件/Register New Account(with custom Keypair)and output WireGuard Config"
+            },
+            {
+              "key": "RegisterNewDevice",
+              "label": "注册新设备(注册ID)/Register New Device(Registration Id/id)"
+            },
+            {
+              "key": "RebindingLicense",
+              "label": "重绑定许可证(许可证 & 注册ID)(仅适用于个人版)/Rebinding License(license & Registration Id/id)(Only for Personal)"
+            },
+            {
+              "key": "ChangeKeypair",
+              "label": "更换公钥(用自定义密钥对)(公钥 & 注册ID & 令牌)/Change Public Key(with custom Keypair)(Public Key & Registration Id/id & Token)"
+            },
+            {
+              "key": "AccountDetail",
+              "label": "查询账户信息(创建日期/剩余流量/邀请人数等)/Check Account Detail"
+            },
+            {
+              "key": "DeviceDetail",
+              "label": "查询设备配置(设备名称/设备类型/创建日期/活动状态等)/Check Device Detail"
+            },
+            {
+              "key": "AutoAffWARP+",
+              "label": "自动邀请新用户刷Warp+流量/Auto Aff New User for WARP+"
+            }
+          ],
+          "desc": "个人版的WARP的验证方式默认只有Token，Team版的不知道"
+        },
+        {
+          "id": "@WireGuard.Settings.PrivateKey",
+          "name": "WireGuard: 私钥/Private Key",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": "在Wireguard的iOS客户端里新建隧道，生成一个密钥对，私钥贴在这里，公钥贴下面"
+        },
+        {
+          "id": "@WireGuard.Settings.PublicKey",
+          "name": "WireGuard: 公钥/Public Key",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": "在Wireguard的iOS客户端里新建隧道，生成一个密钥对，公钥贴在这里，私钥贴上面"
+        },
+        {
+          "id": "@Cloudflare.WARP.Settings.Verify.License",
+          "name": "WARP: 许可证(账户)/License(Account)",
+          "val": "",
+          "type": "text",
+          "placeholder": "1A2B3C4D-5E6F7G8H-9I0J1K2L",
+          "desc": "相当于匿名的WARP账号，妥善保管，使用与获取的流量、设备均算在此许可证密钥的使用量当中"
+        },
+        {
+          "id": "@Cloudflare.WARP.Settings.Verify.RegistrationId",
+          "name": "WARP: 注册ID(设备ID/客户端ID/配置文件ID)/Registration Id(Device ID/Client ID/Config ID)",
+          "val": "",
+          "type": "text",
+          "placeholder": "123e4567-e89b-12d3-a456-426614174000",
+          "desc": "设备ID, UUID, 请妥善保管，注册新设备时可以自己通过UUID生成器生成，每个设备和对应配置文件的唯一身份识别代码，不填写的话视为新设备注册，会自动生成，一个设备生成一个配置文件，想找回配置文件可以通过设备ID找回"
+        },
+        {
+          "id": "@Cloudflare.WARP.Settings.Verify.Mode",
+          "name": "WARP: 验证方式/Verify Mode",
+          "val": "Token",
+          "type": "radios",
+          "items": [
+            {
+              "key": "Token",
+              "label": "令牌/Token"
+            }
+          ],
+          "desc": "个人版的WARP的验证方式默认只有Token，Team版的不知道"
+        },
+        {
+          "id": "@Cloudflare.WARP.Settings.Verify.Content",
+          "name": "WARP: 验证内容/Verify Content",
+          "val": "",
+          "type": "text",
+          "placeholder": "8M7wS6hCpXVc-DoRnPPY_UCWPgy8aea4Wy6kCe5T",
+          "desc": "‘令牌’验证方式的值写一行即可，不填写的话视为新设备注册，会自动生成"
+        },
+        {
+          "id": "@Cloudflare.WARP.Settings.env.deviceType",
+          "name": "WARP: 客户端用户代理类型/Client Device Type",
+          "val": "iOS",
+          "type": "radios",
+          "items": [
+            {
+              "key": "Windows",
+              "label": "Windows"
+            },
+            {
+              "key": "Linux",
+              "label": "Linux"
+            },
+            {
+              "key": "Android",
+              "label": "Android"
+            },
+            {
+              "key": "iOS",
+              "label": "iOS"
+            },
+            {
+              "key": "macOS",
+              "label": "macOS"
+            }
+          ],
+          "desc": "要伪装的客户端类型，默认iOS客户端"
+        },
+        {
+          "id": "@Cloudflare.WARP.Settings.env.Version",
+          "name": "WARP: 客户端API版本/Client API Version",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": "客户端版本，不懂就留空别填写，会用对应设备类型的默认值"
+        }
+      ],
+      "author": "@VirgilClyne",
+      "repo": "https://github.com/VirgilClyne/Cloudflare/blob/main/js/Cloudflare.WARP.js",
+      "script": "https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.WARP.js",
+      "icons": [
+        "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Cloudflare.png",
+        "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png"
+      ]
+    },
+    {
+      "id": "WireGuard",
+      "name": "🐲 WireGuard",
+      "keys": [
+        "@WireGuard.Settings",
+        "@WireGuard.Configs"
+      ],
+      "settings": [
+        {
+          "id": "@WireGuard.Settings.PrivateKey",
+          "name": "Interface: 私钥",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": "在Wireguard的iOS客户端里新建隧道，生成一个密钥对，私钥贴在这里，公钥贴下面"
+        },
+        {
+          "id": "@WireGuard.Settings.PublicKey",
+          "name": "Interface: 公钥",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": "在Wireguard的iOS客户端里新建隧道，生成一个密钥对，公钥贴在这里，私钥贴上面"
+        },
+        {
+          "id": "@WireGuard.Configs.interface.addresses.v4",
+          "name": "Interface: IPV4地址",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": ""
+        },
+        {
+          "id": "@WireGuard.Configs.interface.addresses.v6",
+          "name": "Interface: IPV6地址",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": ""
+        },
+        {
+          "id": "@WireGuard.Configs.peers[0].public_key",
+          "name": "Peer: 公钥",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": ""
+        },
+        {
+          "id": "@WireGuard.Configs.peers[0].endpoint.host",
+          "name": "Peer: endpoint 主机名",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": ""
+        },
+        {
+          "id": "@WireGuard.Configs.peers[0].endpoint.v4",
+          "name": "Peer: endpoint IPV4地址",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": ""
+        },
+        {
+          "id": "@WireGuard.Configs.peers[0].endpoint.v6",
+          "name": "Peer: endpoint IPV6地址",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": ""
+        }
+      ],
+      "author": "@VirgilClyne",
+      "icons": [
+        "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Cloudflare.png",
+        "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png"
+      ]
+    }
+  ]
+}
