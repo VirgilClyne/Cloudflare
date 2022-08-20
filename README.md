@@ -60,10 +60,7 @@
 ## 使用方式
 ### 配合`BoxJs`及订阅使用
   * 安装`BoxJs`插件:
-    * Loon: [boxjs.rewrite.loon.plugin](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.loon.plugin "BoxJs")
-    * Quantumult X: [boxjs.rewrite.quanx.conf](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.quanx.conf "BoxJs")
-    * Surge: [boxjs.rewrite.surge.sgmodule](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.surge.sgmodule "BoxJs")
-  * 导入本项目订阅: [Cloudflare.boxjs.json](./box/Cloudflare.boxjs.json?raw=true "Cloudflare")
+    * 安装方法及下载链接详见: [🧰BoxJs](../../wiki/🧰BoxJs)
   * 在`应用`-`整点薯条`-`Cloudflare`中填写您的Cloudflare DNS信息
     * 验证方式: 
       * API 令牌: 在[我的个人资料的'API 令牌'页面](https://dash.cloudflare.com/profile/api-tokens "API 令牌 | Cloudflare")的`API 令牌`生成，注意生成的令牌要有需管理区域的`DNS编辑`权限(推荐使用预设的`编辑区域 DNS`模版)
@@ -106,6 +103,7 @@
 ### 正式版
   * BoxJs:
     * [Cloudflare.boxjs.json](./box/Cloudflare.boxjs.json?raw=true "☁️ Cloudflare")
+    * 安装方法及下载链接详见: [🧰BoxJs](../../wiki/🧰BoxJs)
   * Loon:
     * [Cloudflare.DNS.plugin](./plugins/Cloudflare.DNS.plugin?raw=true "☁️ Cloudflare DNS")
   * Quantumult X:
@@ -151,10 +149,7 @@
 ## 使用方式
 ### 配合`BoxJs`及订阅使用
   * 安装`BoxJs`插件:
-    * Loon: [boxjs.rewrite.loon.plugin](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.loon.plugin "BoxJs")
-    * Quantumult X: [boxjs.rewrite.quanx.conf](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.quanx.conf "BoxJs")
-    * Surge: [boxjs.rewrite.surge.sgmodule](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.surge.sgmodule "BoxJs")
-  * 导入本项目订阅: [Cloudflare.boxjs.json](./box/Cloudflare.boxjs.json?raw=true "☁️ Cloudflare")
+    * 安装方法及下载链接详见: [🧰BoxJs](../../wiki/🧰BoxJs)
   * 在`应用`-`整点薯条`-`Cloudflare`中填写您的Cloudflare WARP信息
       1. BoxJs要先填写Loon\quanX\Surge的`HTTP-API`地址,不然看不到日志输出
       * BoxJs的`HTTP-API`填写位置位于左上角`菜单键`内，或底端标签栏`应用`-`内置应用`-`偏好设置`-`应用设置`内
@@ -254,6 +249,7 @@ peer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips =
 ### 正式版
   * BoxJs:
     * [Cloudflare.boxjs.json](./box/Cloudflare.boxjs.json?raw=true "☁️ Cloudflare")
+    * 安装方法及下载链接详见: [🧰BoxJs](../../wiki/🧰BoxJs)
   * Surge:
     * [Cloudflare.1.1.1.1.sgmodule](./sgmodule/Cloudflare.1.1.1.1.sgmodule?raw=true "☁️ 1.1.1.1 by Cloudflare APP与WARP客户端配置管理")
     * 此模块功能:
@@ -265,7 +261,6 @@ peer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips =
 ### 🧪测试版
   * BoxJs:
     * [Cloudflare.beta.boxjs.json](./box/Cloudflare.beta.boxjs.json?raw=true "☁️ Cloudflare β")
-
   * Surge:
     * [Cloudflare.1.1.1.1.beta.sgmodule](./sgmodule/Cloudflare.1.1.1.1.beta.sgmodule?raw=true "☁️ 1.1.1.1_by_Cloudflare APP与WARP客户端配置管理")
     * 此模块功能:
