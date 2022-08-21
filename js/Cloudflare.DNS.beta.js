@@ -83,9 +83,9 @@ const DataBase = {
 	}
 };
 
-/***************** Async *****************/
-!(async () => {
-	const { Settings, Caches, Configs } = await setENV("Cloudflare", "DNS", DataBase);
+/***************** Processing *****************/
+(async () => {
+	const { Settings, Configs } = await setENV("Cloudflare", "DNS", DataBase);
 	// Step 1
 	let status = await Verify(Configs.Request, Settings.Verify);
 	//let status = true;
@@ -110,27 +110,59 @@ const DataBase = {
 	.catch((e) => $.logErr(e))
 	.finally(() => $.done())
 
-/***************** DDNS *****************/
+/***************** Function *****************/
+/**
+ * Get Environment Variables
+ * @link https://github.com/VirgilClyne/VirgilClyne/blob/main/function/getENV/getENV.min.js
+ * @author VirgilClyne
+ * @param {String} t - Persistent Store Key
+ * @param {String} e - Platform Name
+ * @param {Object} n - Default Database
+ * @return {Promise<*>}
+ */
+async function getENV(t,e,n){let i=$.getjson(t,n),s={};if("undefined"!=typeof $argument&&Boolean($argument)){let t=Object.fromEntries($argument.split("&").map((t=>t.split("="))));for(let e in t)f(s,e,t[e])}let g={...n?.Default?.Settings,...n?.[e]?.Settings,...i?.[e]?.Settings,...s},o={...n?.Default?.Configs,...n?.[e]?.Configs,...i?.[e]?.Configs},a=i?.[e]?.Caches||void 0;return"string"==typeof a&&(a=JSON.parse(a)),{Settings:g,Caches:a,Configs:o};function f(t,e,n){e.split(".").reduce(((t,i,s)=>t[i]=e.split(".").length===++s?n:t[i]||{}),t)}}
 
-//Update DDNS
-async function DDNS(Request, Zone, Record) {
-	try {
-		$.log(`开始更新${Record.type}类型记录`);
-		//Step 3
-		Record = await checkRecordContent(Record);
-		//Step 4
-		let oldRecord = await checkRecordInfo(Request, Zone, Record);
-		//Step 5
-		let newRecord = await setupRecord(Request, Zone, oldRecord, Record)
-		$.log(`${newRecord.name}上的${newRecord.type}记录${newRecord.content}更新完成`, "");
-	} catch (e) {
-		$.logErr(e);
-	} finally {
-		return $.log(`${DDNS.name}完成`, `名称:${Record.name}`, `type:${Record.type}`, `content:${Record.content}`, "");
+/**
+ * Set Environment Variables
+ * @author VirgilClyne
+ * @param {String} name - Persistent Store Key
+ * @param {String} platform - Platform Name
+ * @param {Object} database - Default DataBase
+ * @return {Promise<*>}
+ */
+async function setENV(name, platform, database) {
+	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
+	let { Settings, Caches = {}, Configs } = await getENV(name, platform, database);
+	/***************** Prase *****************/
+	Settings.Switch = JSON.parse(Settings.Switch) // BoxJs字符串转Boolean
+	switch (Settings.Verify.Mode) {
+		case "Token":
+			Configs.Request.headers["Authorization"] = `Bearer ${Settings.Verify.Content}`;
+			break;
+		case "ServiceKey":
+			Configs.Request.headers["X-Auth-User-Service-Key"] = Settings.Verify.Content;
+			break;
+		case "Key":
+			Settings.Verify.Content = Array.from(Settings.Verify.Content.split("\n"))
+			//$.log(JSON.stringify(Settings.Verify.Content))
+			Configs.Request.headers["X-Auth-Key"] = Settings.Verify.Content[0];
+			Configs.Request.headers["X-Auth-Email"] = Settings.Verify.Content[1];
+			break;
+		default:
+			$.log("无可用授权方式", `Mode=${Settings.Verify.Mode}`, `Content=${Settings.Verify.Content}`, "");
+			break;
 	}
+	Settings.zone.dns_records = Array.from(Settings.zone.dns_records.split("\n"))
+	//$.log(JSON.stringify(Settings.zone.dns_records))
+	Settings.zone.dns_records.forEach((item, i) => {
+		Settings.zone.dns_records[i] = Object.fromEntries(item.split("&").map((item) => item.split("=")));
+		Settings.zone.dns_records[i].proxied = JSON.parse(Settings.zone.dns_records[i].proxied);
+	})
+	//$.log(JSON.stringify(Settings.zone.dns_records));
+	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
+	return { Settings, Caches, Configs }
 };
 
-/***************** Async Function *****************/
 //Step 1
 //Verify API Token/Key
 async function Verify(Request, Verify) {
@@ -413,59 +445,6 @@ async function getPublicIP(type) {
 		})
 	};
 }
-
-/***************** Function *****************/
-/**
- * Get Environment Variables
- * @link https://github.com/VirgilClyne/VirgilClyne/blob/main/function/getENV/getENV.min.js
- * @author VirgilClyne
- * @param {String} t - Persistent Store Key
- * @param {String} e - Platform Name
- * @param {Object} n - Default Database
- * @return {Promise<*>}
- */
-async function getENV(t,e,n){let i=$.getjson(t,n),s={};if("undefined"!=typeof $argument&&Boolean($argument)){let t=Object.fromEntries($argument.split("&").map((t=>t.split("="))));for(let e in t)f(s,e,t[e])}let g={...n?.Default?.Settings,...n?.[e]?.Settings,...i?.[e]?.Settings,...s},o={...n?.Default?.Configs,...n?.[e]?.Configs,...i?.[e]?.Configs},a=i?.[e]?.Caches||void 0;return"string"==typeof a&&(a=JSON.parse(a)),{Settings:g,Caches:a,Configs:o};function f(t,e,n){e.split(".").reduce(((t,i,s)=>t[i]=e.split(".").length===++s?n:t[i]||{}),t)}}
-
-/**
- * Set Environment Variables
- * @author VirgilClyne
- * @param {String} name - Persistent Store Key
- * @param {String} platform - Platform Name
- * @param {Object} database - Default DataBase
- * @return {Promise<*>}
- */
-async function setENV(name, platform, database) {
-	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
-	let { Settings, Caches = {}, Configs } = await getENV(name, platform, database);
-	/***************** Prase *****************/
-	Settings.Switch = JSON.parse(Settings.Switch) // BoxJs字符串转Boolean
-	switch (Settings.Verify.Mode) {
-		case "Token":
-			Configs.Request.headers["Authorization"] = `Bearer ${Settings.Verify.Content}`;
-			break;
-		case "ServiceKey":
-			Configs.Request.headers["X-Auth-User-Service-Key"] = Settings.Verify.Content;
-			break;
-		case "Key":
-			Settings.Verify.Content = Array.from(Settings.Verify.Content.split("\n"))
-			//$.log(JSON.stringify(Settings.Verify.Content))
-			Configs.Request.headers["X-Auth-Key"] = Settings.Verify.Content[0];
-			Configs.Request.headers["X-Auth-Email"] = Settings.Verify.Content[1];
-			break;
-		default:
-			$.log("无可用授权方式", `Mode=${Settings.Verify.Mode}`, `Content=${Settings.Verify.Content}`, "");
-			break;
-	}
-	Settings.zone.dns_records = Array.from(Settings.zone.dns_records.split("\n"))
-	//$.log(JSON.stringify(Settings.zone.dns_records))
-	Settings.zone.dns_records.forEach((item, i) => {
-		Settings.zone.dns_records[i] = Object.fromEntries(item.split("&").map((item) => item.split("=")));
-		Settings.zone.dns_records[i].proxied = JSON.parse(Settings.zone.dns_records[i].proxied);
-	})
-	//$.log(JSON.stringify(Settings.zone.dns_records));
-	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
-	return { Settings, Caches, Configs }
-};
 
 /***************** Env *****************/
 // prettier-ignore
