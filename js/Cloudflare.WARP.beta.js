@@ -5,62 +5,45 @@ README:https://github.com/VirgilClyne/GetSomeFries
 // refer:https://github.com/ViRb3/wgcf
 // refer:https://github.com/yyuueexxiinngg/some-scripts/blob/master/cloudflare/warp2wireguard.js
 
-const $ = new Env('Cloudflare WARP');
-$.VAL = {
-	"url": "https://api.cloudflareclient.com",
-	"headers": {
-		"Host": "api.cloudflareclient.com",
-		"Authorization": null,
-		"Content-Type": "application/json",
-		"User-Agent": "1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0",
-		//"User-Agent": "1.1.1.1/1909221500.1 CFNetwork/978.0.7 Darwin/18.7.0",
-		//"User-Agent": "okhttp/3.12.1",
-		//"User-Agent": "WARP",
-		"CF-Client-Version": "i-6.7-2109031904.1"
-		//"CF-Client-Version": "m-2021.12.1.0-0",
-		//"CF-Client-Version": "a-6.3-1922",
-		//"Debug": false
+const $ = new Env('Cloudflare WARP v2.0.0-beta1');
+const DataBase = {
+	"Settings": {
+		"Switch": true,
+		"Verify": {
+			"License": null,
+			"Mode": "Token",
+			"Content": null,
+			"RegistrationId": null
+		},
+		"env": {
+			"Version": "v0i2109031904",
+			"deviceType": "iOS",
+			"Type": "i"
+		}
+	},
+	"Configs": {
+		"Request": {
+			"url": "https://api.cloudflareclient.com",
+			"headers": {
+				"Host": "api.cloudflareclient.com",
+				"Authorization": null,
+				"Content-Type": "application/json",
+				"User-Agent": "1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0",
+				//"User-Agent": "1.1.1.1/1909221500.1 CFNetwork/978.0.7 Darwin/18.7.0",
+				//"User-Agent": "okhttp/3.12.1",
+				//"User-Agent": "WARP",
+				"CF-Client-Version": "i-6.7-2109031904.1"
+				//"CF-Client-Version": "m-2021.12.1.0-0",
+				//"CF-Client-Version": "a-6.3-1922",
+				//"Debug": false
+			}
+		}
 	}
 };
 
-// Default Settings
-$.Cloudflare = { "WARP": { "Verify": { "License": null, "Mode": "Token", "Content": null, "RegistrationId": null }, "env": { "Version": "v0i2109031904", "deviceType": "iOS", "Type": "i" } } };
-// BoxJs Function Supported
-if ($.getdata("GetSomeFries")) {
-	$.log(`🎉 ${$.name}, BoxJs`);
-	// load user prefs from BoxJs
-	const GetSomeFries = $.getdata("GetSomeFries")
-	$.log(`🚧 ${$.name}, BoxJs调试信息, GetSomeFries类型: ${typeof GetSomeFries}`, `GetSomeFries内容: ${GetSomeFries}`, "");
-	$.Cloudflare = JSON.parse(GetSomeFries).Cloudflare
-	$.WireGuard = JSON.parse(GetSomeFries).WireGuard
-	//$.log(JSON.stringify($.Cloudflare.WARP))
-	if ($.Cloudflare?.WARP?.Verify?.Mode == "Key") {
-		$.Cloudflare.WARP.Verify.Content = Array.from($.Cloudflare.WARP.Verify.Content.split("\n"))
-		//$.log(JSON.stringify($.Cloudflare.WARP.Verify.Content))
-	};
-}
-// Argument Function Supported
-else if (typeof $argument != "undefined") {
-	$.log(`🎉 ${$.name}, $Argument`);
-	let arg = Object.fromEntries($argument.split("&").map((item) => item.split("=")));
-	$.log(JSON.stringify(arg));
-	$.Cloudflare.WARP.Verify.License = arg.License;
-	$.Cloudflare.WARP.Verify.Mode = arg.Mode;
-	$.Cloudflare.WARP.Verify.Content = arg.AccessToken;
-	$.Cloudflare.WARP.Verify.Content = arg.ServiceKey;
-	$.Cloudflare.WARP.Verify.Content[0] = arg.Key;
-	$.Cloudflare.WARP.Verify.Content[1] = arg.Email;
-	$.Cloudflare.WARP.Verify.RegistrationId = arg.RegistrationId;
-	$.WireGuard.PrivateKey = arg.PrivateKey;
-	$.WireGuard.PublicKey = arg.PublicKey;
-	$.Cloudflare.WARP.env.Version = arg.Version;
-	$.Cloudflare.WARP.env.deviceType = arg.deviceType;
-}
-$.log(`🚧 ${$.name}, 调试信息, $.Cloudflare.WARP类型: ${typeof $.Cloudflare.WARP}`, `$.Cloudflare.WARP内容: ${JSON.stringify($.Cloudflare.WARP)}`, "");
-
-/***************** Async *****************/
-
-!(async () => {
+/***************** Processing *****************/
+(async () => {
+	const { Settings, Caches, Configs } = await setENV("Cloudflare", "WARP", DataBase);
 	//Step 1
 	await setupVAL($.Cloudflare.WARP.env.deviceType)
 	//Step 2
@@ -71,7 +54,40 @@ $.log(`🚧 ${$.name}, 调试信息, $.Cloudflare.WARP类型: ${typeof $.Cloudfl
 	.catch((e) => $.logErr(e))
 	.finally(() => $.done())
 
-/***************** Async Function *****************/
+
+/***************** Function *****************/
+/**
+ * Get Environment Variables
+ * @link https://github.com/VirgilClyne/VirgilClyne/blob/main/function/getENV/getENV.min.js
+ * @author VirgilClyne
+ * @param {String} t - Persistent Store Key
+ * @param {String} e - Platform Name
+ * @param {Object} n - Default Database
+ * @return {Promise<*>}
+ */
+async function getENV(t,e,n){let i=$.getjson(t,n),s={};if("undefined"!=typeof $argument&&Boolean($argument)){let t=Object.fromEntries($argument.split("&").map((t=>t.split("="))));for(let e in t)f(s,e,t[e])}let g={...n?.Default?.Settings,...n?.[e]?.Settings,...i?.[e]?.Settings,...s},o={...n?.Default?.Configs,...n?.[e]?.Configs,...i?.[e]?.Configs},a=i?.[e]?.Caches||void 0;return"string"==typeof a&&(a=JSON.parse(a)),{Settings:g,Caches:a,Configs:o};function f(t,e,n){e.split(".").reduce(((t,i,s)=>t[i]=e.split(".").length===++s?n:t[i]||{}),t)}}
+
+/**
+ * Set Environment Variables
+ * @author VirgilClyne
+ * @param {String} name - Persistent Store Key
+ * @param {String} platform - Platform Name
+ * @param {Object} database - Default DataBase
+ * @return {Promise<*>}
+ */
+async function setENV(name, platform, database) {
+	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
+	let { Settings, Caches = {}, Configs } = await getENV(name, platform, database);
+	/***************** Prase *****************/
+	Settings.Switch = JSON.parse(Settings.Switch) // BoxJs字符串转Boolean
+	if (Settings?.Verify?.Mode === "Key") {
+		Settings.Verify.Content = Array.from(Settings.Verify.Content.split("\n"))
+		//$.log(JSON.stringify(Settings.Verify.Content))
+	};
+	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
+	return { Settings, Caches, Configs }
+};
+
 //Step 1
 //Setup Environment
 async function setupVAL(deviceType) {
