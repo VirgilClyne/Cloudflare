@@ -58,9 +58,9 @@ else if (typeof $argument != "undefined") {
 }
 $.log(`🚧 ${$.name}, 调试信息, $.Cloudflare.WARP类型: ${typeof $.Cloudflare.WARP}`, `$.Cloudflare.WARP内容: ${JSON.stringify($.Cloudflare.WARP)}`, "");
 
-/***************** Async *****************/
-
-!(async () => {
+/***************** Processing *****************/
+(async () => {
+	const { Settings, Caches, Configs } = await setENV("Cloudflare", "WARP", DataBase);
 	//Step 1
 	await setupVAL($.Cloudflare.WARP.env.deviceType)
 	//Step 2
@@ -71,7 +71,40 @@ $.log(`🚧 ${$.name}, 调试信息, $.Cloudflare.WARP类型: ${typeof $.Cloudfl
 	.catch((e) => $.logErr(e))
 	.finally(() => $.done())
 
-/***************** Async Function *****************/
+
+/***************** Function *****************/
+/**
+ * Get Environment Variables
+ * @link https://github.com/VirgilClyne/VirgilClyne/blob/main/function/getENV/getENV.min.js
+ * @author VirgilClyne
+ * @param {String} t - Persistent Store Key
+ * @param {String} e - Platform Name
+ * @param {Object} n - Default Database
+ * @return {Promise<*>}
+ */
+async function getENV(t,e,n){let i=$.getjson(t,n),s={};if("undefined"!=typeof $argument&&Boolean($argument)){let t=Object.fromEntries($argument.split("&").map((t=>t.split("="))));for(let e in t)f(s,e,t[e])}let g={...n?.Default?.Settings,...n?.[e]?.Settings,...i?.[e]?.Settings,...s},o={...n?.Default?.Configs,...n?.[e]?.Configs,...i?.[e]?.Configs},a=i?.[e]?.Caches||void 0;return"string"==typeof a&&(a=JSON.parse(a)),{Settings:g,Caches:a,Configs:o};function f(t,e,n){e.split(".").reduce(((t,i,s)=>t[i]=e.split(".").length===++s?n:t[i]||{}),t)}}
+
+/**
+ * Set Environment Variables
+ * @author VirgilClyne
+ * @param {String} name - Persistent Store Key
+ * @param {String} platform - Platform Name
+ * @param {Object} database - Default DataBase
+ * @return {Promise<*>}
+ */
+async function setENV(name, platform, database) {
+	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
+	let { Settings, Caches = {}, Configs } = await getENV(name, platform, database);
+	/***************** Prase *****************/
+	Settings.Switch = JSON.parse(Settings.Switch) // BoxJs字符串转Boolean
+	if (Settings?.Verify?.Mode === "Key") {
+		Settings.Verify.Content = Array.from(Settings.Verify.Content.split("\n"))
+		//$.log(JSON.stringify(Settings.Verify.Content))
+	};
+	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
+	return { Settings, Caches, Configs }
+};
+
 //Step 1
 //Setup Environment
 async function setupVAL(deviceType) {
