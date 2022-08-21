@@ -14,7 +14,7 @@ const DataBase = {
 
 /***************** Processing *****************/
 (async () => {
-	const { Settings, Caches } = await setENV("Cloudflare", "WARP", DataBase);
+	const { Settings } = await setENV("Cloudflare", "WARP", DataBase);
 	const Type = RegExp(`/reg/${Settings.Verify.RegistrationId}`, "i").test($request.url) ? "RegistrationId"
 		: /reg/i.test($request.url) ? "Registration"
 			: undefined
@@ -182,7 +182,7 @@ async function getENV(t,e,n){let i=$.getjson(t,n),s={};if("undefined"!=typeof $a
  */
 async function setENV(name, platform, database) {
 	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
-	 let { Settings, Caches = {} } = await getENV(name, platform, database);
+	 let { Settings, Caches = {}, Configs } = await getENV(name, platform, database);
 	/***************** Prase *****************/
 	Settings.Switch = JSON.parse(Settings.Switch) // BoxJs字符串转Boolean
 	if (Settings?.Verify?.Mode === "Key") {
@@ -190,7 +190,7 @@ async function setENV(name, platform, database) {
 		//$.log(JSON.stringify(Settings.Verify.Content))
 	};
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
-	return { Settings, Caches }
+	return { Settings, Caches, Configs }
 };
 
 /***************** Env *****************/
