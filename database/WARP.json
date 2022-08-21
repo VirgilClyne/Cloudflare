@@ -1,0 +1,28 @@
+{
+	"Settings": {
+		"Switch": true,
+		"Verify": {
+			"License": null,
+			"Mode": "Token",
+			"Content": null,
+			"RegistrationId": null
+		},
+		"env": {
+			"Version": "v0i2109031904",
+			"deviceType": "iOS",
+			"Type": "i"
+		}
+	},
+	"Configs": {
+		"Request": {
+			"url": "https://api.cloudflareclient.com",
+			"headers": {
+				"Host": "api.cloudflareclient.com",
+				"Authorization": null,
+				"Content-Type": "application/json",
+				"User-Agent": "1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0",
+				"CF-Client-Version": "i-6.7-2109031904.1"
+			}
+		}
+	}
+}
