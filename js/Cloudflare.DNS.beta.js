@@ -413,38 +413,20 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { "type": "", name: 
 async function getPublicIP(type) {
 	$.log("获取公共IP");
 	let _Request = { url: `https://api${type}.my-ip.io/ip.json` };
-	return await getCFjson(_Request);
-
-	function getCFjson(request) {
-		return new Promise((resolve) => {
-			$.get(request, (error, response, data) => {
-				try {
-					if (error) throw new Error(error)
-					else if (data) {
-						const _data = JSON.parse(data)
-						switch (_data.success) {
-							case true:
-								resolve(_data.ip);
-								break;
-							case false:
-								if (Array.isArray(_data.errors) && _data.errors.length != 0) _data.errors.forEach(element => { $.msg($.name, `code: ${element.code}`, `message: ${element.message}`); })
-								break;
-							default:
-								if (Array.isArray(_data.result) && _data.result.length != 0) resolve(_data.result[0]);
-								else resolve(_data.result);
-								break;
-						}
-					} else throw new Error(response);
-				} catch (e) {
-					$.logErr(`❗️${$.name}, ${getCFjson.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
-				} finally {
-					$.log(`🚧 ${$.name}, ${getCFjson.name}调试信息`, `request = ${JSON.stringify(request)}`, `data = ${data}`, "")
-					resolve()
-				}
-			})
-		})
+	//return await getCFjson(_Request);
+	let _data = await $.http.get(_Request).then(data => JSON.parse(data));
+	$.log(`data=${JSON.stringify(_data)}`);
+	switch (_data.success) {
+		case true:
+			return _data.ip;
+		case false:
+			if (Array.isArray(_data.errors) && _data.errors.length != 0) _data.errors.forEach(element => { $.msg($.name, `code: ${element.code}`, `message: ${element.message}`); })
+			break;
+		default:
+			if (Array.isArray(_data.result) && _data.result.length != 0) return _data.result[0];
+			else return _data.result;
 	};
-}
+};
 
 /***************** Env *****************/
 // prettier-ignore
