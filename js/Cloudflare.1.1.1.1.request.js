@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.1.0-request");
+const $ = new Env("1.1.1.1 by Cloudflare v2.1.1-request");
 const DataBase = {
 	"WARP": {
 		"Settings":{"Switch":true,"Verify":{"License":null,"Mode":"Token","Content":null,"RegistrationId":null},"env":{"Version":"v0i2109031904","deviceType":"iOS","Type":"i"}}
@@ -13,7 +13,7 @@ const DataBase = {
 };
 
 /***************** Processing *****************/
-!(async () => {
+(async () => {
 	const { Settings, Caches } = await setENV("Cloudflare", "WireGuard", DataBase);
 	const Type = RegExp(`/reg/${Settings.Verify.RegistrationId}`, "i").test($request.url) ? "RegistrationId"
 		: /reg/i.test($request.url) ? "Registration"
