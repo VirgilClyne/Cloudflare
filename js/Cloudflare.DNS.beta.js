@@ -4,7 +4,7 @@ README:https://github.com/VirgilClyne/GetSomeFries
 
 // refer:https://github.com/phil-r/node-cloudflare-ddns
 
-const $ = new Env("Cloudflare DNS v2.0.0-beta");
+const $ = new Env("Cloudflare DNS v2.0.0-beta19");
 const DataBase = {
 	"DNS": {
 		"Settings": {
@@ -94,11 +94,10 @@ const DataBase = {
 		// Step 2
 		Settings.zone = await checkZoneInfo(Configs.Request, Settings.zone)
 		// Step 3 4 5
-		Promise.all(Settings.zone.dns_records.map(async Record => {
-			//await DDNS(Configs.Request, Settings.zone, Record);
-			$.log(`开始更新${Record.type}类型记录`);
+		await Promise.allSettled(Settings.zone.dns_records.map(async dns_record => {
+			$.log(`开始更新${dns_record.type}类型记录`);
 			//Step 3
-			Record = await checkRecordContent(Record);
+			const Record = await checkRecordContent(dns_record);
 			//Step 4
 			let oldRecord = await checkRecordInfo(Configs.Request, Settings.zone, Record);
 			//Step 5
