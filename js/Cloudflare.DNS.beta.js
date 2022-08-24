@@ -4,7 +4,7 @@ README:https://github.com/VirgilClyne/GetSomeFries
 
 // refer:https://github.com/phil-r/node-cloudflare-ddns
 
-const $ = new Env("Cloudflare DNS v2.0.0-beta19");
+const $ = new Env("Cloudflare DNS v2.0.0-beta20");
 const DataBase = {
 	"DNS": {
 		"Settings": {
@@ -251,20 +251,21 @@ async function checkRecordInfo(Request, Zone, Record) {
 }
 
 //Step 5
-async function setupRecord(Request, Zone, oldRecord, Record) {
+async function setupRecord(Request, Zone, oldRecord, newRecord) {
 	$.log("开始更新内容");
+	let Record = {};
 	if (!oldRecord.content) {
 		$.log("无记录");
-		var newRecord = await Cloudflare("createDNSRecord", Request, Zone, Record);
-	} else if (oldRecord.content !== Record.content) {
+		Record = await Cloudflare("createDNSRecord", Request, Zone, newRecord);
+	} else if (oldRecord.content !== newRecord.content) {
 		$.log("有记录且IP地址不同");
-		var newRecord = await Cloudflare("updateDNSRecord", Request, Zone, { ...oldRecord, ...Record });
-	} else if (oldRecord.content === Record.content) {
+		Record = await Cloudflare("updateDNSRecord", Request, Zone, { ...oldRecord, ...newRecord });
+	} else if (oldRecord.content === newRecord.content) {
 		$.log("有记录且IP地址相同");
-		var newRecord = oldRecord
+		Record = oldRecord;
 	}
-	$.log(`记录更新结果:`, `ID:${newRecord.id}`, `名称:${newRecord.name}`, `类型:${newRecord.type}`, `内容:${newRecord.content}`, `可代理:${newRecord.proxiable}`, `代理状态:${newRecord.proxied}`, `TTL:${newRecord.ttl}`, `已锁定:${newRecord.locked}`, "");
-	return newRecord
+	$.log(`记录更新结果:`, `ID:${Record.id}`, `名称:${Record.name}`, `类型:${Record.type}`, `内容:${Record.content}`, `可代理:${Record.proxiable}`, `代理状态:${Record.proxied}`, `TTL:${Record.ttl}`, `已锁定:${Record.locked}`, "");
+	return Record
 }
 
 /***************** Cloudflare API v4 *****************/
