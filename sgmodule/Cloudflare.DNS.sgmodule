@@ -1,0 +1,21 @@
+#!name=☁️ Cloudflare DNS
+#!desc=(V2) Cloudflare DNS Records Management and Auto Update DDNS
+
+[General]
+# > 跳过代理
+# 跳过某个域名或者 IP 段，这些目标主机将不会由 Surge Proxy 处理。
+# (macOS 版本中，如果启用了 Set as System Proxy, 这些值会被写入到系统网络代理设置.)
+# skip-proxy = %APPEND% api4.my-ip.io, api6.my-ip.io
+
+# > Always Real IP Hosts
+# 当 Surge VIF 处理 DNS 问题时，此选项要求 Surge 返回一个真正的 IP 地址，而不是一个假 IP 地址。
+# DNS 数据包将被转发到上游 DNS 服务器。
+# always-real-ip = %APPEND% api4.my-ip.io, api6.my-ip.io
+
+[Rule]
+DOMAIN,api4.my-ip.io,DIRECT
+DOMAIN,api6.my-ip.io,DIRECT
+
+[Script]
+Cloudflare DNS = type=event, network-changed, timeout=60, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.DNS.js, argument=
+Cloudflare DNS = type=cron, cronexp="*/5 * * * *", timeout=60, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.DNS.js, argument=
