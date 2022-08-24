@@ -4,7 +4,7 @@ README:https://github.com/VirgilClyne/GetSomeFries
 
 // refer:https://github.com/phil-r/node-cloudflare-ddns
 
-const $ = new Env("Cloudflare DNS v2.0.0-beta22");
+const $ = new Env("Cloudflare DNS v2.0.0-beta23");
 const DataBase = {
 	"DNS": {
 		"Settings": {
@@ -361,15 +361,19 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { "type": "", name: 
 					if (error) throw new Error(error)
 					else if (data) {
 						const _data = JSON.parse(data)
-						if (Array.isArray(_data.messages) && _data.messages.length != 0) _data.messages.forEach(element => {
-							if (element.code !== 10000) $.msg($.name, `code: ${element.code}`, `message: ${element.message}`);
+						if (Array.isArray(_data.messages)) _data.messages.forEach(message => {
+							if (message.code !== 10000) $.msg($.name, `code: ${message.code}`, `message: ${message.message}`);
 						})
-						if (_data.success === true) {
-							if (Array.isArray(_data.result) && _data.result.length != 0) resolve(_data.result[0]);
-							else resolve(_data.result);
-						} else if (_data.success === false) {
-							if (Array.isArray(_data.errors) && _data.errors.length != 0) _data.errors.forEach(element => { $.msg($.name, `code: ${element.code}`, `message: ${element.message}`); })
-						}
+						switch (_data.success) {
+							case true:
+								resolve(_data?.result?.[0] ?? _data?.result); // _data.result, _data.meta
+								break;
+							case false:
+								if (Array.isArray(_data.errors)) _data.errors.forEach(error => { $.msg($.name, `code: ${error.code}`, `message: ${error.message}`); })
+								break;
+							case undefined:
+								throw new Error(response);
+						};
 					} else throw new Error(response);
 				} catch (e) {
 					$.logErr(`❗️${$.name}, ${getCFjson.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
@@ -390,13 +394,19 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { "type": "", name: 
 					if (error) throw new Error(error)
 					else if (data) {
 						const _data = JSON.parse(data)
-						if (Array.isArray(_data.messages) && _data.messages.length != 0) _data.messages.forEach(element => { $.msg($.name, `code: ${element.code}`, `message: ${element.message}`); })
-						if (_data.success === true) {
-							if (Array.isArray(_data.result) && _data.result.length != 0) resolve(_data.result[0]);
-							else resolve(_data.result); // _data.result, _data.meta
-						} else if (_data.success === false) {
-							if (Array.isArray(_data.errors) && _data.errors.length != 0) _data.errors.forEach(element => { $.msg($.name, `code: ${element.code}`, `message: ${element.message}`); })
-						}
+						if (Array.isArray(_data.messages)) _data.messages.forEach(message => {
+							if (message.code !== 10000) $.msg($.name, `code: ${message.code}`, `message: ${message.message}`);
+						})
+						switch (_data.success) {
+							case true:
+								resolve(_data?.result?.[0] ?? _data?.result); // _data.result, _data.meta
+								break;
+							case false:
+								if (Array.isArray(_data.errors)) _data.errors.forEach(error => { $.msg($.name, `code: ${error.code}`, `message: ${error.message}`); })
+								break;
+							case undefined:
+								throw new Error(response);
+						};
 					} else throw new Error(response);
 				} catch (e) {
 					$.logErr(`❗️${$.name}, ${fatchCFjson.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
@@ -422,11 +432,10 @@ async function getPublicIP(type) {
 		case true:
 			return _data.ip;
 		case false:
-			if (Array.isArray(_data.errors) && _data.errors.length != 0) _data.errors.forEach(element => { $.msg($.name, `code: ${element.code}`, `message: ${element.message}`); })
+			if (Array.isArray(_data.errors)) _data.errors.forEach(error => { $.msg($.name, `code: ${error.code}`, `message: ${error.message}`); })
 			break;
 		default:
-			if (Array.isArray(_data.result) && _data.result.length != 0) return _data.result[0];
-			else return _data.result;
+			return _data?.result?.[0] ?? _data?.result;
 	};
 };
 
