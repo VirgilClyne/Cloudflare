@@ -1,5 +1,10 @@
-#!name=☁️ Cloudflare DNS
+#!name=☁️ Cloudflare DNS 记录管理与自动更新DDNS
 #!desc=(BETA) Cloudflare DNS Records Management and Auto Update DDNS
+#!openUrl=http://boxjs.com/#/app/Cloudflare.DNS.beta
+#!author=VirgilClyne
+#!homepage=https://github.com/VirgilClyne
+#!manual=https://github.com/VirgilClyne/Cloudflare/wiki/☁%EF%B8%8F-Cloudflare-DNS
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png
 
 [General]
 # > 跳过代理
