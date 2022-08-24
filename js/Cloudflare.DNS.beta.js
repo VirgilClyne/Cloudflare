@@ -148,7 +148,7 @@ async function setENV(name, platform, database) {
 			Configs.Request.headers["X-Auth-Email"] = Settings.Verify.Content[1];
 			break;
 		default:
-			$.log("无可用授权方式", `Mode=${Settings.Verify.Mode}`, `Content=${Settings.Verify.Content}`, "");
+			$.log("无可用授权方式", `Mode=${Settings.Verify.Mode}`, `Content=${Settings.Verify.Content}`);
 			break;
 	}
 	Settings.zone.dns_records = Array.from(Settings.zone.dns_records.split("\n"))
@@ -189,16 +189,16 @@ async function checkZoneInfo(Request, Zone) {
 	$.log("查询区域信息");
 	let newZone = {};
 	if (Zone?.id && Zone?.name) {
-		$.log(`有区域ID${Zone.id}和区域名称${Zone.name}, 继续`, "");
+		$.log(`有区域ID${Zone.id}和区域名称${Zone.name}, 继续`);
 		newZone = Zone;
 	} else if (Zone?.id) {
-		$.log(`有区域ID${Zone.id}, 继续`, "");
+		$.log(`有区域ID${Zone.id}, 继续`);
 		newZone = await Cloudflare("getZone", Request, Zone);
 	} else if (Zone?.name) {
-		$.log(`有区域名称${Zone.name}, 继续`, "");
+		$.log(`有区域名称${Zone.name}, 继续`);
 		newZone = await Cloudflare("listZones", Request, Zone);
 	} else {
-		$.logErr("未提供记录ID和名称, 终止", "");
+		$.logErr("未提供记录ID和名称, 终止");
 		$.done();
 	}
 	$.log(`区域查询结果:`, `ID:${newZone.id}`, `名称:${newZone.name}`, `状态:${newZone.status}`, `仅DNS服务:${newZone.paused}`, `类型:${newZone.type}`, `开发者模式:${newZone.development_mode}`, `名称服务器:${newZone.name_servers}`, `原始名称服务器:${newZone.original_name_servers}`, "");
@@ -209,9 +209,9 @@ async function checkZoneInfo(Request, Zone) {
 //Step 3
 async function checkRecordContent(Record) {
 	if (Record.type) {
-		$.log(`有类型${Record.type}, 继续`, "");
+		$.log(`有类型${Record.type}, 继续`);
 		if (!Record.content) {
-			$.log("无内容, 继续", "");
+			$.log("无内容, 继续");
 			switch (Record.type) {
 				case "A":
 					Record.content = await getPublicIP(4);
@@ -220,15 +220,15 @@ async function checkRecordContent(Record) {
 					Record.content = await getPublicIP(6);
 					break;
 				case undefined:
-					$.log("无类型, 跳过", "");
+					$.log("无类型, 跳过");
 					break;
 				default:
-					$.log(`类型${Record.type}, 跳过`, "");
+					$.log(`类型${Record.type}, 跳过`);
 					break;
 			}
-		} else $.log(`有内容${Record.content}, 跳过`, "");
+		} else $.log(`有内容${Record.content}, 跳过`);
 	} else {
-		$.log(`无类型${Record.type}, 跳过`, "");
+		$.log(`无类型${Record.type}, 跳过`);
 	}
 	$.log(`${Record.type}类型内容: ${Record.content}`, "");
 	return Record;
@@ -239,13 +239,13 @@ async function checkRecordInfo(Request, Zone, Record) {
 	$.log("查询记录信息");
 	let oldRecord = {};
 	if (Record.id) {
-		$.log(`有记录ID${Record.id}, 继续`, "");
+		$.log(`有记录ID${Record.id}, 继续`);
 		oldRecord = await Cloudflare("getDNSRecord", Request, Zone, Record);
 	} else if (Record.name) {
-		$.log(`有记录名称${Record.name}, 继续`, "");
+		$.log(`有记录名称${Record.name}, 继续`);
 		oldRecord = await Cloudflare("listDNSRecords", Request, Zone, Record);
 	} else {
-		$.log("未提供记录ID和名称, 终止", "");
+		$.log("未提供记录ID和名称, 终止");
 		$.done();
 	}
 	$.log(`记录查询结果:`, `ID:${oldRecord.id}`, `名称:${oldRecord.name}`, `类型:${oldRecord.type}`, `内容:${oldRecord.content}`, `代理状态:${oldRecord.proxied}`, `TTL:${oldRecord.ttl}`, "");
