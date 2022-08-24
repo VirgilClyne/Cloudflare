@@ -413,9 +413,9 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { "type": "", name: 
 async function getPublicIP(type) {
 	$.log("获取公共IP");
 	let _Request = { url: `https://api${type}.my-ip.io/ip.json` };
-	//return await getCFjson(_Request);
-	let _data = await $.http.get(_Request).then(data => JSON.parse(data));
-	$.log(`data=${JSON.stringify(_data)}`);
+	$.log(`🚧 _Request=${JSON.stringify(_Request)}`);
+	let _data = await $.http.get(_Request).then(response => JSON.parse(response.body));
+	$.log(`🚧 _data=${JSON.stringify(_data)}`);
 	switch (_data.success) {
 		case true:
 			return _data.ip;
