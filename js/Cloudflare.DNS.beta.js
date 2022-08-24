@@ -4,7 +4,7 @@ README:https://github.com/VirgilClyne/GetSomeFries
 
 // refer:https://github.com/phil-r/node-cloudflare-ddns
 
-const $ = new Env("Cloudflare DNS v2.0.0-beta21");
+const $ = new Env("Cloudflare DNS v2.0.0-beta22");
 const DataBase = {
 	"DNS": {
 		"Settings": {
@@ -187,6 +187,7 @@ async function Verify(Request, Verify) {
 //Step 2
 async function checkZoneInfo(Request, Zone) {
 	$.log("查询区域信息");
+	let newZone = {};
 	if (Zone?.id && Zone?.name) {
 		$.log(`有区域ID${Zone.id}和区域名称${Zone.name}, 继续`, "");
 		newZone = Zone;
@@ -201,8 +202,8 @@ async function checkZoneInfo(Request, Zone) {
 		$.done();
 	}
 	$.log(`区域查询结果:`, `ID:${newZone.id}`, `名称:${newZone.name}`, `状态:${newZone.status}`, `仅DNS服务:${newZone.paused}`, `类型:${newZone.type}`, `开发者模式:${newZone.development_mode}`, `名称服务器:${newZone.name_servers}`, `原始名称服务器:${newZone.original_name_servers}`, "");
-	const result = await Object.assign(Zone, newZone);
-	return result
+	const result = { ...Zone, ...newZone };
+	return result;
 };
 
 //Step 3
@@ -236,12 +237,13 @@ async function checkRecordContent(Record) {
 //Step 4
 async function checkRecordInfo(Request, Zone, Record) {
 	$.log("查询记录信息");
+	let oldRecord = {};
 	if (Record.id) {
 		$.log(`有记录ID${Record.id}, 继续`, "");
-		var oldRecord = await Cloudflare("getDNSRecord", Request, Zone, Record);
+		oldRecord = await Cloudflare("getDNSRecord", Request, Zone, Record);
 	} else if (Record.name) {
 		$.log(`有记录名称${Record.name}, 继续`, "");
-		var oldRecord = await Cloudflare("listDNSRecords", Request, Zone, Record);
+		oldRecord = await Cloudflare("listDNSRecords", Request, Zone, Record);
 	} else {
 		$.log("未提供记录ID和名称, 终止", "");
 		$.done();
