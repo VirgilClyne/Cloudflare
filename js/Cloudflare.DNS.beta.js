@@ -4,7 +4,7 @@ README:https://github.com/VirgilClyne/GetSomeFries
 
 // refer:https://github.com/phil-r/node-cloudflare-ddns
 
-const $ = new Env("Cloudflare DNS v2.0.0-beta20");
+const $ = new Env("Cloudflare DNS v2.0.0-beta21");
 const DataBase = {
 	"DNS": {
 		"Settings": {
@@ -92,18 +92,18 @@ const DataBase = {
 	if (status === true) {
 		$.log("验证成功");
 		// Step 2
-		Settings.zone = await checkZoneInfo(Configs.Request, Settings.zone)
+		Settings.zone = await checkZoneInfo(Configs.Request, Settings.zone);
 		// Step 3 4 5
 		await Promise.allSettled(Settings.zone.dns_records.map(async dns_record => {
 			$.log(`开始更新${dns_record.type}类型记录`);
 			//Step 3
-			const Record = await checkRecordContent(dns_record);
+			let oldRecord = await checkRecordInfo(Configs.Request, Settings.zone, dns_record);
 			//Step 4
-			let oldRecord = await checkRecordInfo(Configs.Request, Settings.zone, Record);
+			let newRecord = await checkRecordContent(dns_record);
 			//Step 5
-			let newRecord = await setupRecord(Configs.Request, Settings.zone, oldRecord, Record);
-			$.log(`${newRecord.name}上的${newRecord.type}记录${newRecord.content}更新完成`, "");
-		}))
+			let Record = await setupRecord(Configs.Request, Settings.zone, oldRecord, newRecord);
+			$.log(`${Record.name}上的${Record.type}记录${Record.content}更新完成`, "");
+		}));
 	} else throw new Error("验证失败")
 })()
 	.catch((e) => $.logErr(e))
