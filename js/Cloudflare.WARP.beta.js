@@ -5,20 +5,16 @@ README:https://github.com/VirgilClyne/GetSomeFries
 // refer:https://github.com/ViRb3/wgcf
 // refer:https://github.com/yyuueexxiinngg/some-scripts/blob/master/cloudflare/warp2wireguard.js
 
-const $ = new Env('Cloudflare WARP v2.0.0-beta2');
+const $ = new Env('Cloudflare WARP v2.0.0-beta3');
 const DataBase = {
 	"Settings": {
 		"Switch": true,
+		"deviceType": "iOS",
 		"Verify": {
 			"License": null,
 			"Mode": "Token",
 			"Content": null,
 			"RegistrationId": null
-		},
-		"Environment": {
-			"Version": "v0i2109031904",
-			"deviceType": "iOS",
-			"Type": "i"
 		}
 	},
 	"Configs": {
@@ -86,11 +82,6 @@ const DataBase = {
 /***************** Processing *****************/
 (async () => {
 	const { Settings, Caches, Configs } = await setENV("Cloudflare", "WARP", DataBase);
-	//Step 1
-	await setupVAL($.Cloudflare.WARP.Environment.deviceType)
-	//Step 2
-	await setupVerify($.Cloudflare.WARP.Verify.Mode, $.Cloudflare.WARP.Verify.Content)
-	//Step 3
 	await WARP($.Cloudflare.WARP.setupMode, $.Cloudflare.WARP.Environment, $.Cloudflare.WARP.Verify, $.WireGuard)
 })()
 	.catch((e) => $.logErr(e))
@@ -122,60 +113,30 @@ async function setENV(name, platform, database) {
 	let { Settings, Caches = {}, Configs } = await getENV(name, platform, database);
 	/***************** Prase *****************/
 	Settings.Switch = JSON.parse(Settings.Switch) // BoxJs字符串转Boolean
-	if (Settings?.Verify?.Mode === "Key") {
-		Settings.Verify.Content = Array.from(Settings.Verify.Content.split("\n"))
-		//$.log(JSON.stringify(Settings.Verify.Content))
+	switch (Settings.Verify.Mode) {
+		case "Token":
+			Configs.Request.headers["Authorization"] = `Bearer ${Settings.Verify.Content}`;
+			break;
+		case "ServiceKey":
+			Configs.Request.headers["X-Auth-User-Service-Key"] = Settings.Verify.Content;
+			break;
+		case "Key":
+			Settings.Verify.Content = Array.from(Settings.Verify.Content.split("\n"))
+			//$.log(JSON.stringify(Settings.Verify.Content))
+			Configs.Request.headers["X-Auth-Key"] = Settings.Verify.Content[0];
+			Configs.Request.headers["X-Auth-Email"] = Settings.Verify.Content[1];
+			break;
+		default:
+			$.log("无可用授权方式", `Mode=${Settings.Verify.Mode}`, `Content=${Settings.Verify.Content}`);
+			break;
 	};
+	Settings.Environment.Type = Configs.Environment[Settings.deviceType].Type;
+	Settings.Environment.Version = Configs.Environment[Settings.deviceType].Version;
+	Configs.Request.headers["User-Agent"] = Configs.Environment[Settings.deviceType].headers["User-Agent"];
+	Configs.Request.headers["CF-Client-Version"] = Configs.Environment[Settings.deviceType].headers["CF-Client-Version"];
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	return { Settings, Caches, Configs }
 };
-
-//Step 1
-//Setup Environment
-async function setupVAL(deviceType) {
-	$.log('设置运行环境');
-	//设置设备环境
-	if (deviceType == "iOS") {
-		$.Cloudflare.WARP.Environment.Type = "i";
-		$.Cloudflare.WARP.Environment.Version = "v0i2109031904";
-		$.VAL.headers["User-Agent"] = "1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0";
-		$.VAL.headers["CF-Client-Version"] = "i-6.7-2109031904.1";
-	} else if (deviceType == "macOS") {
-		$.Cloudflare.WARP.Environment.Type = "m";
-		$.VAL.headers["User-Agent"] = "1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0";
-		$.VAL.headers["CF-Client-Version"] = "m-2021.12.1.0-0";
-	} else if (deviceType == "Android") {
-		$.Cloudflare.WARP.Environment.Type = "a";
-		$.Cloudflare.WARP.Environment.Version = "v0a1922";
-		$.VAL.headers["User-Agent"] = "okhttp/3.12.1";
-		$.VAL.headers["CF-Client-Version"] = "a-6.3-1922";
-	} else if (deviceType == "Windows") {
-		$.Cloudflare.WARP.Environment.Type = "w";
-	} else if (deviceType == "Liunx") {
-		$.Cloudflare.WARP.Environment.Type = "l";
-	} else {
-		$.logErr('无可用设备类型', `deviceType=${deviceType}`, '');
-		$.done();
-	};
-}
-
-//Step 2
-//Setup Verify
-async function setupVerify(Mode, Content) {
-	$.log('设置验证方式');
-	//设置验证方式
-	if (Mode == "Token") {
-		$.VAL.headers['Authorization'] = `Bearer ${Content}`;
-	} else if (Mode == "ServiceKey") {
-		$.VAL.headers['X-Auth-User-Service-Key'] = Content;
-	} else if (Mode == "Key") {
-		$.VAL.headers['X-Auth-Key'] = Content[0];
-		$.VAL.headers['X-Auth-Email'] = Content[1];
-	} else {
-		$.logErr('无可用授权方式', `Mode=${Mode}`, `Content=${Content}`, '');
-		$.done();
-	};
-}
 
 //Step 3
 async function WARP(setupMode, Environment, Verify, WireGuard) {
