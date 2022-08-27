@@ -5,7 +5,7 @@ README:https://github.com/VirgilClyne/GetSomeFries
 // refer:https://github.com/ViRb3/wgcf
 // refer:https://github.com/yyuueexxiinngg/some-scripts/blob/master/cloudflare/warp2wireguard.js
 
-const $ = new Env('Cloudflare WARP v2.0.0-beta1');
+const $ = new Env('Cloudflare WARP v2.0.0-beta2');
 const DataBase = {
 	"Settings": {
 		"Switch": true,
@@ -15,7 +15,7 @@ const DataBase = {
 			"Content": null,
 			"RegistrationId": null
 		},
-		"env": {
+		"Environment": {
 			"Version": "v0i2109031904",
 			"deviceType": "iOS",
 			"Type": "i"
@@ -37,6 +37,48 @@ const DataBase = {
 				//"CF-Client-Version": "a-6.3-1922",
 				//"Debug": false
 			}
+		},
+		"Environment": {
+			"iOS": {
+				"Type": "i",
+				"Version": "v0i2109031904",
+				"headers": {
+					"User-Agent": "1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0",
+					"CF-Client-Version": "i-6.7-2109031904.1"
+				}
+			},
+			"macOS": {
+				"Type": "m",
+				"Version": "v0i2109031904",
+				"headers": {
+					"User-Agent": "1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0",
+					"CF-Client-Version": "m-2021.12.1.0-0"
+				}
+			},
+			"Android": {
+				"Type": "a",
+				"Version": "v0a1922",
+				"headers": {
+					"User-Agent": "okhttp/3.12.1",
+					"CF-Client-Version": "a-6.3-1922"
+				}
+			},
+			"Windows": {
+				"Type": "w",
+				"Version": "",
+				"headers": {
+					"User-Agent": "",
+					"CF-Client-Version": ""
+				}
+			},
+			"Linux": {
+				"Type": "l",
+				"Version": "",
+				"headers": {
+					"User-Agent": "",
+					"CF-Client-Version": ""
+				}
+			},
 		}
 	}
 };
@@ -45,11 +87,11 @@ const DataBase = {
 (async () => {
 	const { Settings, Caches, Configs } = await setENV("Cloudflare", "WARP", DataBase);
 	//Step 1
-	await setupVAL($.Cloudflare.WARP.env.deviceType)
+	await setupVAL($.Cloudflare.WARP.Environment.deviceType)
 	//Step 2
 	await setupVerify($.Cloudflare.WARP.Verify.Mode, $.Cloudflare.WARP.Verify.Content)
 	//Step 3
-	await WARP($.Cloudflare.WARP.setupMode, $.Cloudflare.WARP.env, $.Cloudflare.WARP.Verify, $.WireGuard)
+	await WARP($.Cloudflare.WARP.setupMode, $.Cloudflare.WARP.Environment, $.Cloudflare.WARP.Verify, $.WireGuard)
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => $.done())
@@ -94,23 +136,23 @@ async function setupVAL(deviceType) {
 	$.log('设置运行环境');
 	//设置设备环境
 	if (deviceType == "iOS") {
-		$.Cloudflare.WARP.env.Type = "i";
-		$.Cloudflare.WARP.env.Version = "v0i2109031904";
+		$.Cloudflare.WARP.Environment.Type = "i";
+		$.Cloudflare.WARP.Environment.Version = "v0i2109031904";
 		$.VAL.headers["User-Agent"] = "1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0";
 		$.VAL.headers["CF-Client-Version"] = "i-6.7-2109031904.1";
 	} else if (deviceType == "macOS") {
-		$.Cloudflare.WARP.env.Type = "m";
+		$.Cloudflare.WARP.Environment.Type = "m";
 		$.VAL.headers["User-Agent"] = "1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0";
 		$.VAL.headers["CF-Client-Version"] = "m-2021.12.1.0-0";
 	} else if (deviceType == "Android") {
-		$.Cloudflare.WARP.env.Type = "a";
-		$.Cloudflare.WARP.env.Version = "v0a1922";
+		$.Cloudflare.WARP.Environment.Type = "a";
+		$.Cloudflare.WARP.Environment.Version = "v0a1922";
 		$.VAL.headers["User-Agent"] = "okhttp/3.12.1";
 		$.VAL.headers["CF-Client-Version"] = "a-6.3-1922";
 	} else if (deviceType == "Windows") {
-		$.Cloudflare.WARP.env.Type = "w";
+		$.Cloudflare.WARP.Environment.Type = "w";
 	} else if (deviceType == "Liunx") {
-		$.Cloudflare.WARP.env.Type = "l";
+		$.Cloudflare.WARP.Environment.Type = "l";
 	} else {
 		$.logErr('无可用设备类型', `deviceType=${deviceType}`, '');
 		$.done();
@@ -136,16 +178,16 @@ async function setupVerify(Mode, Content) {
 }
 
 //Step 3
-async function WARP(setupMode, env, Verify, WireGuard) {
+async function WARP(setupMode, Environment, Verify, WireGuard) {
 	try {
 		$.log(`开始运行,模式:${setupMode}`, '');
-		var result = (setupMode == "RegisterNewAccount") ? await RegisterNewAccount(env, Verify, WireGuard)
-			: (setupMode == "RegisterNewAccountwithPublicKey") ? await RegisterNewAccountwithPublicKey(env, Verify, WireGuard)
-				: (setupMode == "RegisterNewDevice") ? await RegisterNewDevice(env, Verify, WireGuard)
-					: (setupMode == "RebindingLicense") ? await RebindingLicense(env, Verify)
-						: (setupMode == "ChangeKeypair") ? await ChangeKeypair(env, Verify, WireGuard)
-							: (setupMode == "AccountDetail") ? await AccountDetail(env, Verify)
-								: (setupMode == "DeviceDetail") ? await DeviceDetail(env, Verify)
+		var result = (setupMode == "RegisterNewAccount") ? await RegisterNewAccount(Environment, Verify, WireGuard)
+			: (setupMode == "RegisterNewAccountwithPublicKey") ? await RegisterNewAccountwithPublicKey(Environment, Verify, WireGuard)
+				: (setupMode == "RegisterNewDevice") ? await RegisterNewDevice(Environment, Verify, WireGuard)
+					: (setupMode == "RebindingLicense") ? await RebindingLicense(Environment, Verify)
+						: (setupMode == "ChangeKeypair") ? await ChangeKeypair(Environment, Verify, WireGuard)
+							: (setupMode == "AccountDetail") ? await AccountDetail(Environment, Verify)
+								: (setupMode == "DeviceDetail") ? await DeviceDetail(Environment, Verify)
 									: (setupMode == "AutoAffWARP") ? $.log('没写', '') //await autoAFF(License, AffID)
 										: $.log(`未选择运行模式或不符合模式:${setupMode}运行要求，退出`, `setupMode = ${setupMode}`, `License = ${Verify.License}`, `RegistrationId = ${Verify.RegistrationId}`, '');
 	} catch (e) {
@@ -160,10 +202,10 @@ async function WARP(setupMode, env, Verify, WireGuard) {
 /***************** Setup Mode *****************/
 // Setup Mode 1
 // Register New Account
-async function RegisterNewAccount(env, Verify, WireGuard) {
+async function RegisterNewAccount(Environment, Verify, WireGuard) {
 	if (!Verify.RegistrationId && !WireGuard.PublicKey) {
 		$.log('无设备ID(RegistrationId), 无自定义公钥(publicKey)', '');
-		var result = await regAccount(env.Version, Verify.RegistrationId, WireGuard.PublicKey, env.Locale, env.deviceModel, env.Type, env.warp_enabled);
+		var result = await regAccount(Environment.Version, Verify.RegistrationId, WireGuard.PublicKey, Environment.Locale, Environment.deviceModel, Environment.Type, Environment.warp_enabled);
 		//$.log(`🎉 ${$.name}, ${RegisterNewAccount.name}执行完成, 当前账户信息:`, `帐户类型:${result.account.account_type}`, `帐户ID:${result.account.id}`, '账户ID:等同于匿名账号', `许可证:${result.account.license}`, '许可证:可付费购买的订阅，流量，邀请奖励均绑定于许可证，一个许可证可以绑定5个设备(注册ID)', `注册ID:${result.id}`, '注册ID:相当于WARP的客户端或设备ID，配置信息均关联到此注册ID', `令牌:${result.token}`, '令牌:相当于密码，更新读取对应账号所需，如果要更新注册ID的配置或者更改关联的许可证，需要此令牌验证收发数据', '');
 		return result;
 	} else {
@@ -174,16 +216,16 @@ async function RegisterNewAccount(env, Verify, WireGuard) {
 
 // Setup Mode 2
 // Register New Account with Public Key
-async function RegisterNewAccountwithPublicKey(env, Verify, WireGuard) {
+async function RegisterNewAccountwithPublicKey(Environment, Verify, WireGuard) {
 	if (!Verify.RegistrationId && WireGuard.PrivateKey && WireGuard.PublicKey) {
 		$.log('无设备ID(RegistrationId)', '有自定义私钥(PrivateKey)', '有自定义公钥(PublicKey)', '');
-		var result = await regAccount(env.Version, Verify.RegistrationId, WireGuard.PublicKey, env.Locale, env.deviceModel, env.Type, env.warp_enabled);
+		var result = await regAccount(Environment.Version, Verify.RegistrationId, WireGuard.PublicKey, Environment.Locale, Environment.deviceModel, Environment.Type, Environment.warp_enabled);
 		//$.log(`🎉 ${$.name}, ${RegisterNewAccountwithPublicKey.name}执行完成, 当前账户信息:`, `帐户类型:${result.account.account_type}`, `帐户ID:${result.account.id}`, '账户ID:等同于匿名账号', `许可证:${result.account.license}`, '许可证:可付费购买的订阅，流量，邀请奖励均绑定于许可证，一个许可证可以绑定5个设备(注册ID)', `注册ID:${result.id}`, '注册ID:相当于WARP的客户端或设备ID，配置信息均关联到此注册ID', `令牌:${result.token}`, '令牌:相当于密码，更新读取对应账号所需，如果要更新注册ID的配置或者更改关联的许可证，需要此令牌验证收发数据', '');
 		if (WireGuard.PrivateKey && WireGuard.PublicKey) {
 			$.log('有自定义私钥(PrivateKey)', '有自定义公钥(PublicKey)', '');
 			Verify.Content = result.token;
 			await setupVerify(Verify.Mode, Verify.Content);
-			$.WireGuard = await getDevice(env.Version, result.id);
+			$.WireGuard = await getDevice(Environment.Version, result.id);
 			const SurgeConf = `
 		[Proxy]
 		WARP = wireguard, section-name = Cloudflare
@@ -225,10 +267,10 @@ async function RegisterNewAccountwithPublicKey(env, Verify, WireGuard) {
 
 // Setup Mode 3
 // Register New Device
-async function RegisterNewDevice(env, Verify, WireGuard) {
+async function RegisterNewDevice(Environment, Verify, WireGuard) {
 	if (Verify.RegistrationId) {
 		$.log('有设备ID(RegistrationId)', '');
-		var result = await regDevice(env.Version, Verify.RegistrationId, WireGuard.PublicKey, env.Locale, env.deviceModel, env.Type, env.warp_enabled);
+		var result = await regDevice(Environment.Version, Verify.RegistrationId, WireGuard.PublicKey, Environment.Locale, Environment.deviceModel, Environment.Type, Environment.warp_enabled);
 		//$.log(`🎉 ${$.name}, ${RegisterNewDevice.name}执行完成, 当前账户信息:`, `帐户ID:${result.account.id}`, '账户ID:等同于匿名账号', `许可证:${result.account.license}`, '许可证:可付费购买的订阅，流量，邀请奖励均绑定于许可证，一个许可证可以绑定5个设备(注册ID)', `注册ID:${result.id}`, '注册ID:相当于WARP的客户端或设备ID，配置信息均关联到此注册ID', `令牌:${result.token}`, '令牌:相当于密码，更新读取对应账号所需，如果要更新注册ID的配置或者更改关联的许可证，需要此令牌验证收发数据', '');
 		return result;
 	} else {
@@ -239,10 +281,10 @@ async function RegisterNewDevice(env, Verify, WireGuard) {
 
 // Setup Mode 4
 // Rebinding License
-async function RebindingLicense(env, Verify) {
+async function RebindingLicense(Environment, Verify) {
 	if (Verify.RegistrationId && Verify.Content && Verify.License) {
 		$.log('有设备ID(RegistrationId), 有验证内容(Content), 有许可证(License)', '');
-		var result = await setAccountLicense(env.Version, Verify.RegistrationId, Verify.License);
+		var result = await setAccountLicense(Environment.Version, Verify.RegistrationId, Verify.License);
 		//$.log(`🎉 ${$.name}, ${RebindingLicense.name}执行完成, 当前配置文件信息为:`, `帐户ID:${result?.account?.id}`, '账户ID:等同于匿名账号', `许可证:${result?.account?.license}`, '许可证:可付费购买的订阅，流量，邀请奖励均绑定于许可证，一个许可证可以绑定5个设备(注册ID)', `注册ID:${result?.id}`, '注册ID:相当于WARP的客户端或设备ID，配置信息均关联到此注册ID', '');
 		return result;
 	} else {
@@ -253,10 +295,10 @@ async function RebindingLicense(env, Verify) {
 
 // Setup Mode 5
 // Rebinding License
-async function ChangeKeypair(env, Verify, WireGuard) {
+async function ChangeKeypair(Environment, Verify, WireGuard) {
 	if (Verify.RegistrationId && Verify.Content && WireGuard.PublicKey) {
 		$.log('有设备ID(RegistrationId), 有验证内容(Content), 有自定义公钥(publicKey)', '');
-		var result = await setKeypair(env.Version, Verify.RegistrationId, WireGuard.PublicKey);
+		var result = await setKeypair(Environment.Version, Verify.RegistrationId, WireGuard.PublicKey);
 		$.log(`🎉 ${$.name}, ${ChangeKeypair.name}执行完成, 当前配置文件信息为:`);
 		$.log(`此配置文件公钥:${result?.key}`, '');
 		return result;
@@ -268,10 +310,10 @@ async function ChangeKeypair(env, Verify, WireGuard) {
 
 // Setup Mode 6
 // Account Detail
-async function AccountDetail(env, Verify) {
+async function AccountDetail(Environment, Verify) {
 	if (Verify.RegistrationId && Verify.Content) {
 		$.log('有设备ID(RegistrationId), 有验证内容(Content)', '');
-		var result = await getAccount(env.Version, Verify.RegistrationId);
+		var result = await getAccount(Environment.Version, Verify.RegistrationId);
 		$.log(`🎉 ${$.name}, ${AccountDetail.name}执行完成, 当前配置文件对应的账户信息为:`);
 		$.log(`WARP+:${result?.warp_plus}`, 'WARP+:是否已启用WARP+', `Premium流量:${result?.premium_data}`, 'Premium流量:付费订阅WARP+的流量或者来自邀请等奖励的高级流量', `邀请人数:${result?.referral_count}`, '邀请人数:邀请新用户计数', `账户类型:${result?.account_type}`, '账户类型:付费或免费账户', '');
 		return result;
@@ -283,10 +325,10 @@ async function AccountDetail(env, Verify) {
 
 // Setup Mode 7
 // Account Detail
-async function DeviceDetail(env, Verify) {
+async function DeviceDetail(Environment, Verify) {
 	if (Verify.RegistrationId && Verify.Content) {
 		$.log('有设备ID(RegistrationId), 有验证内容(Content)', '');
-		var result = await getDevices(env.Version, Verify.RegistrationId);
+		var result = await getDevices(Environment.Version, Verify.RegistrationId);
 		$.log(`🎉 ${$.name}, ${DeviceDetail.name}执行完成, 当前配置文件对应的账户下的全部设备信息为:`);
 		if (Array.isArray(result) && result.length != 0) {
 			result.forEach((result, i) => {
@@ -303,63 +345,155 @@ async function DeviceDetail(env, Verify) {
 }
 
 /***************** Function *****************/
-// Function 0A
-// Get Cloudflare JSON
-function getCFjson(url) {
-	return new Promise((resolve) => {
-		$.get(url, (error, response, data) => {
-			try {
-				if (error) throw new Error(error)
-				else if (data) {
-					_data = JSON.parse(data)
-					if (Array.isArray(_data.messages) && _data.messages.length != 0) _data.messages.forEach(element => { 
-						if (element.code !== 10000) $.msg($.name, `code: ${element.code}`, `message: ${element.message}`);
-					})
-					if (_data.success === true) {
-						if (Array.isArray(_data.result) && _data.result.length != 0) resolve(_data.result[0]);
-						else resolve(_data.result);
-					} else if (_data.success === false) {
-						if (Array.isArray(_data.errors) && _data.errors.length != 0) _data.errors.forEach(element => { $.msg($.name, `code: ${element.code}`, `message: ${element.message}`); });
-						throw new Error(_data);
-					}
-				} else throw new Error(response);
-			} catch (e) {
-				$.logErr(`❗️${$.name}, ${getCFjson.name}执行失败`, ` url = ${JSON.stringify(url)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
-			} finally {
-				$.log(`🚧 ${$.name}, ${getCFjson.name}调试信息`, ` url = ${JSON.stringify(url)}`, `data = ${data}`, '')
-				resolve()
-			}
-		})
-	})
-}
 
-// Function 0B
-// Fatch Cloudflare JSON
-function fatchCFjson(url) {
-	return new Promise((resolve) => {
-		$.post(url, (error, response, data) => {
-			try {
-				if (error) throw new Error(error)
-				else if (data) {
-					_data = JSON.parse(data)
-					if (Array.isArray(_data.messages) && _data.messages.length != 0) _data.messages.forEach(element => { $.msg($.name, `code: ${element.code}`, `message: ${element.message}`); })
-					if (_data.success === true) {
-						if (Array.isArray(_data.result) && _data.result.length != 0) resolve(_data.result[0]);
-						else resolve(_data.result); // _data.result, _data.meta
-					} else if (_data.success === false) {
-						if (Array.isArray(_data.errors) && _data.errors.length != 0) _data.errors.forEach(element => { $.msg($.name, `code: ${element.code}`, `message: ${element.message}`); });
-						throw new Error(_data);
-					}
-				} else throw new Error(response);
-			} catch (e) {
-				$.logErr(`❗️${$.name}, ${fatchCFjson.name}执行失败`, ` url = ${JSON.stringify(url)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
-			} finally {
-				$.log(`🚧 ${$.name}, ${fatchCFjson.name}调试信息`, ` url = ${JSON.stringify(url)}`, `data = ${data}`, '')
-				resolve()
-			}
+/***************** Cloudflare API v4 *****************/
+async function Cloudflare(opt, Request, Zone = {}, Record = { "type": "", name: "", content: "", "ttl": 1, "priority": 10, "proxied": true }) {
+	/*
+	let Request = {
+		// Endpoints
+		// https://api.cloudflare.com/#getting-started-endpoints
+		"url": "https://api.cloudflare.com/client/v4",
+		"headers": {
+			"Host": "api.cloudflare.com",
+			"Content-Type": "application/json",
+		}
+	}
+	*/
+	let _Request = JSON.parse(JSON.stringify(Request));
+	switch (opt) {
+		case "trace":
+			_Request.url = "https://1.1.1.1/cdn-cgi/trace"
+			//_Request.url = "https://[2606:4700:4700::1111]/cdn-cgi/trace"
+			return await getCloudflareJSON(_Request);
+			async function getCloudflareJSON(request) {
+				return await $.http.get(request).then(data => {
+					let arr = data.trim().split('\n').map(e => e.split('='))
+					return Object.fromEntries(arr)
+				})
+			};
+		case "verifyToken":
+			// Verify Token
+			// https://api.cloudflare.com/#user-api-tokens-verify-token
+			$.log("验证令牌");
+			_Request.url += "/user/tokens/verify";
+			return await getCFjson(_Request);
+		case "getUser":
+			// User Details
+			// https://api.cloudflare.com/#user-user-details
+			$.log("获取用户信息");
+			_Request.url += "/user";
+			return await getCFjson(_Request);
+		case "getZone":
+			// Zone Details
+			// https://api.cloudflare.com/#zone-zone-details
+			$.log("获取区域详情");
+			_Request.url += `/zones/${Zone.id}`;
+			return await getCFjson(_Request);
+		case "listZones":
+			// List Zones
+			// https://api.cloudflare.com/#zone-list-zones
+			$.log("列出区域");
+			_Request.url += `/zones?name=${Zone.name}`;
+			return await getCFjson(_Request);
+		case "createDNSRecord":
+			// Create DNS Record
+			// https://api.cloudflare.com/#dns-records-for-a-zone-create-dns-record
+			$.log("创建新记录");
+			_Request.method = "post";
+			_Request.url += `/zones/${Zone.id}/dns_records`;
+			_Request.body = Record;
+			return await fatchCFjson(_Request);
+		case "getDNSRecord":
+			// DNS Record Details
+			// https://api.cloudflare.com/#dns-records-for-a-zone-dns-record-details
+			$.log("获取记录详情");
+			_Request.url += `/zones/${Zone.id}/dns_records/${Record.id}`;
+			return await getCFjson(_Request);
+		case "listDNSRecords":
+			// List DNS Records
+			// https://api.cloudflare.com/#dns-records-for-a-zone-list-dns-records
+			$.log("列出记录");
+			_Request.url += `/zones/${Zone.id}/dns_records?type=${Record.type}&name=${Record.name}.${Zone.name}&order=type`;
+			return await getCFjson(_Request);
+		case "updateDNSRecord":
+			// Update DNS Record
+			// https://api.cloudflare.com/#dns-records-for-a-zone-update-dns-record
+			$.log("更新记录");
+			_Request.method = "put";
+			_Request.url += `/zones/${Zone.id}/dns_records/${Record.id}`;
+			_Request.body = Record;
+			return await fatchCFjson(_Request);
+		default:
+			$.logErr("未设置操作类型", `opt=${opt}`, `Request=${JSON.stringify(Request)}`, "");
+			return $.done();
+	};
+	/***************** Cloudflare API v4 *****************/
+	// Function 0A
+	// Get Cloudflare JSON
+	function getCFjson(request) {
+		return new Promise((resolve) => {
+			$.get(request, (error, response, data) => {
+				try {
+					if (error) throw new Error(error)
+					else if (data) {
+						const _data = JSON.parse(data)
+						if (Array.isArray(_data.messages)) _data.messages.forEach(message => {
+							if (message.code !== 10000) $.msg($.name, `code: ${message.code}`, `message: ${message.message}`);
+						})
+						switch (_data.success) {
+							case true:
+								resolve(_data?.result?.[0] ?? _data?.result); // _data.result, _data.meta
+								break;
+							case false:
+								if (Array.isArray(_data.errors)) _data.errors.forEach(error => { $.msg($.name, `code: ${error.code}`, `message: ${error.message}`); })
+								break;
+							case undefined:
+								throw new Error(response);
+						};
+					} else throw new Error(response);
+				} catch (e) {
+					$.logErr(`❗️${$.name}, ${getCFjson.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
+				} finally {
+					//$.log(`🚧 ${$.name}, ${getCFjson.name}调试信息`, `request = ${JSON.stringify(request)}`, `data = ${data}`, "")
+					resolve()
+				}
+			})
 		})
-	})
-}
+	};
+
+	// Function 0B
+	// Fatch Cloudflare JSON
+	function fatchCFjson(request) {
+		return new Promise((resolve) => {
+			$.post(request, (error, response, data) => {
+				try {
+					if (error) throw new Error(error)
+					else if (data) {
+						const _data = JSON.parse(data)
+						if (Array.isArray(_data.messages)) _data.messages.forEach(message => {
+							if (message.code !== 10000) $.msg($.name, `code: ${message.code}`, `message: ${message.message}`);
+						})
+						switch (_data.success) {
+							case true:
+								resolve(_data?.result?.[0] ?? _data?.result); // _data.result, _data.meta
+								break;
+							case false:
+								if (Array.isArray(_data.errors)) _data.errors.forEach(error => { $.msg($.name, `code: ${error.code}`, `message: ${error.message}`); })
+								break;
+							case undefined:
+								throw new Error(response);
+						};
+					} else throw new Error(response);
+				} catch (e) {
+					$.logErr(`❗️${$.name}, ${fatchCFjson.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
+				} finally {
+					//$.log(`🚧 ${$.name}, ${fatchCFjson.name}调试信息`, `request = ${JSON.stringify(request)}`, `data = ${data}`, "")
+					resolve()
+				}
+			})
+		})
+	};
+};
 
 // Function 1
 // Register New Account
