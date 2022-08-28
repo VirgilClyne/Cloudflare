@@ -153,7 +153,7 @@
           "desc": "个人版的WARP的验证方式默认只有Token，Team版的不知道"
         },
         {
-          "id": "@WireGuard.Settings.PrivateKey",
+          "id": "@Cloudflare.WARP.Settings.PrivateKey",
           "name": "WireGuard: 私钥/Private Key",
           "val": "",
           "type": "text",
@@ -161,7 +161,7 @@
           "desc": "在Wireguard的iOS客户端里新建隧道，生成一个密钥对，私钥贴在这里，公钥贴下面"
         },
         {
-          "id": "@WireGuard.Settings.PublicKey",
+          "id": "@Cloudflare.WARP.Settings.PublicKey",
           "name": "WireGuard: 公钥/Public Key",
           "val": "",
           "type": "text",
