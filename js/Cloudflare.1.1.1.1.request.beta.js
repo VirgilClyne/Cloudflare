@@ -5,7 +5,7 @@ README:https://github.com/VirgilClyne/Cloudflare
 const $ = new Env("1.1.1.1 by Cloudflare v2.1.1-request-beta");
 const DataBase = {
 	"WARP": {
-		"Settings":{"Switch":true,"Verify":{"License":null,"Mode":"Token","Content":null,"RegistrationId":null},"env":{"Version":"v0i2109031904","deviceType":"iOS","Type":"i"}}
+		"Settings":{"Switch":true,"Verify":{"License":null,"Mode":"Token","Content":null,"RegistrationId":null},"env":{"Version":"v0i2109031904","deviceType":"iOS","Type":"i"},"PrivateKey":"","PublicKey":""}
 	},
 	"WireGuard": {
 		"Settings":{"Switch":true,"interface":{"addresses":{"v4":"","v6":""}},"peers":[{"public_key":"","endpoint":{"host":"","v4":"","v6":""}}]},"PrivateKey":"","PublicKey":""
@@ -14,7 +14,7 @@ const DataBase = {
 
 /***************** Processing *****************/
 (async () => {
-	const { Settings } = await setENV("Cloudflare", "WireGuard", DataBase);
+	const { Settings, WireGuard } = await setENV("Cloudflare", "WARP", DataBase);
 	const Type = RegExp(`/reg/${Settings.Verify.RegistrationId}`, "i").test($request.url) ? "RegistrationId"
 		: /reg/i.test($request.url) ? "Registration"
 			: undefined
@@ -25,9 +25,9 @@ const DataBase = {
 				$.log($request.method);
 				body = JSON.parse($request.body)
 				if (body.key) {
-					body.key = WireGuard.PublicKey;
-					$.msg($.name, "客户端公钥已替换", `当前公钥为:\n${WireGuard.PublicKey}`);
-					//$.log($.name, "客户端公钥已替换", `当前公钥为: ${WireGuard.PublicKey}`, '');
+					body.key = Settings.PublicKey;
+					$.msg($.name, "客户端公钥已替换", `当前公钥为:\n${Settings.PublicKey}`);
+					//$.log($.name, "客户端公钥已替换", `当前公钥为: ${Settings.PublicKey}`, '');
 				}
 				body = JSON.stringify(body);
 			}
