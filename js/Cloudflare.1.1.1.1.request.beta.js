@@ -25,7 +25,7 @@ const DataBase = {
 				$.log($request.method);
 				body = JSON.parse($request.body)
 				if (body.key) {
-					body.key = Settings.PublicKey;
+					body.key = Settings.PrivateKey;
 					$.msg($.name, "客户端公钥已替换", `当前公钥为:\n${Settings.PublicKey}`);
 					//$.log($.name, "客户端公钥已替换", `当前公钥为: ${Settings.PublicKey}`, '');
 				}
