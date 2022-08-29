@@ -5,7 +5,7 @@ README:https://github.com/VirgilClyne/GetSomeFries
 // refer:https://github.com/ViRb3/wgcf
 // refer:https://github.com/yyuueexxiinngg/some-scripts/blob/master/cloudflare/warp2wireguard.js
 
-const $ = new Env('Cloudflare WARP v2.0.1-beta');
+const $ = new Env('Cloudflare WARP v2.0.1-beta2');
 const DataBase = {
 	"WARP": {
 		"Settings":{"Switch":true,"setupMode":null,"deviceType":"iOS","Verify":{"License":null,"Mode":"Token","Content":null,"RegistrationId":null}},
@@ -268,7 +268,7 @@ async function DeviceDetail(Environment, Verify) {
 /***************** Function *****************/
 
 /***************** Cloudflare API v4 *****************/
-async function Cloudflare(opt, Request, Zone = {}, Record = { "type": "", name: "", content: "", "ttl": 1, "priority": 10, "proxied": true }) {
+async function Cloudflare(opt, Request, Environment, Settings = {}, WireGuard = {}, ) {
 	/*
 	let Request = {
 		// Endpoints
@@ -281,6 +281,8 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { "type": "", name: 
 	}
 	*/
 	let _Request = JSON.parse(JSON.stringify(Request));
+	const referrer = Settings.Verify.RegistrationId;
+	const install_id = genString(11);
 	switch (opt) {
 		case "trace":
 			_Request.url = "https://1.1.1.1/cdn-cgi/trace"
@@ -292,12 +294,40 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { "type": "", name: 
 					return Object.fromEntries(arr)
 				})
 			};
-		case "verifyToken":
-			// Verify Token
-			// https://api.cloudflare.com/#user-api-tokens-verify-token
-			$.log("验证令牌");
-			_Request.url += "/user/tokens/verify";
-			return await getCFjson(_Request);
+		case "regAccount":
+			// Register New Account
+			$.log('注册账户');
+			_Request.method = "post";
+			_Request.url += `/${Environment[Settings.deviceType].Version}/reg`;
+			_Request.body = {
+				"install_id": install_id, // not empty on actual client
+				"fcm_token": `${install_id}:APA91b${genString(134)}`, // not empty on actual client
+				"referrer": /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(referrer) ? referrer : "",
+				"key": WireGuard.Settings.publicKey,
+				"locale": "en_US",
+				//warp_enabled: warp_enabled,
+				//model: deviceModel,
+				"tos": new Date().toISOString(),
+				"type": Environment[Settings.deviceType].Type
+			};
+			return await fatchCFjson(_Request);
+		case "regDevice":
+			// Register New Device
+			$.log('注册设备');
+			_Request.method = "post";
+			_Request.url += `/${Environment[Settings.deviceType].Version}/reg/${Settings.Verify.RegistrationId}`;
+			_Request.body = {
+				"install_id": install_id, // not empty on actual client
+				"fcm_token": `${install_id}:APA91b${genString(134)}`, // not empty on actual client
+				"referrer": /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(Settings.Verify.RegistrationId) ? Settings.Verify.RegistrationId : "",
+				"key": WireGuard.Settings.publicKey,
+				"locale": "en_US",
+				//warp_enabled: warp_enabled,
+				//model: deviceModel,
+				"tos": new Date().toISOString(),
+				"type": Environment[Settings.deviceType].Type
+			};
+			return await fatchCFjson(_Request);
 		case "getUser":
 			// User Details
 			// https://api.cloudflare.com/#user-user-details
@@ -415,46 +445,6 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { "type": "", name: 
 		})
 	};
 };
-
-// Function 1
-// Register New Account
-async function regAccount(Version, referrer, publicKey, Locale = "en_US", deviceModel = "", Type = "", warp_enabled = true) {
-	$.log('注册账户');
-	const install_id = genString(11);
-	var body = {
-		install_id: install_id, // not empty on actual client
-		fcm_token: `${install_id}:APA91b${genString(134)}`, // not empty on actual client
-		referrer: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(referrer) ? referrer : "",
-		key: publicKey,
-		locale: Locale,
-		//warp_enabled: warp_enabled,
-		//model: deviceModel,
-		tos: new Date().toISOString(),
-		type: Type
-	};
-	const url = { method: 'post', url: `${$.VAL.url}/${Version}/reg`, headers: $.VAL.headers, body }
-	return await fatchCFjson(url);
-}
-
-// Function 2
-// Register New Device
-async function regDevice(Version, RegistrationId, publicKey, Locale = "en_US", deviceModel = "", Type = "", warp_enabled = true) {
-	$.log('注册设备');
-	const install_id = genString(11);
-	var body = {
-		install_id: install_id, // not empty on actual client
-		fcm_token: `${install_id}:APA91b${genString(134)}`, // not empty on actual client
-		referrer: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(RegistrationId) ? RegistrationId : "",
-		key: publicKey,
-		locale: Locale,
-		//warp_enabled: warp_enabled,
-		//model: deviceModel,
-		tos: new Date().toISOString(),
-		type: Type
-	};
-	const url = { method: 'post', url: `${$.VAL.url}/${Version}/reg/${RegistrationId}`, headers: $.VAL.headers, body }
-	return await fatchCFjson(url);
-}
 
 // Function 2
 // Get the Device Detail
