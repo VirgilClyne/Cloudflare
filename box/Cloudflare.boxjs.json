@@ -10,7 +10,7 @@
       "id": "Cloudflare.DNS",
       "name": "☁️ Cloudflare DNS",
       "descs_html": [
-        "使用说明请见<a href=\"https://github.com/VirgilClyne/Cloudflare#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F\">使用说明</a>进行配置",
+        "使用说明请见<a href=\"https://github.com/VirgilClyne/Cloudflare/wiki/☁-Cloudflare-DNS\">使用说明</a>进行配置",
         "填写完成后请先点击此页面底端右下角的\"保存\"后，再点击此页面右上角的圆箭头按钮\"运行\"。"
       ],
       "keys": [
@@ -96,7 +96,7 @@
       "name": "☁️ Cloudflare WARP",
       "descs_html": [
         "不同运行方式所要填写的内容也不相同",
-        "使用说明请见<a href=\"https://github.com/VirgilClyne/Cloudflare#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F-1\">使用说明</a>",
+        "使用说明请见<a href=\"https://github.com/VirgilClyne/Cloudflare/wiki/☁-Cloudflare-WARP\">使用说明</a>",
         "填写完成后请先点击此页面底端右下角的\"保存\"后，再点击此页面右上角的圆箭头按钮\"运行\"。"
       ],
       "keys": [
@@ -206,7 +206,7 @@
           "desc": "‘令牌’验证方式的值写一行即可，不填写的话视为新设备注册，会自动生成"
         },
         {
-          "id": "@Cloudflare.WARP.Settings.env.deviceType",
+          "id": "@Cloudflare.WARP.Settings.deviceType",
           "name": "WARP: 客户端用户代理类型/Client Device Type",
           "val": "iOS",
           "type": "radios",
@@ -233,14 +233,6 @@
             }
           ],
           "desc": "要伪装的客户端类型，默认iOS客户端"
-        },
-        {
-          "id": "@Cloudflare.WARP.Settings.env.Version",
-          "name": "WARP: 客户端API版本/Client API Version",
-          "val": "",
-          "type": "text",
-          "placeholder": "",
-          "desc": "客户端版本，不懂就留空别填写，会用对应设备类型的默认值"
         }
       ],
       "author": "@VirgilClyne",

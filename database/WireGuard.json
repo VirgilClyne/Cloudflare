@@ -1,6 +1,10 @@
 {
 	"Settings": {
 		"Switch": true,
+		"PrivateKey": "",
+		"PublicKey": ""
+	},
+	"Configs": {
 		"interface": {
 			"addresses": {
 				"v4": "",
@@ -17,7 +21,5 @@
 				}
 			}
 		]
-	},
-	"PrivateKey": "",
-	"PublicKey": ""
+	}
 }

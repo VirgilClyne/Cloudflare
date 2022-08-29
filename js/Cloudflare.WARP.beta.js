@@ -5,78 +5,15 @@ README:https://github.com/VirgilClyne/GetSomeFries
 // refer:https://github.com/ViRb3/wgcf
 // refer:https://github.com/yyuueexxiinngg/some-scripts/blob/master/cloudflare/warp2wireguard.js
 
-const $ = new Env('Cloudflare WARP v2.0.0-beta5');
+const $ = new Env('Cloudflare WARP v2.0.1-beta');
 const DataBase = {
-	"Settings": {
-		"Switch": true,
-		"setupMode": null,
-		"deviceType": "iOS",
-		"Verify": {
-			"License": null,
-			"Mode": "Token",
-			"Content": null,
-			"RegistrationId": null
-		}
+	"WARP": {
+		"Settings":{"Switch":true,"setupMode":null,"deviceType":"iOS","Verify":{"License":null,"Mode":"Token","Content":null,"RegistrationId":null}},
+		"Configs":{"Request":{"url":"https://api.cloudflareclient.com","headers":{"Host":"api.cloudflareclient.com","Authorization":null,"Content-Type":"application/json","User-Agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","CF-Client-Version":"i-6.7-2109031904.1"}},"Environment":{"iOS":{"Type":"i","Version":"v0i2109031904","headers":{"User-Agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","CF-Client-Version":"i-6.7-2109031904.1"}},"macOS":{"Type":"m","Version":"v0i2109031904","headers":{"User-Agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","CF-Client-Version":"m-2021.12.1.0-0"}},"Android":{"Type":"a","Version":"v0a1922","headers":{"User-Agent":"okhttp/3.12.1","CF-Client-Version":"a-6.3-1922"}},"Windows":{"Type":"w","Version":"","headers":{"User-Agent":"","CF-Client-Version":""}},"Linux":{"Type":"l","Version":"","headers":{"User-Agent":"","CF-Client-Version":""}}}}
 	},
-	"Configs": {
-		"Request": {
-			"url": "https://api.cloudflareclient.com",
-			"headers": {
-				"Host": "api.cloudflareclient.com",
-				"Authorization": null,
-				"Content-Type": "application/json",
-				"User-Agent": "1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0",
-				//"User-Agent": "1.1.1.1/1909221500.1 CFNetwork/978.0.7 Darwin/18.7.0",
-				//"User-Agent": "okhttp/3.12.1",
-				//"User-Agent": "WARP",
-				"CF-Client-Version": "i-6.7-2109031904.1"
-				//"CF-Client-Version": "m-2021.12.1.0-0",
-				//"CF-Client-Version": "a-6.3-1922",
-				//"Debug": false
-			}
-		},
-		"Environment": {
-			"iOS": {
-				"Type": "i",
-				"Version": "v0i2109031904",
-				"headers": {
-					"User-Agent": "1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0",
-					"CF-Client-Version": "i-6.7-2109031904.1"
-				}
-			},
-			"macOS": {
-				"Type": "m",
-				"Version": "v0i2109031904",
-				"headers": {
-					"User-Agent": "1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0",
-					"CF-Client-Version": "m-2021.12.1.0-0"
-				}
-			},
-			"Android": {
-				"Type": "a",
-				"Version": "v0a1922",
-				"headers": {
-					"User-Agent": "okhttp/3.12.1",
-					"CF-Client-Version": "a-6.3-1922"
-				}
-			},
-			"Windows": {
-				"Type": "w",
-				"Version": "",
-				"headers": {
-					"User-Agent": "",
-					"CF-Client-Version": ""
-				}
-			},
-			"Linux": {
-				"Type": "l",
-				"Version": "",
-				"headers": {
-					"User-Agent": "",
-					"CF-Client-Version": ""
-				}
-			},
-		}
+	"VPN": {
+		"Settings":{"Switch":true,"PrivateKey":"","PublicKey":""},
+		"Configs":{"interface":{"addresses":{"v4":"","v6":""}},"peers":[{"public_key":"","endpoint":{"host":"","v4":"","v6":""}}]}
 	}
 };
 

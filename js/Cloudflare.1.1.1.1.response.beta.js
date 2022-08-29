@@ -2,19 +2,26 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.1.1-response-beta");
+const $ = new Env("1.1.1.1 by Cloudflare v2.1.2-response-beta");
 const DataBase = {
-	"WARP": {
-		"Settings":{"Switch":true,"Verify":{"License":null,"Mode":"Token","Content":null,"RegistrationId":null},"env":{"Version":"v0i2109031904","deviceType":"iOS","Type":"i"}}
+	"DNS": {
+		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
+		"Configs":{"Request":{"url":"https://api.cloudflare.com/client/v4","headers":{"Host":"api.cloudflare.com","Content-Type":"application/json"}}}
 	},
-	"WireGuard": {
-		"Settings":{"Switch":true,"interface":{"addresses":{"v4":"","v6":""}},"peers":[{"public_key":"","endpoint":{"host":"","v4":"","v6":""}}]},"PrivateKey":"","PublicKey":""
+	"WARP": {
+		"Settings":{"Switch":true,"setupMode":null,"deviceType":"iOS","Verify":{"License":null,"Mode":"Token","Content":null,"RegistrationId":null}},
+		"Configs":{"Request":{"url":"https://api.cloudflareclient.com","headers":{"Host":"api.cloudflareclient.com","Authorization":null,"Content-Type":"application/json","User-Agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","CF-Client-Version":"i-6.7-2109031904.1"}},"Environment":{"iOS":{"Type":"i","Version":"v0i2109031904","headers":{"User-Agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","CF-Client-Version":"i-6.7-2109031904.1"}},"macOS":{"Type":"m","Version":"v0i2109031904","headers":{"User-Agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","CF-Client-Version":"m-2021.12.1.0-0"}},"Android":{"Type":"a","Version":"v0a1922","headers":{"User-Agent":"okhttp/3.12.1","CF-Client-Version":"a-6.3-1922"}},"Windows":{"Type":"w","Version":"","headers":{"User-Agent":"","CF-Client-Version":""}},"Linux":{"Type":"l","Version":"","headers":{"User-Agent":"","CF-Client-Version":""}}}}
+	},
+	"VPN": {
+		"Settings":{"Switch":true,"PrivateKey":"","PublicKey":""},
+		"Configs":{"interface":{"addresses":{"v4":"","v6":""}},"peers":[{"public_key":"","endpoint":{"host":"","v4":"","v6":""}}]}
 	}
 };
 
 /***************** Processing *****************/
 (async () => {
 	const { Settings } = await setENV("Cloudflare", "WARP", DataBase);
+	const WireGuard = await setENV("WireGuard", "VPN", DataBase);
 	const Type = RegExp(`/reg/${Settings.Verify.RegistrationId}`, "i").test($request.url) ? "RegistrationId"
 		: /reg/i.test($request.url) ? "Registration"
 			: undefined

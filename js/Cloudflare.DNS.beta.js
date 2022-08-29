@@ -4,7 +4,7 @@ README:https://github.com/VirgilClyne/GetSomeFries
 
 // refer:https://github.com/phil-r/node-cloudflare-ddns
 
-const $ = new Env("Cloudflare DNS v2.0.0-beta23");
+const $ = new Env("Cloudflare DNS v2.0.1-beta");
 const DataBase = {
 	"DNS": {
 		"Settings": {
@@ -80,6 +80,14 @@ const DataBase = {
 				}
 			}
 		}
+	},
+	"WARP": {
+		"Settings":{"Switch":true,"setupMode":null,"deviceType":"iOS","Verify":{"License":null,"Mode":"Token","Content":null,"RegistrationId":null}},
+		"Configs":{"Request":{"url":"https://api.cloudflareclient.com","headers":{"Host":"api.cloudflareclient.com","Authorization":null,"Content-Type":"application/json","User-Agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","CF-Client-Version":"i-6.7-2109031904.1"}},"Environment":{"iOS":{"Type":"i","Version":"v0i2109031904","headers":{"User-Agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","CF-Client-Version":"i-6.7-2109031904.1"}},"macOS":{"Type":"m","Version":"v0i2109031904","headers":{"User-Agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","CF-Client-Version":"m-2021.12.1.0-0"}},"Android":{"Type":"a","Version":"v0a1922","headers":{"User-Agent":"okhttp/3.12.1","CF-Client-Version":"a-6.3-1922"}},"Windows":{"Type":"w","Version":"","headers":{"User-Agent":"","CF-Client-Version":""}},"Linux":{"Type":"l","Version":"","headers":{"User-Agent":"","CF-Client-Version":""}}}}
+	},
+	"VPN": {
+		"Settings":{"Switch":true,"PrivateKey":"","PublicKey":""},
+		"Configs":{"interface":{"addresses":{"v4":"","v6":""}},"peers":[{"public_key":"","endpoint":{"host":"","v4":"","v6":""}}]}
 	}
 };
 
