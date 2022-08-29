@@ -28,7 +28,7 @@ const DataBase = {
 			: undefined
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
 	if (typeof $response?.body != "undefined") { // 有回复体
-		let body = JSON.parse($request.body);
+		let body = JSON.parse($response.body);
 		if (Array.isArray(body.messages)) body.messages.forEach(element => $.msg($.name, `code: ${element.code}`, `message: ${element.message}`));
 		switch (body.success) {
 			case true:
