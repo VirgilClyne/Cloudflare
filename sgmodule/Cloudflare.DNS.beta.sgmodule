@@ -3,7 +3,7 @@
 #!openUrl=http://boxjs.com/#/app/Cloudflare.DNS.beta
 #!author=VirgilClyne
 #!homepage=https://github.com/VirgilClyne
-#!manual=https://github.com/VirgilClyne/Cloudflare/wiki/☁%EF%B8%8F-Cloudflare-DNS
+#!manual=https://github.com/VirgilClyne/Cloudflare/wiki/☁-Cloudflare-DNS
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png
 
 [General]
@@ -22,5 +22,5 @@ DOMAIN,api4.my-ip.io,DIRECT
 DOMAIN,api6.my-ip.io,DIRECT
 
 [Script]
-Cloudflare DNS = type=event, network-changed, timeout=60, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/beta/js/Cloudflare.DNS.beta.js, argument=
-Cloudflare DNS = type=cron, cronexp="*/5 * * * *", timeout=60, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/beta/js/Cloudflare.DNS.beta.js, argument=
+☁ Cloudflare DNS = type=event, network-changed, timeout=60, debug=1, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/beta/js/Cloudflare.DNS.beta.js, argument=
+☁ Cloudflare DNS = type=cron, cronexp="*/5 * * * *", timeout=60, debug=1, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/beta/js/Cloudflare.DNS.beta.js, argument=
