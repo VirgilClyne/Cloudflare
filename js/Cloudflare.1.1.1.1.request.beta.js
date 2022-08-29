@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.1.3-request-beta");
+const $ = new Env("1.1.1.1 by Cloudflare v2.1.4-request-beta");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -31,11 +31,9 @@ const DataBase = {
 			if ($request.method === "PUT") { // 是PUT方法
 				$.log($request.method);
 				let body = JSON.parse($request.body)
-				if (body.key) {
-					body.key = WireGuard.Settings.PublicKey;
-					$.msg($.name, "客户端公钥已替换", `当前公钥为:\n${WireGuard.Settings.PublicKey}`);
-					//$.log($.name, "客户端公钥已替换", `当前公钥为: ${WireGuard.Settings.PublicKey}`, '');
-				}
+				body.key = WireGuard.Settings.PublicKey;
+				$.msg($.name, "客户端公钥已替换", `当前公钥为:\n${WireGuard.Settings.PublicKey}`);
+				//$.log($.name, "客户端公钥已替换", `当前公钥为: ${WireGuard.Settings.PublicKey}`, '');
 				$request.body = JSON.stringify(body);
 			}
 		}
