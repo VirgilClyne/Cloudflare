@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.1.4-request-beta");
+const $ = new Env("1.1.1.1 by Cloudflare v2.1.5-request-beta");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -22,21 +22,24 @@ const DataBase = {
 (async () => {
 	const { Settings } = await setENV("Cloudflare", "WARP", DataBase);
 	const WireGuard = await setENV("WireGuard", "VPN", DataBase);
-	const Type = RegExp(`/reg/${Settings.Verify.RegistrationId}`, "i").test($request.url) ? "RegistrationId"
+	const Type = RegExp(`/reg/${Settings.Verify.RegistrationId}$`, "i").test($request.url) ? "RegistrationId"
 		: /reg/i.test($request.url) ? "Registration"
 			: undefined
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
-	if (Type == "RegistrationId") { // 是指定链接
-		if (typeof $request.body !== "undefined") { // 有请求体
-			if ($request.method === "PUT") { // 是PUT方法
-				$.log($request.method);
-				let body = JSON.parse($request.body)
-				body.key = WireGuard.Settings.PublicKey;
-				$.msg($.name, "客户端公钥已替换", `当前公钥为:\n${WireGuard.Settings.PublicKey}`);
-				//$.log($.name, "客户端公钥已替换", `当前公钥为: ${WireGuard.Settings.PublicKey}`, '');
-				$request.body = JSON.stringify(body);
-			}
-		}
+	if (typeof $request.body !== "undefined") { // 有请求体
+		let body = JSON.parse($request.body)
+		switch (Type) {
+			case "Registration": // 是链接
+				break;
+			case "RegistrationId": // 是指定链接
+				if ($request.method === "PUT") { // 是PUT方法
+					body.key = WireGuard.Settings.PublicKey;
+					$.msg($.name, "重置密钥", `发送请求数据\n请求中的客户端公钥已替换为:\n${WireGuard.Settings.PublicKey}\n等待回复数据`);
+					//$.log($.name, "重置密钥", "发送请求数据", "请求中的客户端公钥已替换为:", WireGuard.Settings.PublicKey, "等待回复数据", "");
+				}
+				break;
+		};
+		$request.body = JSON.stringify(body);
 	}
 })()
 	.catch((e) => $.logErr(e))

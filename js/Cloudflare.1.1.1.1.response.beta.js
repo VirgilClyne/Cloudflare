@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.1.3-response-beta");
+const $ = new Env("1.1.1.1 by Cloudflare v2.1.4-response-beta");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -23,41 +23,48 @@ const DataBase = {
 	const { Settings } = await setENV("Cloudflare", "WARP", DataBase);
 	const WireGuard = await setENV("WireGuard", "VPN", DataBase);
 	const Token = $request?.headers?.authorization?.match(/Bearer (\S*)/)?.[1] ?? $request?.headers?.Authorization?.match(/Bearer (\S*)/)?.[1]
-	const Type = RegExp(`/reg/${Settings.Verify.RegistrationId}`, "i").test($request.url) ? "RegistrationId"
+	const Type = RegExp(`/reg/${Settings.Verify.RegistrationId}$`, "i").test($request.url) ? "RegistrationId"
 		: /reg/i.test($request.url) ? "Registration"
 			: undefined
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
-	if (Type === "Registration") { // 是链接
-		if ($request.method === "PUT" || $request.method === "GET") { // 是PUT或GET方法
-			if (typeof $response?.body != "undefined") { // 有回复体
-				_data = JSON.parse($response.body);
-				if (Array.isArray(_data.messages) && _data.messages.length != 0) _data.messages.forEach(element => {
-					if (element.code !== 10000) $.msg($.name, `code: ${element.code}`, `message: ${element.message}`);
-				})
-				switch (_data.success) {
-					case true:
-						const result = _data?.result?.[0] ?? _data?.result; // _data.result, _data.meta
-						if (result) {
-							if (result.id.startsWith('t.')) {
-								$.msg($.name, "检测到WARP Teams配置文件", `设备注册ID:\n${result.id}\n设备令牌Token:\n${Token}\n账户类型:${result.account.account_type}\n账户组织:${result.account.organization}\n客户端公钥:\n${result.key}\n节点公钥:\n${result.config.peers[0].public_key}`);
-								//$.log($.name, "检测到WARP Teams配置文件", `设备注册ID/id: ${result.id}`, `设备令牌Token: ${Token}`, `账户ID/account.id: ${result.account.id}`, `账户类型/account.account_type: ${result.account.account_type}`, `账户组织/account.organization: ${result.account.organization}`, `客户端公钥/key: ${result.key}`, `节点公钥/config.peers[0].public_key: ${result.config.peers[0].public_key}`, '', `原始配置文件:\n${JSON.stringify(result)}`);
-								$.log($.name, "检测到WARP Teams配置文件", `原始配置文件:\n注意！文本内容未转义！字符串中可能包含额外字符！\n${JSON.stringify(result)}`, '');
-							} else {
-								$.msg($.name, "检测到WARP Personal配置文件", `设备注册ID:\n${result.id}\n设备令牌Token:\n${Token}\nWARP启用状态: ${result.warp_enabled},账户类型:${result.account.account_type},WARP+:${result.account.warp_plus},WARP+流量:${result.account.premium},邀请人数:${result.account.referral_count}\n许可证/account.license:\n${result.account.license}\n客户端公钥:\n${result.key}\n节点公钥:\n${result.config.peers[0].public_key}`);
-								//$.log($.name, "检测到WARP Personal配置文件", `设备注册ID/id: ${result.id}`, `设备令牌Token: ${Token}`, `WARP启用状态/warp_enabled: ${result.warp_enabled}`, `账户ID/account.id: ${result.account.id}`, `许可证/account.license: ${result.account.license}`, `账户类型/account.account_type: ${result.account.account_type}`, `WARP+/account.warp_plus: ${result.account.warp_plus}`, `WARP+流量/account.premium: ${result.account.premium}`, `邀请人数/account.referral_count: ${result.account.referral_count}`, `客户端公钥/key: ${result.key}`, `节点公钥/config.peers[0].public_key: ${result.config.peers[0].public_key}`, '', `原始配置文件:\n${JSON.stringify(result)}`);
-								$.log($.name, "检测到WARP Personal配置文件", `原始配置文件:\n注意！文本内容未转义！字符串中可能包含额外字符！\n${JSON.stringify(result)}`, '');
+	if (typeof $response?.body != "undefined") { // 有回复体
+		let body = JSON.parse($request.body);
+		if (Array.isArray(body.messages)) body.messages.forEach(element => $.msg($.name, `code: ${element.code}`, `message: ${element.message}`));
+		switch (body.success) {
+			case true:
+				const result = body?.result?.[0] ?? body?.result; // body.result, body.meta
+				if (result) {
+					switch (Type) {
+						case "Registration": // 是链接
+							if ($request.method === "GET" || $request.method === "PUT") { // 是GET或PUT方法
+								if (result.id.startsWith("t.")) {
+									$.msg($.name, "检测到WARP Teams配置文件", `设备注册ID:\n${result.id}\n设备令牌Token:\n${Token}\n账户类型:${result.account.account_type}\n账户组织:${result.account.organization}\n客户端公钥:\n${result.key}\n节点公钥:\n${result.config.peers[0].public_key}`);
+									//$.log($.name, "检测到WARP Teams配置文件", `设备注册ID/id: ${result.id}`, `设备令牌Token: ${Token}`, `账户ID/account.id: ${result.account.id}`, `账户类型/account.account_type: ${result.account.account_type}`, `账户组织/account.organization: ${result.account.organization}`, `客户端公钥/key: ${result.key}`, `节点公钥/config.peers[0].public_key: ${result.config.peers[0].public_key}`, '', `原始配置文件:\n${JSON.stringify(result)}`);
+									$.log($.name, "检测到WARP Teams配置文件", `原始配置文件:\n注意！文本内容未转义！字符串中可能包含额外字符！\n${JSON.stringify(result)}`, '');
+								} else {
+									$.msg($.name, "检测到WARP Personal配置文件", `设备注册ID:\n${result.id}\n设备令牌Token:\n${Token}\nWARP启用状态: ${result.warp_enabled},账户类型:${result.account.account_type},WARP+:${result.account.warp_plus},WARP+流量:${result.account.premium},邀请人数:${result.account.referral_count}\n许可证/account.license:\n${result.account.license}\n客户端公钥:\n${result.key}\n节点公钥:\n${result.config.peers[0].public_key}`);
+									//$.log($.name, "检测到WARP Personal配置文件", `设备注册ID/id: ${result.id}`, `设备令牌Token: ${Token}`, `WARP启用状态/warp_enabled: ${result.warp_enabled}`, `账户ID/account.id: ${result.account.id}`, `许可证/account.license: ${result.account.license}`, `账户类型/account.account_type: ${result.account.account_type}`, `WARP+/account.warp_plus: ${result.account.warp_plus}`, `WARP+流量/account.premium: ${result.account.premium}`, `邀请人数/account.referral_count: ${result.account.referral_count}`, `客户端公钥/key: ${result.key}`, `节点公钥/config.peers[0].public_key: ${result.config.peers[0].public_key}`, '', `原始配置文件:\n${JSON.stringify(result)}`);
+									$.log($.name, "检测到WARP Personal配置文件", `原始配置文件:\n注意！文本内容未转义！字符串中可能包含额外字符！\n${JSON.stringify(result)}`, '');
+								}
 							}
-						}
-					case false:
-						if (Array.isArray(_data.errors)) _data.errors.forEach(error => { $.msg($.name, `code: ${error.code}`, `message: ${error.message}`); })
-						break;
-					case undefined:
-						throw new Error($response);
-				};
-				$response.body = JSON.stringify(_data);
-			}
-		}
-	}
+							break;
+						case "RegistrationId": // 是指定链接
+							if ($request.method === "PUT") { // 是PUT方法
+								body.key = WireGuard.Settings.PublicKey;
+								$.msg($.name, "重置密钥", `收到回复数据\n当前客户端公钥为:\n${result.key}\n用户设置公钥为:\n${WireGuard.Settings.PublicKey}\n如两者一致，则替换成功`);
+								//$.log($.name, "重置密钥", "收到回复数据"，"当前替换客户端公钥为:", result.key, "用户设置公钥为:", WireGuard.Settings.PublicKey, "如两者一致，则替换成功", "");
+							}
+							break;
+					};
+				}
+			case false:
+				if (Array.isArray(body.errors)) body.errors.forEach(error => { $.msg($.name, `code: ${error.code}`, `message: ${error.message}`); })
+				break;
+			case undefined:
+				throw new Error($response);
+		};
+		$response.body = JSON.stringify(body);
+	};
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
