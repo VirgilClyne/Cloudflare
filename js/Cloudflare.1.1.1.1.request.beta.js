@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.1.5-request-beta");
+const $ = new Env("1.1.1.1 by Cloudflare v2.2.0-request-beta");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -20,18 +20,19 @@ const DataBase = {
 
 /***************** Processing *****************/
 (async () => {
-	const { Settings } = await setENV("Cloudflare", "WARP", DataBase);
+	const { Settings, Caches } = await setENV("Cloudflare", "WARP", DataBase);
 	const WireGuard = await setENV("WireGuard", "VPN", DataBase);
 	const Type = RegExp(`/reg/${Settings.Verify.RegistrationId}$`, "i").test($request.url) ? "RegistrationId"
 		: /reg/i.test($request.url) ? "Registration"
 			: undefined
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
+	await setCaches("Cloudflare", "WARP", $request.headers);
 	if (typeof $request.body !== "undefined") { // 有请求体
-		let body = JSON.parse($request.body)
+		let body = JSON.parse($request.body);
 		switch (Type) {
-			case "Registration": // 是链接
+			case "Registration": // 是注册链接
 				break;
-			case "RegistrationId": // 是指定链接
+			case "RegistrationId": // 是指定注册链接
 				if ($request.method === "PUT") { // 是PUT方法
 					body.key = WireGuard.Settings.PublicKey;
 					$.msg($.name, "重置密钥", `发送请求数据，请求中的客户端公钥已替换为:\n${WireGuard.Settings.PublicKey}\n等待回复数据`);
@@ -183,6 +184,31 @@ async function setENV(name, platform, database) {
 	};
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	return { Settings, Caches, Configs }
+};
+
+/**
+ * Set Caches
+ * @author VirgilClyne
+ * @param {String} name - Persistent Store Key
+ * @param {String} platform - Platform Name
+ * @param {Object} headers - Request Headers
+ * @return {Promise<*>}
+ */
+async function setCaches(name, platform, headers) {
+	// 转小写
+	for (const [key, value] of Object.entries(headers)) {
+		headers[key.toLowerCase()] = value
+		delete headers[key]
+	};
+	// 转存必要值
+	const newCaches = {
+		"cookie": headers?.cookie,
+		"cf-client-version": headers?.["cf-client-version"],
+		"authorization": headers?.authorization,
+		"user-agent": headers?.["user-agent"]
+	};
+	// 写入Caches
+	$.setjson(newCaches, `@${name}.${platform}.Caches`);
 };
 
 /***************** Env *****************/
