@@ -82,6 +82,7 @@ const DataBase = {
 /***************** Processing *****************/
 (async () => {
 	const { Settings, Caches, Configs } = await setENV("Cloudflare", "WARP", DataBase);
+	const { Settings, Caches, Configs } = await setENV("WireGuard", "WARP", DataBase);
 	await WARP($.Cloudflare.WARP.setupMode, $.Cloudflare.WARP.Environment, $.Cloudflare.WARP.Verify, $.WireGuard)
 })()
 	.catch((e) => $.logErr(e))

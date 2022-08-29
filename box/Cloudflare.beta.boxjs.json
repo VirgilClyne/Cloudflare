@@ -252,15 +252,15 @@
       ]
     },
     {
-      "id": "WireGuard.beta",
-      "name": "🐲 WireGuard β",
+      "id": "WireGuard.VPN.beta",
+      "name": "🐲 WireGuard VPN β",
       "keys": [
-        "@WireGuard.Settings",
-        "@WireGuard.Configs"
+        "@WireGuard.VPN.Settings",
+        "@WireGuard.VPN.Configs"
       ],
       "settings": [
         {
-          "id": "@WireGuard.Settings.PrivateKey",
+          "id": "@WireGuard.VPN.Settings.PrivateKey",
           "name": "Interface: 私钥",
           "val": "",
           "type": "text",
@@ -268,7 +268,7 @@
           "desc": "在Wireguard的iOS客户端里新建隧道，生成一个密钥对，私钥贴在这里，公钥贴下面"
         },
         {
-          "id": "@WireGuard.Settings.PublicKey",
+          "id": "@WireGuard.VPN.Settings.PublicKey",
           "name": "Interface: 公钥",
           "val": "",
           "type": "text",
@@ -276,7 +276,7 @@
           "desc": "在Wireguard的iOS客户端里新建隧道，生成一个密钥对，公钥贴在这里，私钥贴上面"
         },
         {
-          "id": "@WireGuard.Configs.interface.addresses.v4",
+          "id": "@WireGuard.VPN.Configs.interface.addresses.v4",
           "name": "Interface: IPV4地址",
           "val": "",
           "type": "text",
@@ -284,7 +284,7 @@
           "desc": ""
         },
         {
-          "id": "@WireGuard.Configs.interface.addresses.v6",
+          "id": "@WireGuard.VPN.Configs.interface.addresses.v6",
           "name": "Interface: IPV6地址",
           "val": "",
           "type": "text",
@@ -292,7 +292,7 @@
           "desc": ""
         },
         {
-          "id": "@WireGuard.Configs.peers[0].public_key",
+          "id": "@WireGuard.VPN.Configs.peers[0].public_key",
           "name": "Peer: 公钥",
           "val": "",
           "type": "text",
@@ -300,7 +300,7 @@
           "desc": ""
         },
         {
-          "id": "@WireGuard.Configs.peers[0].endpoint.host",
+          "id": "@WireGuard.VPN.Configs.peers[0].endpoint.host",
           "name": "Peer: endpoint 主机名",
           "val": "",
           "type": "text",
@@ -308,7 +308,7 @@
           "desc": ""
         },
         {
-          "id": "@WireGuard.Configs.peers[0].endpoint.v4",
+          "id": "@WireGuard.VPN.Configs.peers[0].endpoint.v4",
           "name": "Peer: endpoint IPV4地址",
           "val": "",
           "type": "text",
@@ -316,7 +316,7 @@
           "desc": ""
         },
         {
-          "id": "@WireGuard.Configs.peers[0].endpoint.v6",
+          "id": "@WireGuard.VPN.Configs.peers[0].endpoint.v6",
           "name": "Peer: endpoint IPV6地址",
           "val": "",
           "type": "text",
@@ -326,8 +326,8 @@
       ],
       "author": "@VirgilClyne",
       "icons": [
-        "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Cloudflare.png",
-        "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png"
+        "https://www.wireguard.com/img/emblem.svg",
+        "https://www.wireguard.com/img/icons/favicon-128.png"
       ]
     }
   ]
