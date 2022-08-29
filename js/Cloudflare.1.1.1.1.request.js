@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.1.1-request");
+const $ = new Env("1.1.1.1 by Cloudflare v2.1.2-request");
 const DataBase = {
 	"WARP": {
 		"Settings":{"Switch":true,"Verify":{"License":null,"Mode":"Token","Content":null,"RegistrationId":null},"env":{"Version":"v0i2109031904","deviceType":"iOS","Type":"i"},"PrivateKey":"","PublicKey":""}
@@ -23,13 +23,13 @@ const DataBase = {
 		if (typeof $request.body !== "undefined") { // 有请求体
 			if ($request.method === "PUT") { // 是PUT方法
 				$.log($request.method);
-				body = JSON.parse($request.body)
+				let body = JSON.parse($request.body)
 				if (body.key) {
 					body.key = Settings.PublicKey;
 					$.msg($.name, "客户端公钥已替换", `当前公钥为:\n${Settings.PublicKey}`);
 					//$.log($.name, "客户端公钥已替换", `当前公钥为: ${Settings.PublicKey}`, '');
 				}
-				body = JSON.stringify(body);
+				$request.body = JSON.stringify(body);
 			}
 		}
 	}
