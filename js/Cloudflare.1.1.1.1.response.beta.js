@@ -51,8 +51,8 @@ const DataBase = {
 						case "RegistrationId": // 是指定链接
 							if ($request.method === "PUT") { // 是PUT方法
 								body.key = WireGuard.Settings.PublicKey;
-								$.msg($.name, "重置密钥", `收到回复数据\n当前客户端公钥为:\n${result.key}\n用户设置公钥为:\n${WireGuard.Settings.PublicKey}\n如两者一致，则替换成功`);
-								//$.log($.name, "重置密钥", "收到回复数据"，"当前替换客户端公钥为:", result.key, "用户设置公钥为:", WireGuard.Settings.PublicKey, "如两者一致，则替换成功", "");
+								$.msg($.name, "重置密钥", `收到回复数据，当前客户端公钥为:\n${result.key}\n用户设置公钥为:\n${WireGuard.Settings.PublicKey}\n如两者一致，则替换成功`);
+								//$.log($.name, "重置密钥", "收到回复数据，当前替换客户端公钥为:", result.key, "用户设置公钥为:", WireGuard.Settings.PublicKey, "如两者一致，则替换成功", "");
 							}
 							break;
 					};
