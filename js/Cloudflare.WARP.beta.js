@@ -5,7 +5,7 @@ README:https://github.com/VirgilClyne/GetSomeFries
 // refer:https://github.com/ViRb3/wgcf
 // refer:https://github.com/yyuueexxiinngg/some-scripts/blob/master/cloudflare/warp2wireguard.js
 
-const $ = new Env('Cloudflare WARP v2.0.1-beta2');
+const $ = new Env('Cloudflare WARP v2.0.1-beta4');
 const DataBase = {
 	"WARP": {
 		"Settings":{"Switch":true,"setupMode":null,"deviceType":"iOS","Verify":{"License":null,"Mode":"Token","Content":null,"RegistrationId":null}},
@@ -268,15 +268,16 @@ async function DeviceDetail(Environment, Verify) {
 /***************** Function *****************/
 
 /***************** Cloudflare API v4 *****************/
-async function Cloudflare(opt, Request, Environment, Settings = {}, WireGuard = {}, ) {
+async function Cloudflare(opt, Request, Environment, Settings = {"Switch":true,"setupMode":null,"deviceType":"iOS","Verify":{"License":null,"Mode":"Token","Content":null,"RegistrationId":null}}, WireGuard = {"Settings":{"Switch":true,"PrivateKey":"","PublicKey":""}} ) {
 	/*
 	let Request = {
 		// Endpoints
-		// https://api.cloudflare.com/#getting-started-endpoints
-		"url": "https://api.cloudflare.com/client/v4",
+		"url": "https://api.cloudflareclient.com",
 		"headers": {
-			"Host": "api.cloudflare.com",
+			"Host": "api.cloudflareclient.com",
 			"Content-Type": "application/json",
+			"User-Agent": "1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0",
+			"CF-Client-Version": "i-6.7-2109031904.1"
 		}
 	}
 	*/
@@ -319,8 +320,8 @@ async function Cloudflare(opt, Request, Environment, Settings = {}, WireGuard = 
 			_Request.body = {
 				"install_id": install_id, // not empty on actual client
 				"fcm_token": `${install_id}:APA91b${genString(134)}`, // not empty on actual client
-				"referrer": /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(Settings.Verify.RegistrationId) ? Settings.Verify.RegistrationId : "",
-				"key": WireGuard.Settings.publicKey,
+				"referrer": /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(referrer) ? referrer : "",
+				"key": WireGuard.Settings.PublicKey,
 				"locale": "en_US",
 				//warp_enabled: warp_enabled,
 				//model: deviceModel,
@@ -328,51 +329,56 @@ async function Cloudflare(opt, Request, Environment, Settings = {}, WireGuard = 
 				"type": Environment[Settings.deviceType].Type
 			};
 			return await fatchCFjson(_Request);
-		case "getUser":
-			// User Details
-			// https://api.cloudflare.com/#user-user-details
-			$.log("获取用户信息");
-			_Request.url += "/user";
+		case "getDevice":
+			// Get the Device Detail
+			$.log('获取当前设备配置');
+			_Request.url += `/${Environment[Settings.deviceType].Version}/reg/${Settings.Verify.RegistrationId}`;
 			return await getCFjson(_Request);
-		case "getZone":
-			// Zone Details
-			// https://api.cloudflare.com/#zone-zone-details
-			$.log("获取区域详情");
-			_Request.url += `/zones/${Zone.id}`;
+		case "getAccount":
+			// Get the Account Detail
+			$.log('获取账户信息');
+			_Request.url += `/${Environment[Settings.deviceType].Version}/reg/${Settings.Verify.RegistrationId}/account`;
 			return await getCFjson(_Request);
-		case "listZones":
-			// List Zones
-			// https://api.cloudflare.com/#zone-list-zones
-			$.log("列出区域");
-			_Request.url += `/zones?name=${Zone.name}`;
+		case "getDevices":
+			// Get Account Devices Details
+			$.log('获取设备信息');
+			_Request.url += `/${Environment[Settings.deviceType].Version}/reg/${Settings.Verify.RegistrationId}/account/devices`;
 			return await getCFjson(_Request);
-		case "createDNSRecord":
-			// Create DNS Record
-			// https://api.cloudflare.com/#dns-records-for-a-zone-create-dns-record
-			$.log("创建新记录");
-			_Request.method = "post";
-			_Request.url += `/zones/${Zone.id}/dns_records`;
-			_Request.body = Record;
+		case "setAccountLicense":
+			// Set Account License
+			$.log('设置账户许可证');
+			_Request.method = "put";
+			_Request.url += `/${Environment[Settings.deviceType].Version}/reg/${Settings.Verify.RegistrationId}/account`;
+			_Request.body = {
+				"license": Settings.Verify.License
+			};
 			return await fatchCFjson(_Request);
-		case "getDNSRecord":
-			// DNS Record Details
-			// https://api.cloudflare.com/#dns-records-for-a-zone-dns-record-details
-			$.log("获取记录详情");
-			_Request.url += `/zones/${Zone.id}/dns_records/${Record.id}`;
-			return await getCFjson(_Request);
-		case "listDNSRecords":
-			// List DNS Records
-			// https://api.cloudflare.com/#dns-records-for-a-zone-list-dns-records
-			$.log("列出记录");
-			_Request.url += `/zones/${Zone.id}/dns_records?type=${Record.type}&name=${Record.name}.${Zone.name}&order=type`;
-			return await getCFjson(_Request);
-		case "updateDNSRecord":
-			// Update DNS Record
-			// https://api.cloudflare.com/#dns-records-for-a-zone-update-dns-record
-			$.log("更新记录");
+		case "setKeypair":
+			// Set Keypair
+			$.log('设置密钥对');
 			_Request.method = "put";
 			_Request.url += `/zones/${Zone.id}/dns_records/${Record.id}`;
-			_Request.body = Record;
+			_Request.body = {
+				"key": WireGuard.Settings.PublicKey
+			};
+			return await fatchCFjson(_Request);
+		case "setDeviceActive":
+			// Set Device Active
+			$.log('设置设备激活状态');
+			_Request.method = "patch";
+			_Request.url += `/${Environment[Settings.deviceType].Version}/reg/${Settings.Verify.RegistrationId}/account/devices`;
+			_Request.body = {
+				"active": active = true
+			};
+			return await fatchCFjson(_Request);
+		case "setDeviceName":
+			// Set Device Name
+			$.log('设置设备名称');
+			_Request.method = "patch";
+			_Request.url += `/${Environment[Settings.deviceType].Version}/reg/${Settings.Verify.RegistrationId}/account/devices`;
+			_Request.body = {
+				"name": Name
+			};
 			return await fatchCFjson(_Request);
 		default:
 			$.logErr("未设置操作类型", `opt=${opt}`, `Request=${JSON.stringify(Request)}`, "");
@@ -444,77 +450,17 @@ async function Cloudflare(opt, Request, Environment, Settings = {}, WireGuard = 
 			})
 		})
 	};
+
+	// Function 1
+	// Generate Random String
+	// https://gist.github.com/6174/6062387#gistcomment-2651745
+	function genString(length) {
+		$.log('生成随机字符串');
+		return [...Array(length)]
+			.map(i => (~~(Math.random() * 36)).toString(36))
+			.join("");
+	};
 };
-
-// Function 2
-// Get the Device Detail
-async function getDevice(Version, RegistrationId) {
-	$.log('获取当前设备配置');
-	const url = { url: `${$.VAL.url}/${Version}/reg/${RegistrationId}`, headers: $.VAL.headers };
-	return await getCFjson(url);
-}
-
-// Function 3
-// Get the Account Detail
-async function getAccount(Version, RegistrationId) {
-	$.log('获取账户信息');
-	const url = { url: `${$.VAL.url}/${Version}/reg/${RegistrationId}/account`, headers: $.VAL.headers };
-	return await getCFjson(url);
-}
-
-// Function 4
-// Get Account Devices Details
-async function getDevices(Version, RegistrationId) {
-	$.log('获取设备信息');
-	const url = { url: `${$.VAL.url}/${Version}/reg/${RegistrationId}/account/devices`, headers: $.VAL.headers };
-	return await getCFjson(url);
-}
-
-// Function 5
-// Set Account License
-async function setAccountLicense(Version, RegistrationId, License) {
-	$.log('设置账户许可证');
-	var body = { "license": License };
-	const url = { method: 'put',  url: `${$.VAL.url}/${Version}/reg/${RegistrationId}/account`, headers: $.VAL.headers, body };
-	return await fatchCFjson(url);
-}
-
-// Function 6
-// Set Keypair
-async function setKeypair(Version, RegistrationId, publicKey) {
-	$.log('设置账户许可证');
-	var body = { "key": publicKey };
-	const url = { method: 'put',  url: `${$.VAL.url}/${Version}/reg/${RegistrationId}/account`, headers: $.VAL.headers, body };
-	return await fatchCFjson(url);
-}
-
-// Function 7
-// Set Device Active
-async function setDeviceActive(Version, RegistrationId, active = true) {
-	$.log('设置设备激活状态');
-	var body = { "active": active };
-	const url = { method: 'patch',  url: `${$.VAL.url}/${Version}/reg/${RegistrationId}/account/devices`, headers: $.VAL.headers, body };
-	return await fatchCFjson(url);
-}
-
-// Function 8
-// Set Device Name
-async function setDeviceName(Version, RegistrationId, Name) {
-	$.log('设置设备名称');
-	var body = { "name": Name };
-	const url = { method: 'patch',  url: `${$.VAL.url}/${Version}/reg/${RegistrationId}/account/devices`, headers: $.VAL.headers, body };
-	return await fatchCFjson(url);
-}
-
-// Function 9
-// Generate Random String
-// https://gist.github.com/6174/6062387#gistcomment-2651745
-function genString(length) {
-	$.log('生成随机字符串');
-	return [...Array(length)]
-	  .map(i => (~~(Math.random() * 36)).toString(36))
-	  .join("");
-  }
 
 /***************** Env *****************/
 // prettier-ignore
