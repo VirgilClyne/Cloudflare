@@ -5,7 +5,7 @@ README:https://github.com/VirgilClyne/GetSomeFries
 // refer:https://github.com/ViRb3/wgcf
 // refer:https://github.com/yyuueexxiinngg/some-scripts/blob/master/cloudflare/warp2wireguard.js
 
-const $ = new Env('Cloudflare WARP v2.0.1-beta4');
+const $ = new Env('Cloudflare WARP v2.0.1-beta5');
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -270,7 +270,7 @@ async function DeviceDetail(Environment, Verify) {
 /***************** Function *****************/
 
 /***************** Cloudflare API v4 *****************/
-async function Cloudflare(opt, Request, Environment, Settings = {"Switch":true,"setupMode":null,"deviceType":"iOS","Verify":{"License":null,"Mode":"Token","Content":null,"RegistrationId":null}}, WireGuard = {"Settings":{"Switch":true,"PrivateKey":"","PublicKey":""}} ) {
+async function Cloudflare(opt, Request = DataBase.WARP.Configs.Request, Environment = DataBase.WARP.Configs.Environment, Settings = DataBase.WARP.Settings, WireGuard = {"Settings":{"Switch":true,"PrivateKey":"","PublicKey":""}} ) {
 	/*
 	let Request = {
 		// Endpoints
