@@ -7,7 +7,7 @@
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png
 
 [Panel]
-☁ WARP Panel = script-name=☁ WARP Panel,update-interval=1
+☁ WARP Panel = title="☁ WARP Info", icon="lock.icloud.fill", script-name=Cloudflare.1.1.1.1.panel.beta, update-interval=1
 
 [Script]
 # WARP Panel

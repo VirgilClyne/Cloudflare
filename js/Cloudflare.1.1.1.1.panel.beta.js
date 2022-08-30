@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v1.0.0-panel-beta");
+const $ = new Env("1.1.1.1 by Cloudflare v1.0.0-panel-beta6");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -18,27 +18,22 @@ const DataBase = {
 	}
 };
 
-// headers转小写
-for (const [key, value] of Object.entries($request.headers)) {
-	delete $request.headers[key]
-	$request.headers[key.toLowerCase()] = value
-};
-
 /***************** Processing *****************/
 (async () => {
 	const { Settings, Caches, Configs } = await setENV("Cloudflare", "WARP", DataBase);
-	const Trace = await Cloudflare("trace");
-    $done({
-      title: "𝑾𝒂𝒓𝒑 𝑷𝒂𝒏𝒆𝒍+",
-      content: WarpApiInfo + "\n" + ByteInfo,
-      icon: "scribble.variable"
-    });
+	Settings.Verify.RegistrationId = Caches.RegistrationId;
+	Configs.Request.url = `https://${Caches.host}`;
+	Configs.Request.headers = Caches.headers;
+	Configs.Environment[Settings.deviceType].Version = Caches.version;
+	const Trace = await Cloudflare("trace").then(trace => formatTrace(trace));
+	const Account = await Cloudflare("getAccount").then(account => formatAccount(account));
+	const Panel = {
+		content: `代理IP: ${Trace.ip}\nWARP等级: ${Trace.warp}\n账户类型: ${Account.data.type}\n流量数据: ${Account.data.text}`,
+	};
+    $done(Panel);
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => {
-		if ($.isQuanX()) $.done({ body: $request.body })
-		else $.done($request)
-	})
+	.finally(() => $.done())
 
 /***************** Function *****************/
 /**
@@ -82,14 +77,74 @@ async function setENV(name, platform, database) {
 			$.log("无可用授权方式", `Mode=${Settings.Verify.Mode}`, `Content=${Settings.Verify.Content}`);
 			break;
 	};
-	Settings.Verify.RegistrationId = Caches.RegistrationId;
-	Configs.Request.url = `https://${Caches.host}`;
-	Configs.Request.headers = Caches.headers;
-	Configs.Environment[Settings.deviceType].Version = Caches.version;
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	return { Settings, Caches, Configs }
 };
 
+function formatTrace(trace) {
+	switch (trace.warp) {
+		case "off":
+			trace.warp = "无";
+			break;
+		case "on":
+			trace.warp = "部分";
+			break;
+		case "plus":
+			trace.warp = "完全";
+			break;
+		default:
+			trace.warp = "未知";
+			break;
+	};
+	return trace;
+};
+
+function formatAccount(account) {
+	switch (account.account_type){
+		case "limited":
+			account.data = {
+				"type": "有限版",
+				"limited": true,
+				"used": parseInt(account.premium_data - account.quota) / 1024 / 1024 / 1024,
+				"flow": parseInt(account.quota) / 1024 / 1024 / 1024,
+				"total": parseInt(account.premium_data) / 1024 / 1024 / 1024
+			}
+			break;
+		case "team":
+			account.data = {
+				"type": "团队版",
+				"limited": false,
+			}
+			break;
+		case "free":
+			account.data = {
+				"type": "免费版",
+				"limited": true,
+				"used": parseInt(account.premium_data - account.quota) / 1024 / 1024 / 1024,
+				"flow": parseInt(account.quota) / 1024 / 1024 / 1024,
+				"total": parseInt(account.premium_data) / 1024 / 1024 / 1024
+			}
+			break;
+		default:
+			account.data = {
+				"type": "未知类型,请向 @R·E 反馈!",
+				"limited": undefined
+			}
+			break;
+	};
+	switch (account.data.limited) {
+		case true:
+			account.data.text = `使用${account.data.used}GB\n剩余: ${account.data.flow}GB\n总计: ${account.data.total}GB`
+			break;
+		case false:
+			account.data.text = "无限"
+			break;
+		default:
+			account.data.text = "未知"
+			break;
+	}
+	return account;
+};
 async function Cloudflare(opt, Request = DataBase.WARP.Configs.Request, Environment = DataBase.WARP.Configs.Environment, Settings = DataBase.WARP.Settings ) {
 	/*
 	let Request = {
