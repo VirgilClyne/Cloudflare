@@ -29,7 +29,7 @@ const DataBase = {
 	const Panel = {
 		"title": "☁ WARP Info",
 		"icon": "lock.icloud.fill",
-		"content": `代理IP: ${Trace.ip}\nWARP状态: ${Trace.warp}\n账户类型: ${Account.data.type}\n数据流量:${Account.data.text}`,
+		"content": `代理IP: ${Trace.ip}\nWARP状态: ${Trace.warp}\n账户类型: ${Account.data.type}\n数据流量: ${Account.data.text}`,
 	};
     $done(Panel);
 })()
