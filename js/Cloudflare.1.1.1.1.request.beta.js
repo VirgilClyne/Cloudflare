@@ -27,7 +27,7 @@ for (const [key, value] of Object.entries($request.headers)) {
 /***************** Processing *****************/
 (async () => {
 	const { Settings, Caches } = await setENV("Cloudflare", "WARP", DataBase);
-	const WireGuard = await setENV("WireGuard", "VPN", DataBase);
+	const WireGuard = await getENV("WireGuard", "VPN", DataBase);
 	const Type = RegExp(`/reg/${Settings.Verify.RegistrationId}$`, "i").test($request.url) ? "RegistrationId"
 		: /\/reg\//i.test($request.url) ? "Registration"
 			: undefined
