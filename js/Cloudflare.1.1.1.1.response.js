@@ -18,6 +18,12 @@ const DataBase = {
 	}
 };
 
+// headers转小写
+for (const [key, value] of Object.entries($request.headers)) {
+	delete $request.headers[key]
+	$request.headers[key.toLowerCase()] = value
+};
+
 /***************** Processing *****************/
 (async () => {
 	const { Settings } = await setENV("Cloudflare", "WARP", DataBase);

@@ -18,6 +18,12 @@ const DataBase = {
 	}
 };
 
+// headers转小写
+for (const [key, value] of Object.entries($request.headers)) {
+	delete $request.headers[key]
+	$request.headers[key.toLowerCase()] = value
+};
+
 /***************** Processing *****************/
 (async () => {
 	const { Settings, Caches } = await setENV("Cloudflare", "WARP", DataBase);
@@ -91,11 +97,6 @@ async function setENV(name, platform, database) {
  * @return {Promise<*>}
  */
 async function setCaches(name, platform, headers) {
-	// 转小写
-	for (const [key, value] of Object.entries(headers)) {
-		headers[key.toLowerCase()] = value
-		delete headers[key]
-	};
 	// 转存必要值
 	const newCaches = {
 		"cookie": headers?.cookie,

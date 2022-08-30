@@ -18,6 +18,12 @@ const DataBase = {
 	}
 };
 
+// headers转小写
+for (const [key, value] of Object.entries($request.headers)) {
+	delete $request.headers[key]
+	$request.headers[key.toLowerCase()] = value
+};
+
 /***************** Processing *****************/
 (async () => {
 	const { Settings } = await setENV("Cloudflare", "WARP", DataBase);
@@ -70,110 +76,6 @@ const DataBase = {
 		if ($.isQuanX()) $.done({ body: $response.body })
 		else $.done($response)
 	})
-
-/*
-if (url.search(path1) != -1) {
-	$.log(path1);
-	if ($request.method == "GET") {
-
-		var body = $response.body
-		body = JSON.parse(body)
-		if (Array.isArray(body.messages) && body.messages.length != 0) body.messages.forEach(element => {
-			if (element.code !== 10000) $.msg($.name, `code: ${element.code}`, `message: ${element.message}`);
-		})
-		if (body.success === true) {
-			if (body.ip) resolve(body.ip);
-			else if (Array.isArray(body.result) && body.result.length != 0) resolve(body.result[0]);
-			else if (body.result) {
-				var matchTokenReg = /Bearer (\S*)/
-				let Token = headers['Authorization'].match(matchTokenReg)[1]
-				if (body.result.id.startsWith('t.')) {
-					$.msg($.name, "检测到WARP Teams配置文件", `设备注册ID:\n${body.result.id}\n设备令牌Token:\n${Token}\n账户类型:${body.result.account.account_type}\n账户组织:${body.result.account.organization}\n客户端公钥:\n${body.result.key}\n节点公钥:\n${body.result.config.peers[0].public_key}`);
-					//$.log($.name, "检测到WARP Teams配置文件", `设备注册ID/id: ${body.result.id}`, `设备令牌Token: ${Token}`, `账户ID/account.id: ${body.result.account.id}`, `账户类型/account.account_type: ${body.result.account.account_type}`, `账户组织/account.organization: ${body.result.account.organization}`, `客户端公钥/key: ${body.result.key}`, `节点公钥/config.peers[0].public_key: ${body.result.config.peers[0].public_key}`, '', `原始配置文件:\n${JSON.stringify(body.result)}`);
-					$.log($.name, "检测到WARP Teams配置文件", `原始配置文件:\n注意！文本内容未转义！字符串中可能包含额外字符！\n${JSON.stringify(body.result)}`, '');
-				} else {
-					$.msg($.name, "检测到WARP Personal配置文件", `设备注册ID:\n${body.result.id}\n设备令牌Token:\n${Token}\nWARP启用状态: ${body.result.warp_enabled},账户类型:${body.result.account.account_type},WARP+:${body.result.account.warp_plus},WARP+流量:${body.result.account.premiumbody},邀请人数:${body.result.account.referral_count}\n许可证/account.license:\n${body.result.account.license}\n客户端公钥:\n${body.result.key}\n节点公钥:\n${body.result.config.peers[0].public_key}`);
-					//$.log($.name, "检测到WARP Personal配置文件", `设备注册ID/id: ${body.result.id}`, `设备令牌Token: ${Token}`, `WARP启用状态/warp_enabled: ${body.result.warp_enabled}`, `账户ID/account.id: ${body.result.account.id}`, `许可证/account.license: ${body.result.account.license}`, `账户类型/account.account_type: ${body.result.account.account_type}`, `WARP+/account.warp_plus: ${body.result.account.warp_plus}`, `WARP+流量/account.premiumbody: ${body.result.account.premiumbody}`, `邀请人数/account.referral_count: ${body.result.account.referral_count}`, `客户端公钥/key: ${body.result.key}`, `节点公钥/config.peers[0].public_key: ${body.result.config.peers[0].public_key}`, '', `原始配置文件:\n${JSON.stringify(body.result)}`);
-					$.log($.name, "检测到WARP Personal配置文件", `原始配置文件:\n注意！文本内容未转义！字符串中可能包含额外字符！\n${JSON.stringify(body.result)}`, '');
-				}
-			}
-		} else if (body.success === false) {
-			if (Array.isArray(body.errors) && body.errors.length != 0) body.errors.forEach(element => { $.msg($.name, `code: ${element.code}`, `message: ${element.message}`); })
-		}
-
-	} else if ($request.method == "PUT") {
-		if (url.search(path2) != -1) {
-			$.log(path2);
-			if (typeof $request?.body != "undefined") {
-				var body = $request.body
-				body = JSON.parse(body)
-				if (body.key) {
-					body.key = $.WireGuard.PublicKey;
-					$.msg($.name, "客户端公钥已替换", `当前公钥为:\n${$.WireGuard.PublicKey}`);
-					//$.log($.name, "客户端公钥已替换", `当前公钥为: ${$.WireGuard.PublicKey}`, '');
-				}
-				body = JSON.stringify(body);
-				$.done({ body });
-			}
-			$.done();
-		}
-	}
-}
-$.done();
-
-
-//Check Key and Rewrite
-if (url.search(path1) != -1 && $request.method == "PUT") {
-	$.log(path1);
-	if (typeof $request?.body != "undefined") {
-		var body = $request.body
-		body = JSON.parse(body)
-		if (body.key) {
-			body.key = $.WireGuard.PublicKey;
-			$.msg($.name, "客户端公钥已替换", `当前公钥为:\n${$.WireGuard.PublicKey}`);
-			//$.log($.name, "客户端公钥已替换", `当前公钥为: ${$.WireGuard.PublicKey}`, '');
-		}
-		body = JSON.stringify(body);
-		$.done({ body });
-	}
-	$.done();
-} 
-
-//Check Config
-else if (url.search(path2) != -1 && $request.method == "GET") {
-	$.log(path2);
-	if (typeof $response?.body != "undefined") {
-		var body = $response.body
-		body = JSON.parse(body)
-		if (Array.isArray(body.messages) && body.messages.length != 0) body.messages.forEach(element => {
-			if (element.code !== 10000) $.msg($.name, `code: ${element.code}`, `message: ${element.message}`);
-		})
-		if (body.success === true) {
-			if (body.ip) resolve(body.ip);
-			else if (Array.isArray(body.result) && body.result.length != 0) resolve(body.result[0]);
-			else if (body.result) {
-				var matchTokenReg = /Bearer (\S*)/
-				let Token = headers['Authorization'].match(matchTokenReg)[1]
-				if (body.result.id.startsWith('t.')) {					
-					$.msg($.name, "检测到WARP Teams配置文件", `设备注册ID:\n${body.result.id}\n设备令牌Token:\n${Token}\n账户类型:${body.result.account.account_type}\n账户组织:${body.result.account.organization}\n客户端公钥:\n${body.result.key}\n节点公钥:\n${body.result.config.peers[0].public_key}`);
-					//$.log($.name, "检测到WARP Teams配置文件", `设备注册ID/id: ${body.result.id}`, `设备令牌Token: ${Token}`, `账户ID/account.id: ${body.result.account.id}`, `账户类型/account.account_type: ${body.result.account.account_type}`, `账户组织/account.organization: ${body.result.account.organization}`, `客户端公钥/key: ${body.result.key}`, `节点公钥/config.peers[0].public_key: ${body.result.config.peers[0].public_key}`, '', `原始配置文件:\n${JSON.stringify(body.result)}`);
-					$.log($.name, "检测到WARP Teams配置文件", `原始配置文件:\n注意！文本内容未转义！字符串中可能包含额外字符！\n${JSON.stringify(body.result)}`, '');
-
-				} else {
-					$.msg($.name, "检测到WARP Personal配置文件", `设备注册ID:\n${body.result.id}\n设备令牌Token:\n${Token}\nWARP启用状态: ${body.result.warp_enabled},账户类型:${body.result.account.account_type},WARP+:${body.result.account.warp_plus},WARP+流量:${body.result.account.premiumbody},邀请人数:${body.result.account.referral_count}\n许可证/account.license:\n${body.result.account.license}\n客户端公钥:\n${body.result.key}\n节点公钥:\n${body.result.config.peers[0].public_key}`);
-					//$.log($.name, "检测到WARP Personal配置文件", `设备注册ID/id: ${body.result.id}`, `设备令牌Token: ${Token}`, `WARP启用状态/warp_enabled: ${body.result.warp_enabled}`, `账户ID/account.id: ${body.result.account.id}`, `许可证/account.license: ${body.result.account.license}`, `账户类型/account.account_type: ${body.result.account.account_type}`, `WARP+/account.warp_plus: ${body.result.account.warp_plus}`, `WARP+流量/account.premiumbody: ${body.result.account.premiumbody}`, `邀请人数/account.referral_count: ${body.result.account.referral_count}`, `客户端公钥/key: ${body.result.key}`, `节点公钥/config.peers[0].public_key: ${body.result.config.peers[0].public_key}`, '', `原始配置文件:\n${JSON.stringify(body.result)}`);
-					$.log($.name, "检测到WARP Personal配置文件", `原始配置文件:\n注意！文本内容未转义！字符串中可能包含额外字符！\n${JSON.stringify(body.result)}`, '');
-
-				}
-			}
-		} else if (body.success === false) {
-			if (Array.isArray(body.errors) && body.errors.length != 0) body.errors.forEach(element => { $.msg($.name, `code: ${element.code}`, `message: ${element.message}`); })
-		}
-	}
-	$.done();
-}
-else $.done();
-*/
 
 /***************** Function *****************/
 /**

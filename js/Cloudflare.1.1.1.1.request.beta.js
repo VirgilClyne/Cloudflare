@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.2.1-request-beta");
+const $ = new Env("1.1.1.1 by Cloudflare v2.2.2-request-beta");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -16,6 +16,12 @@ const DataBase = {
 		"Settings":{"Switch":true,"PrivateKey":"","PublicKey":""},
 		"Configs":{"interface":{"addresses":{"v4":"","v6":""}},"peers":[{"public_key":"","endpoint":{"host":"","v4":"","v6":""}}]}
 	}
+};
+
+// headers转小写
+for (const [key, value] of Object.entries($request.headers)) {
+	delete $request.headers[key]
+	$request.headers[key.toLowerCase()] = value
 };
 
 /***************** Processing *****************/
@@ -95,11 +101,6 @@ async function setCaches(name, platform, url, headers) {
 	// url提取参数
 	const regExp = /^https?:\/\/(?<host>(api|zero-trust-client)\.cloudflareclient\.com)\/(?<version>.*)\/reg\/(?<id>[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12})/
 	const result = url.match(regExp)?.group;
-	// headers转小写
-	for (const [key, value] of Object.entries(headers)) {
-		headers[key.toLowerCase()] = value
-		delete headers[key]
-	};
 	// 转存必要值
 	const newCaches = {
 		"host": result.host,
