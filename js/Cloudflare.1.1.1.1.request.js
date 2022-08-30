@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.2.3-request");
+const $ = new Env("1.1.1.1 by Cloudflare v2.2.4-request");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -111,14 +111,9 @@ async function setENV(name, platform, database) {
  * @return {Promise<*>}
  */
 async function setCaches(name, platform, url, headers) {
-	// url提取参数
-	const regExp = /^https?:\/\/(?<host>(api|zero-trust-client)\.cloudflareclient\.com)\/(?<version>.*)\/reg\/(?<id>[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12})/
-	const result = url.match(regExp)?.group;
 	// 转存必要值
 	const newCaches = {
-		"host": result.host,
-		"version": result.version,
-		"id": result.id,
+		"url": url,
 		"headers": {
 			"set-cookie": headers?.["set-cookie"],
 			"cookie": headers?.cookie,
