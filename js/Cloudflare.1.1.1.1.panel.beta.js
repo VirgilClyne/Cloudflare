@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v1.0.0-panel-beta8");
+const $ = new Env("1.1.1.1 by Cloudflare v1.0.0-panel-beta11");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -23,10 +23,13 @@ const DataBase = {
 	const { Settings, Caches, Configs } = await setENV("Cloudflare", "WARP", DataBase);
 	Configs.Request.url = Caches.url;
 	Configs.Request.headers = Caches.headers;
+	Configs.Request.headers["x-surge-skip-scripting"] = "true";
 	const Trace = await Cloudflare("trace").then(trace => formatTrace(trace));
-	const Account = await Cloudflare("getAccount").then(account => formatAccount(account));
+	const Account = await Cloudflare("GET").then(result => formatAccount(result.account));
 	const Panel = {
-		content: `代理IP: ${Trace.ip}\nWARP等级: ${Trace.warp}\n账户类型: ${Account.data.type}\n流量数据: ${Account.data.text}`,
+		"title": "☁ WARP Info",
+		"icon": "lock.icloud.fill",
+		"content": `代理IP: ${Trace.ip}\nWARP状态: ${Trace.warp}\n账户类型: ${Account.data.type}\n数据流量:${Account.data.text}`,
 	};
     $done(Panel);
 })()
@@ -82,13 +85,13 @@ async function setENV(name, platform, database) {
 function formatTrace(trace) {
 	switch (trace.warp) {
 		case "off":
-			trace.warp = "无";
+			trace.warp = "关闭";
 			break;
 		case "on":
-			trace.warp = "部分";
+			trace.warp = "开启";
 			break;
 		case "plus":
-			trace.warp = "完全";
+			trace.warp = "PLUS";
 			break;
 		default:
 			trace.warp = "未知";
@@ -132,7 +135,7 @@ function formatAccount(account) {
 	};
 	switch (account.data.limited) {
 		case true:
-			account.data.text = `使用${account.data.used}GB\n剩余: ${account.data.flow}GB\n总计: ${account.data.total}GB`
+			account.data.text = `\n已用${account.data.used}GB\n剩余: ${account.data.flow}GB\n总计: ${account.data.total}GB`
 			break;
 		case false:
 			account.data.text = "无限"
@@ -157,6 +160,7 @@ async function Cloudflare(opt, Request = DataBase.WARP.Configs.Request, Environm
 	};
 	*/
 	let _Request = JSON.parse(JSON.stringify(Request));
+	$.log(JSON.stringify(_Request));
 	switch (opt) {
 		case "trace":
 			_Request.url = "https://cloudflare.com/cdn-cgi/trace";
@@ -164,18 +168,21 @@ async function Cloudflare(opt, Request = DataBase.WARP.Configs.Request, Environm
 			//_Request.url = "https://[2606:4700:4700::1111]/cdn-cgi/trace";
 			delete _Request.headers;
 			return await formatCFJSON(_Request);
-		case "getAccount":
-			// Get the Account Detail
-			$.log('获取账户信息');
-			//_Request.url += `/${Environment[Settings.deviceType].Version}/reg/${Settings.Verify.RegistrationId}/account`;
+		case "GET":
+			// GET Cloudflare JSON
+			$.log('GET');
 			return await getCFjson(_Request);
+		case "FATCH":
+			// FATCH Cloudflare JSON
+			$.log('FATCH');
+			return await fatchCFjson(_Request);
 	};
 
 	/***************** Function *****************/
 	// Format Cloudflare JSON
 	async function formatCFJSON(request) {
-		return await $.http.get(request).then(data => {
-			let arr = data.trim().split('\n').map(e => e.split('='))
+		return await $.http.get(request).then(response => {
+			let arr = response.body.trim().split('\n').map(e => e.split('='))
 			return Object.fromEntries(arr)
 		})
 	};
@@ -199,7 +206,7 @@ async function Cloudflare(opt, Request = DataBase.WARP.Configs.Request, Environm
 								if (Array.isArray(_data.errors)) _data.errors.forEach(error => { $.msg($.name, `code: ${error.code}`, `message: ${error.message}`); })
 								break;
 							case undefined:
-								throw new Error(response);
+								resolve(response);
 						};
 					} else throw new Error(response);
 				} catch (e) {
@@ -232,7 +239,7 @@ async function Cloudflare(opt, Request = DataBase.WARP.Configs.Request, Environm
 								if (Array.isArray(_data.errors)) _data.errors.forEach(error => { $.msg($.name, `code: ${error.code}`, `message: ${error.message}`); })
 								break;
 							case undefined:
-								throw new Error(response);
+								resolve(response);
 						};
 					} else throw new Error(response);
 				} catch (e) {
