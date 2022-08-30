@@ -135,7 +135,7 @@ function formatAccount(account) {
 	};
 	switch (account.data.limited) {
 		case true:
-			account.data.text = `\n已用${account.data.used}GB\n剩余: ${account.data.flow}GB\n总计: ${account.data.total}GB`
+			account.data.text = `\n已用${account.data.used.toFixed(2)}GB\n剩余: ${account.data.flow.toFixed(2)}GB\n总计: ${account.data.total.toFixed(2)}GB`
 			break;
 		case false:
 			account.data.text = "无限"
