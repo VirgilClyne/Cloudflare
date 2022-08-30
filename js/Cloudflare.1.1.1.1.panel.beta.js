@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v1.0.0-panel-beta6");
+const $ = new Env("1.1.1.1 by Cloudflare v1.0.0-panel-beta8");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -21,10 +21,8 @@ const DataBase = {
 /***************** Processing *****************/
 (async () => {
 	const { Settings, Caches, Configs } = await setENV("Cloudflare", "WARP", DataBase);
-	Settings.Verify.RegistrationId = Caches.RegistrationId;
-	Configs.Request.url = `https://${Caches.host}`;
+	Configs.Request.url = Caches.url;
 	Configs.Request.headers = Caches.headers;
-	Configs.Environment[Settings.deviceType].Version = Caches.version;
 	const Trace = await Cloudflare("trace").then(trace => formatTrace(trace));
 	const Account = await Cloudflare("getAccount").then(account => formatAccount(account));
 	const Panel = {
@@ -169,7 +167,7 @@ async function Cloudflare(opt, Request = DataBase.WARP.Configs.Request, Environm
 		case "getAccount":
 			// Get the Account Detail
 			$.log('获取账户信息');
-			_Request.url += `/${Environment[Settings.deviceType].Version}/reg/${Settings.Verify.RegistrationId}/account`;
+			//_Request.url += `/${Environment[Settings.deviceType].Version}/reg/${Settings.Verify.RegistrationId}/account`;
 			return await getCFjson(_Request);
 	};
 
