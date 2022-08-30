@@ -98,25 +98,23 @@ async function setENV(name, platform, database) {
 	Settings.Switch = JSON.parse(Settings.Switch) // BoxJs字符串转Boolean
 	switch (Settings.Verify.Mode) {
 		case "Token":
-			Configs.Request.headers["Authorization"] = `Bearer ${Settings.Verify.Content}`;
+			Configs.Request.headers["authorization"] = `Bearer ${Settings.Verify.Content}`;
 			break;
 		case "ServiceKey":
-			Configs.Request.headers["X-Auth-User-Service-Key"] = Settings.Verify.Content;
+			Configs.Request.headers["x-auth-user-service-key"] = Settings.Verify.Content;
 			break;
 		case "Key":
 			Settings.Verify.Content = Array.from(Settings.Verify.Content.split("\n"))
 			//$.log(JSON.stringify(Settings.Verify.Content))
-			Configs.Request.headers["X-Auth-Key"] = Settings.Verify.Content[0];
-			Configs.Request.headers["X-Auth-Email"] = Settings.Verify.Content[1];
+			Configs.Request.headers["x-auth-key"] = Settings.Verify.Content[0];
+			Configs.Request.headers["x-auth-email"] = Settings.Verify.Content[1];
 			break;
 		default:
 			$.log("无可用授权方式", `Mode=${Settings.Verify.Mode}`, `Content=${Settings.Verify.Content}`);
 			break;
 	};
-	Settings.Environment.Type = Configs.Environment[Settings.deviceType].Type;
-	Settings.Environment.Version = Configs.Environment[Settings.deviceType].Version;
-	Configs.Request.headers["User-Agent"] = Configs.Environment[Settings.deviceType].headers["User-Agent"];
-	Configs.Request.headers["CF-Client-Version"] = Configs.Environment[Settings.deviceType].headers["CF-Client-Version"];
+	Configs.Request.headers["user-agent"] = Configs.Environment[Settings.deviceType].headers["user-agent"];
+	Configs.Request.headers["cf-client-version"] = Configs.Environment[Settings.deviceType].headers["cf-client-version"];
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	return { Settings, Caches, Configs }
 };

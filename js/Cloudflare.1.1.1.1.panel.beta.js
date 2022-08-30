@@ -65,6 +65,23 @@ async function setENV(name, platform, database) {
 	let { Settings, Caches = {}, Configs } = await getENV(name, platform, database);
 	/***************** Prase *****************/
 	Settings.Switch = JSON.parse(Settings.Switch) // BoxJs字符串转Boolean
+	switch (Settings.Verify.Mode) {
+		case "Token":
+			Configs.Request.headers["authorization"] = `Bearer ${Settings.Verify.Content}`;
+			break;
+		case "ServiceKey":
+			Configs.Request.headers["x-auth-user-service-key"] = Settings.Verify.Content;
+			break;
+		case "Key":
+			Settings.Verify.Content = Array.from(Settings.Verify.Content.split("\n"))
+			//$.log(JSON.stringify(Settings.Verify.Content))
+			Configs.Request.headers["x-auth-key"] = Settings.Verify.Content[0];
+			Configs.Request.headers["x-auth-email"] = Settings.Verify.Content[1];
+			break;
+		default:
+			$.log("无可用授权方式", `Mode=${Settings.Verify.Mode}`, `Content=${Settings.Verify.Content}`);
+			break;
+	};
 	Settings.Verify.RegistrationId = Caches.RegistrationId;
 	Configs.Request.url = `https://${Caches.host}`;
 	Configs.Request.headers = Caches.headers;
@@ -92,6 +109,7 @@ async function Cloudflare(opt, Request = DataBase.WARP.Configs.Request, Environm
 			_Request.url = "https://cloudflare.com/cdn-cgi/trace";
 			//_Request.url = "https://1.1.1.1/cdn-cgi/trace";
 			//_Request.url = "https://[2606:4700:4700::1111]/cdn-cgi/trace";
+			delete _Request.headers;
 			return await formatCFJSON(_Request);
 		case "getAccount":
 			// Get the Account Detail

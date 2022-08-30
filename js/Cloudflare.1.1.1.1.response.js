@@ -102,9 +102,22 @@ async function setENV(name, platform, database) {
 	 let { Settings, Caches = {}, Configs } = await getENV(name, platform, database);
 	/***************** Prase *****************/
 	Settings.Switch = JSON.parse(Settings.Switch) // BoxJs字符串转Boolean
-	if (Settings?.Verify?.Mode === "Key") {
-		Settings.Verify.Content = Array.from(Settings.Verify.Content.split("\n"))
-		//$.log(JSON.stringify(Settings.Verify.Content))
+	switch (Settings.Verify.Mode) {
+		case "Token":
+			Configs.Request.headers["authorization"] = `Bearer ${Settings.Verify.Content}`;
+			break;
+		case "ServiceKey":
+			Configs.Request.headers["x-auth-user-service-key"] = Settings.Verify.Content;
+			break;
+		case "Key":
+			Settings.Verify.Content = Array.from(Settings.Verify.Content.split("\n"))
+			//$.log(JSON.stringify(Settings.Verify.Content))
+			Configs.Request.headers["x-auth-key"] = Settings.Verify.Content[0];
+			Configs.Request.headers["x-auth-email"] = Settings.Verify.Content[1];
+			break;
+		default:
+			$.log("无可用授权方式", `Mode=${Settings.Verify.Mode}`, `Content=${Settings.Verify.Content}`);
+			break;
 	};
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	return { Settings, Caches, Configs }
