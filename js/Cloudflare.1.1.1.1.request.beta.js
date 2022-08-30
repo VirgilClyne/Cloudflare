@@ -114,13 +114,7 @@ async function setCaches(name, platform, url, headers) {
 	// 转存必要值
 	const newCaches = {
 		"url": url,
-		"headers": {
-			"set-cookie": headers?.["set-cookie"],
-			"cookie": headers?.cookie,
-			"cf-client-version": headers?.["cf-client-version"],
-			"authorization": headers?.authorization,
-			"user-agent": headers?.["user-agent"]
-		}
+		"headers": headers
 	};
 	// 写入Caches
 	$.setjson(newCaches, `@${name}.${platform}.Caches`);
