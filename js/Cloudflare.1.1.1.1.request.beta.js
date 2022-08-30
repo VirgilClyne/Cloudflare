@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.2.2-request-beta");
+const $ = new Env("1.1.1.1 by Cloudflare v2.2.3-request-beta");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -120,6 +120,7 @@ async function setCaches(name, platform, url, headers) {
 		"version": result.version,
 		"id": result.id,
 		"headers": {
+			"set-cookie": headers?.["set-cookie"],
 			"cookie": headers?.cookie,
 			"cf-client-version": headers?.["cf-client-version"],
 			"authorization": headers?.authorization,
