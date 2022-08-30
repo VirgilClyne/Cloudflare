@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v1.0.0-panel-beta12");
+const $ = new Env("1.1.1.1 by Cloudflare v1.0.0-panel-beta14");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -27,9 +27,9 @@ const DataBase = {
 	const Trace = await Cloudflare("trace").then(trace => formatTrace(trace));
 	const Account = await Cloudflare("GET").then(result => formatAccount(result.account));
 	const Panel = {
-		"title": "☁ 𝑾𝑨𝑹𝑷 𝑰𝒏𝒇𝒐",
+		"title": "☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤",
 		"icon": "lock.icloud.fill",
-		"content": `代理地址: ${Trace.ip}\nWARP保护: ${Trace.warp}\n账户类型: ${Account.data.type}${Account.data.text}`,
+		"content": `代理地址: ${Trace.ip}\nWARP隐私: ${Trace.warp}\n账户类型: ${Account.data.type}\n${Account.data.text}`,
 	};
     $done(Panel);
 })()
@@ -85,16 +85,16 @@ async function setENV(name, platform, database) {
 function formatTrace(trace) {
 	switch (trace.warp) {
 		case "off":
-			trace.warp = "关闭";
+			trace.warp = "没有保护";
 			break;
 		case "on":
-			trace.warp = "部分";
+			trace.warp = "部分保护";
 			break;
 		case "plus":
-			trace.warp = "完整";
+			trace.warp = "完整保护";
 			break;
 		default:
-			trace.warp = "未知";
+			trace.warp = "未知类型";
 			break;
 	};
 	return trace;
@@ -135,13 +135,13 @@ function formatAccount(account) {
 	};
 	switch (account.data.limited) {
 		case true:
-			account.data.text = `\n已用流量${account.data.used.toFixed(2)}GB\n剩余流量: ${account.data.flow.toFixed(2)}GB\n总计流量: ${account.data.total.toFixed(2)}GB`
+			account.data.text = `已用流量: ${account.data.used.toFixed(2)}GB\n剩余流量: ${account.data.flow.toFixed(2)}GB\n总计流量: ${account.data.total.toFixed(2)}GB`
 			break;
 		case false:
-			account.data.text = "无限制"
+			account.data.text = "流量信息: 无限制"
 			break;
 		default:
-			account.data.text = "未知"
+			account.data.text = "未知流量信息"
 			break;
 	}
 	return account;
