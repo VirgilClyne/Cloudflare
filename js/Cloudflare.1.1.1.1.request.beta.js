@@ -32,11 +32,11 @@ for (const [key, value] of Object.entries($request.headers)) {
 		: /\/reg\//i.test($request.url) ? "Registration"
 			: undefined
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
+	await setCaches("Cloudflare", "WARP", $request.url, $request.headers);
 	if (typeof $request.body !== "undefined") { // 有请求体
 		let body = JSON.parse($request.body);
 		switch (Type) {
 			case "Registration": // 是注册链接
-				await setCaches("Cloudflare", "WARP", $request.url, $request.headers);
 				break;
 			case "RegistrationId": // 是指定注册链接
 				if ($request.method === "PUT") { // 是PUT方法

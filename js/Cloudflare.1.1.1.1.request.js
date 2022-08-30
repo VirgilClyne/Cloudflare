@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.2.0-request");
+const $ = new Env("1.1.1.1 by Cloudflare v2.2.3-request");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -29,10 +29,10 @@ for (const [key, value] of Object.entries($request.headers)) {
 	const { Settings, Caches } = await setENV("Cloudflare", "WARP", DataBase);
 	const WireGuard = await getENV("WireGuard", "VPN", DataBase);
 	const Type = RegExp(`/reg/${Settings.Verify.RegistrationId}$`, "i").test($request.url) ? "RegistrationId"
-		: /reg/i.test($request.url) ? "Registration"
+		: /\/reg\//i.test($request.url) ? "Registration"
 			: undefined
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
-	await setCaches("Cloudflare", "WARP", $request.headers);
+	await setCaches("Cloudflare", "WARP", $request.url, $request.headers);
 	if (typeof $request.body !== "undefined") { // 有请求体
 		let body = JSON.parse($request.body);
 		switch (Type) {
@@ -106,16 +106,26 @@ async function setENV(name, platform, database) {
  * @author VirgilClyne
  * @param {String} name - Persistent Store Key
  * @param {String} platform - Platform Name
+ * @param {String} url - Request URL
  * @param {Object} headers - Request Headers
  * @return {Promise<*>}
  */
-async function setCaches(name, platform, headers) {
+async function setCaches(name, platform, url, headers) {
+	// url提取参数
+	const regExp = /^https?:\/\/(?<host>(api|zero-trust-client)\.cloudflareclient\.com)\/(?<version>.*)\/reg\/(?<id>[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12})/
+	const result = url.match(regExp)?.group;
 	// 转存必要值
 	const newCaches = {
-		"cookie": headers?.cookie,
-		"cf-client-version": headers?.["cf-client-version"],
-		"authorization": headers?.authorization,
-		"user-agent": headers?.["user-agent"]
+		"host": result.host,
+		"version": result.version,
+		"id": result.id,
+		"headers": {
+			"set-cookie": headers?.["set-cookie"],
+			"cookie": headers?.cookie,
+			"cf-client-version": headers?.["cf-client-version"],
+			"authorization": headers?.authorization,
+			"user-agent": headers?.["user-agent"]
+		}
 	};
 	// 写入Caches
 	$.setjson(newCaches, `@${name}.${platform}.Caches`);
