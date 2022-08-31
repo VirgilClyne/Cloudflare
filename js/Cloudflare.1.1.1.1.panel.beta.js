@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v1.0.2-panel-beta3");
+const $ = new Env("1.1.1.1 by Cloudflare v1.0.2-panel-beta4");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -31,7 +31,7 @@ const DataBase = {
 				"x-surge-skip-scripting": "true"
 			}
 		};
-		Account = await Cloudflare("GET", Request).then(result => formatAccount(result.account));
+		Account = await Cloudflare("GET", Request).then(result => formatAccount(result?.account ?? {}));
 	};
 	const Panel = {
 		"title": "☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤",
