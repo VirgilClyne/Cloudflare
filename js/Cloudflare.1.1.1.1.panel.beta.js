@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v1.0.2-panel-beta2");
+const $ = new Env("1.1.1.1 by Cloudflare v1.0.2-panel-beta3");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -21,15 +21,22 @@ const DataBase = {
 /***************** Processing *****************/
 (async () => {
 	const { Settings, Caches, Configs } = await setENV("Cloudflare", "WARP", DataBase);
-	Configs.Request.url = Caches?.url;
-	Configs.Request.headers = Caches?.headers ?? {};
-	Configs.Request.headers["x-surge-skip-scripting"] = "true";
 	const Trace = await Cloudflare("trace").then(trace => formatTrace(trace));
-	const Account = await Cloudflare("GET").then(result => formatAccount(result.account));
+	let Account = {};
+	if (Caches?.url && Caches?.headers) {
+		const Request = {
+			"url": Caches?.url,
+			"headers": {
+				...Caches?.headers ?? {},
+				"x-surge-skip-scripting": "true"
+			}
+		};
+		Account = await Cloudflare("GET", Request).then(result => formatAccount(result.account));
+	};
 	const Panel = {
 		"title": "☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤",
 		"icon": "lock.icloud.fill",
-		"content": `公用IP: ${Trace.ip}\n主机托管中心: ${Trace.loc} | ${Trace.colo}\nWARP隐私: ${Trace.warp}\n账户类型: ${Account.data.type}\n${Account.data.text}`,
+		"content": `公用IP: ${Trace.ip}\n主机托管中心: ${Trace.loc} | ${Trace.colo}\nWARP隐私: ${Trace.warp}\n账户类型: ${Account?.data?.type ?? "获取失败"}\n流量信息: ${Account?.data?.text ?? "获取失败"}`,
 	};
     $done(Panel);
 })()
@@ -147,13 +154,13 @@ function formatAccount(account) {
 	};
 	switch (account.data.limited) {
 		case true:
-			account.data.text = `已用流量: ${account.data.used.toFixed(2)}GB\n剩余流量: ${account.data.flow.toFixed(2)}GB\n总计流量: ${account.data.total.toFixed(2)}GB`
+			account.data.text = `\n已用流量: ${account.data.used.toFixed(2)}GB\n剩余流量: ${account.data.flow.toFixed(2)}GB\n总计流量: ${account.data.total.toFixed(2)}GB`
 			break;
 		case false:
-			account.data.text = "流量信息: 无限制 | unlimited"
+			account.data.text = "无限制 | unlimited"
 			break;
 		default:
-			account.data.text = "流量信息: 未知 | unknown"
+			account.data.text = "未知 | unknown"
 			break;
 	}
 	return account;
