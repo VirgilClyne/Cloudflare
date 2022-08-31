@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v1.0.2-panel-beta1");
+const $ = new Env("1.1.1.1 by Cloudflare v1.0.2-panel-beta2");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -123,6 +123,12 @@ function formatAccount(account) {
 				"limited": false,
 			}
 			break;
+		case "plus":
+			account.data = {
+				"type": "WARP+ | plus",
+				"limited": false,
+			}
+			break;
 		case "free":
 			account.data = {
 				"type": "免费版 | free",
@@ -134,7 +140,7 @@ function formatAccount(account) {
 			break;
 		default:
 			account.data = {
-				"type": "未知 | 请向 @R·E 反馈!",
+				"type": account?.account_type,
 				"limited": undefined
 			}
 			break;
