@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v1.0.1-panel-beta1");
+const $ = new Env("1.1.1.1 by Cloudflare v1.0.2-panel-beta1");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -21,8 +21,8 @@ const DataBase = {
 /***************** Processing *****************/
 (async () => {
 	const { Settings, Caches, Configs } = await setENV("Cloudflare", "WARP", DataBase);
-	Configs.Request.url = Caches.url;
-	Configs.Request.headers = Caches.headers;
+	Configs.Request.url = Caches?.url;
+	Configs.Request.headers = Caches?.headers ?? {};
 	Configs.Request.headers["x-surge-skip-scripting"] = "true";
 	const Trace = await Cloudflare("trace").then(trace => formatTrace(trace));
 	const Account = await Cloudflare("GET").then(result => formatAccount(result.account));
