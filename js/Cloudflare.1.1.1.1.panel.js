@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v1.0.0-panel");
+const $ = new Env("1.1.1.1 by Cloudflare v1.0.1-panel");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -27,9 +27,9 @@ const DataBase = {
 	const Trace = await Cloudflare("trace").then(trace => formatTrace(trace));
 	const Account = await Cloudflare("GET").then(result => formatAccount(result.account));
 	const Panel = {
-		"title": "☁ WARP Info",
+		"title": "☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤",
 		"icon": "lock.icloud.fill",
-		"content": `代理IP: ${Trace.ip}\nWARP状态: ${Trace.warp}\n账户类型: ${Account.data.type}\n数据流量: ${Account.data.text}`,
+		"content": `公用IP: ${Trace.ip}\n主机托管中心: ${Trace.loc} | ${Trace.colo}\nWARP隐私: ${Trace.warp}\n账户类型: ${Account.data.type}\n${Account.data.text}`,
 	};
     $done(Panel);
 })()
@@ -85,26 +85,32 @@ async function setENV(name, platform, database) {
 function formatTrace(trace) {
 	switch (trace.warp) {
 		case "off":
-			trace.warp = "关闭";
+			trace.warp = "没有保护 | off";
 			break;
 		case "on":
-			trace.warp = "开启";
+			trace.warp = "部分保护 | on";
 			break;
 		case "plus":
-			trace.warp = "PLUS";
+			trace.warp = "完整保护 | plus";
 			break;
 		default:
-			trace.warp = "未知";
+			trace.warp = "未知类型 | unknown";
 			break;
 	};
 	return trace;
 };
 
 function formatAccount(account) {
-	switch (account.account_type){
+	switch (account.account_type) {
+		case "unlimited":
+			account.data = {
+				"type": "无限版 | unlimited",
+				"limited": false,
+			}
+			break;
 		case "limited":
 			account.data = {
-				"type": "有限版",
+				"type": "有限版 | limited",
 				"limited": true,
 				"used": parseInt(account.premium_data - account.quota) / 1024 / 1024 / 1024,
 				"flow": parseInt(account.quota) / 1024 / 1024 / 1024,
@@ -113,13 +119,13 @@ function formatAccount(account) {
 			break;
 		case "team":
 			account.data = {
-				"type": "团队版",
+				"type": "团队版 | team",
 				"limited": false,
 			}
 			break;
 		case "free":
 			account.data = {
-				"type": "免费版",
+				"type": "免费版 | free",
 				"limited": true,
 				"used": parseInt(account.premium_data - account.quota) / 1024 / 1024 / 1024,
 				"flow": parseInt(account.quota) / 1024 / 1024 / 1024,
@@ -128,20 +134,20 @@ function formatAccount(account) {
 			break;
 		default:
 			account.data = {
-				"type": "未知类型,请向 @R·E 反馈!",
+				"type": "未知 | 请向 @R·E 反馈!",
 				"limited": undefined
 			}
 			break;
 	};
 	switch (account.data.limited) {
 		case true:
-			account.data.text = `\n已用${account.data.used.toFixed(2)}GB\n剩余: ${account.data.flow.toFixed(2)}GB\n总计: ${account.data.total.toFixed(2)}GB`
+			account.data.text = `已用流量: ${account.data.used.toFixed(2)}GB\n剩余流量: ${account.data.flow.toFixed(2)}GB\n总计流量: ${account.data.total.toFixed(2)}GB`
 			break;
 		case false:
-			account.data.text = "无限"
+			account.data.text = "流量信息: 无限制 | unlimited"
 			break;
 		default:
-			account.data.text = "未知"
+			account.data.text = "流量信息: 未知 | unknown"
 			break;
 	}
 	return account;
