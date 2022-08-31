@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v1.0.2-panel-beta4");
+const $ = new Env("1.1.1.1 by Cloudflare v1.0.2-panel-beta5");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -179,7 +179,6 @@ async function Cloudflare(opt, Request = DataBase.WARP.Configs.Request, Environm
 	};
 	*/
 	let _Request = JSON.parse(JSON.stringify(Request));
-	$.log(JSON.stringify(_Request));
 	switch (opt) {
 		case "trace":
 			_Request.url = "https://cloudflare.com/cdn-cgi/trace";
@@ -190,10 +189,12 @@ async function Cloudflare(opt, Request = DataBase.WARP.Configs.Request, Environm
 		case "GET":
 			// GET Cloudflare JSON
 			$.log('GET');
+			$.log(JSON.stringify(_Request));
 			return await getCFjson(_Request);
 		case "FATCH":
 			// FATCH Cloudflare JSON
 			$.log('FATCH');
+			$.log(JSON.stringify(_Request));
 			return await fatchCFjson(_Request);
 	};
 
@@ -231,7 +232,7 @@ async function Cloudflare(opt, Request = DataBase.WARP.Configs.Request, Environm
 				} catch (e) {
 					$.logErr(`❗️${$.name}, ${getCFjson.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
 				} finally {
-					//$.log(`🚧 ${$.name}, ${getCFjson.name}调试信息`, `request = ${JSON.stringify(request)}`, `data = ${data}`, "")
+					$.log(`🚧 ${$.name}, ${getCFjson.name}调试信息`, `request = ${JSON.stringify(request)}`, `data = ${data}`, "")
 					resolve()
 				}
 			})
@@ -264,7 +265,7 @@ async function Cloudflare(opt, Request = DataBase.WARP.Configs.Request, Environm
 				} catch (e) {
 					$.logErr(`❗️${$.name}, ${fatchCFjson.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
 				} finally {
-					//$.log(`🚧 ${$.name}, ${fatchCFjson.name}调试信息`, `request = ${JSON.stringify(request)}`, `data = ${data}`, "")
+					$.log(`🚧 ${$.name}, ${fatchCFjson.name}调试信息`, `request = ${JSON.stringify(request)}`, `data = ${data}`, "")
 					resolve()
 				}
 			})
