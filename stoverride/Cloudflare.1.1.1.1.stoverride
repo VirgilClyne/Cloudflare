@@ -1,0 +1,42 @@
+name: ☁️ 1.1.1.1 by Cloudflare with WARP 客户端配置管理
+desc: (V2) 1.1.1.1 by Cloudflare APP with WARP Client Config Management
+openUrl: http://boxjs.com/#/app/Cloudflare.WARP
+author: VirgilClyne & R·E
+homepage: https://github.com/VirgilClyne
+manual: https://github.com/VirgilClyne/Cloudflare/wiki/☁-1.1.1.1-by-Cloudflare-with-WARP
+icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png
+
+http:
+  mitm:
+    - "api.cloudflareclient.com"
+    - "zero-trust-client.cloudflareclient.com"
+
+  script:
+    - match: ^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$
+      name: 1.1.1.1.request
+      type: request
+      require-body: true
+      timeout: 10
+    - match: ^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$
+      name: 1.1.1.1.response
+      type: response
+      require-body: true
+      timeout: 10
+    - match: ^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/t\.[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$
+      name: 1.1.1.1.response
+      type: request
+      require-body: true
+      timeout: 10
+    - match: ^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/t\.[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$
+      name: 1.1.1.1.request
+      type: response
+      require-body: true
+      timeout: 10
+
+script-providers:
+  1.1.1.1.request:
+    url: https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.1.1.1.1.request.js
+    interval: 86400
+  1.1.1.1.request:
+    url: https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.1.1.1.1.response.js
+    interval: 86400
