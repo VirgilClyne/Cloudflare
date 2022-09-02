@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.3.0-response-beta1");
+const $ = new Env("1.1.1.1 by Cloudflare v2.3.0-response-beta3");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -40,6 +40,7 @@ for (const [key, value] of Object.entries($request.headers)) {
 			case true:
 				const result = body?.result?.[0] ?? body?.result; // body.result, body.meta
 				if (result) {
+					await setConfigs("WireGuard", "VPN", result.config);
 					const verify = `当前客户端公钥为:\n${result.key}\n用户设置公钥为:\n${WireGuard.Settings.PublicKey}\n如两者一致，下列配置有效`
 					const surge = `[WireGuard Cloudflare]\nprivate-key = ${WireGuard.Settings.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 162.159.36.1, 2606:4700:4700::1111\nmtu = 1280\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.nanocat.me:2408, keepalive = 45)`;
 					const config = JSON.stringify(result);
@@ -117,6 +118,26 @@ async function setENV(name, platform, database) {
 	};
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	return { Settings, Caches, Configs }
+};
+
+/**
+ * Set Configs
+ * @author VirgilClyne
+ * @param {String} name - Persistent Store Key
+ * @param {String} platform - Platform Name
+ * @param {Object} headers - Configs
+ * @return {Promise<*>}
+ */
+async function setConfigs(name, platform, Configs) {
+	$.log(`⚠ ${$.name}, Set Configs`, "");
+	// 写入Caches
+	$.setjson(Configs.interface.addresses.v4, `@${name}.${platform}.Configs.interface.addresses.v4`);
+	$.setjson(Configs.interface.addresses.v6, `@${name}.${platform}.Configs.interface.addresses.v6`);
+	$.setjson(Configs.peers[0].public_key, `@${name}.${platform}.Configs.peers[0].public_key`);
+	$.setjson(Configs.peers[0].endpoint.host, `@${name}.${platform}.Configs.peers[0].endpoint.host`);
+	$.setjson(Configs.peers[0].endpoint.v4, `@${name}.${platform}.Configs.peers[0].endpoint.v4`);
+	$.setjson(Configs.peers[0].endpoint.v6, `@${name}.${platform}.Configs.peers[0].endpoint.v6`);
+	return $.log(`🎉 ${$.name}, Set Configs`, "");
 };
 
 /***************** Env *****************/
