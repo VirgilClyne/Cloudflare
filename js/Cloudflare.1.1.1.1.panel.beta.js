@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v1.2.0-panel-beta1");
+const $ = new Env("1.1.1.1 by Cloudflare v1.3.0-panel-beta1");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -21,7 +21,9 @@ const DataBase = {
 /***************** Processing *****************/
 (async () => {
 	const { Settings, Caches, Configs } = await setENV("Cloudflare", "1dot1dot1dot1", DataBase);
-	const Trace = await Cloudflare("trace").then(trace => formatTrace(trace));
+	const [Trace4, Trace6] = await Promise
+		.allSettled([await Cloudflare("trace4"), await Cloudflare("trace6")])
+		.then(traces => traces.map(trace => formatTrace(trace)));
 	let Account = {};
 	if (Caches?.url && Caches?.headers) {
 		const Request = {
@@ -37,12 +39,12 @@ const DataBase = {
 	switch ($environment.language) {
 		case "zh-Hans":
 		case "zh-Hant":
-			content = `公用IP: ${Trace.ip}\n主机托管中心: ${Trace.loc} | ${Trace.colo}\nWARP隐私: ${Trace.warp}\n账户类型: ${Account?.data?.type ?? "获取失败"}\n流量信息: ${Account?.data?.text ?? "获取失败"}`
+			content = `公用IPv4: ${Trace4?.ip}\n公用IPv6: ${Trace6?.ip}\n主机托管中心: ${Trace4?.loc ?? Trace6?.loc} | ${Trace4?.colo ?? Trace6?.colo}\nWARP隐私: ${Trace4?.warp ?? Trace6?.warp}\n账户类型: ${Account?.data?.type ?? "获取失败"}\n流量信息: ${Account?.data?.text ?? "获取失败"}`
 			break;
 		case "en":
 		case "en-US":
 		default:
-			content = `Public IP: ${Trace.ip}\nColocation Center: ${Trace.loc} | ${Trace.colo}\nWARP Level: ${Trace.warp}\nAccount Type: ${Account?.data?.type ?? "Failed to get"}\nData Information: ${Account?.data?.text ?? "Failed to get"}`
+			content = `Public IPv4: ${Trace4?.ip}\nPublic IPv6: ${Trace6?.ip}\nColocation Center: ${Trace4?.loc ?? Trace6?.loc} | ${Trace4?.colo ?? Trace6?.colo}\nWARP Level: ${Trace4?.warp ?? Trace6?.warp}\nAccount Type: ${Account?.data?.type ?? "Failed to get"}\nData Information: ${Account?.data?.text ?? "Failed to get"}`
 			break;
 	};
 	const Panel = {
@@ -204,8 +206,14 @@ async function Cloudflare(opt, Request = DataBase.WARP.Configs.Request, Environm
 	switch (opt) {
 		case "trace":
 			_Request.url = "https://cloudflare.com/cdn-cgi/trace";
-			//_Request.url = "https://1.1.1.1/cdn-cgi/trace";
-			//_Request.url = "https://[2606:4700:4700::1111]/cdn-cgi/trace";
+			delete _Request.headers;
+			return await formatCFJSON(_Request);
+		case "trace4":
+			_Request.url = "https://1.1.1.1/cdn-cgi/trace";
+			delete _Request.headers;
+			return await formatCFJSON(_Request);
+		case "trace6":
+			_Request.url = "https://[2606:4700:4700::1111]/cdn-cgi/trace";
 			delete _Request.headers;
 			return await formatCFJSON(_Request);
 		case "GET":
