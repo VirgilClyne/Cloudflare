@@ -14,15 +14,15 @@
   * 点击下方链接直达详细说明
   * 手机等竖屏设备可以👈左右👉划动下列表格查看更多模块
 
-| [☁️<br>Cloudflare DNS](../../wiki/☁-Cloudflare-DNS) | [☁️<br>1.1.1.1 by Cloudflare with WARP](../../wiki/☁-1.1.1.1-by-Cloudflare-with-WARP) | [☁️<br>Cloudflare WARP](../../wiki/☁-Cloudflare-WARP) |
+| [☁️<br>Cloudflare DNS](../../wiki/☁-Cloudflare-DNS) | [☁️<br>1.1.1.1 by Cloudflare with WARP](../../wiki/☁-1.1.1.1-by-Cloudflare-with-WARP) | [☁️<br>~~Cloudflare WARP~~](../../wiki/☁-Cloudflare-WARP) |
 | :---: | :---: | :---: |
 | [简介](../../wiki/☁-Cloudflare-DNS#简介) | [简介](../../wiki/☁-1.1.1.1-by-Cloudflare-with-WARP#简介) | [简介](../../wiki/☁-Cloudflare-WARP#简介) |
 | [功能列表](../../wiki/☁-Cloudflare-DNS#功能列表) | [功能列表](../../wiki/☁-1.1.1.1-by-Cloudflare-with-WARP#功能列表) | [功能列表](../../wiki/☁-Cloudflare-WARP#功能列表) |
 | [使用说明](../../wiki/☁-Cloudflare-DNS#使用说明) | [使用说明](../../wiki/☁-1.1.1.1-by-Cloudflare-with-WARP#使用说明) | [使用说明](../../wiki/☁-Cloudflare-WARP#使用说明) |
 | [安装链接](../../wiki/☁-Cloudflare-DNS#安装链接) | [安装链接](../../wiki/☁-1.1.1.1-by-Cloudflare-with-WARP#安装链接) | [安装链接](../../wiki/☁-Cloudflare-WARP#安装链接) |
-| 🆕新版<br>v2.0.x | 🆕新版<br>v2.0.x | v1.0.x |
+| 🆕新版<br>v2.0.x | 🆕新版<br>v2.3.x | 已停止供应<br>v1.0.x |
 | [更新日志](../../wiki/☁-Cloudflare-DNS#更新日志) | [更新日志](../../wiki/☁-1.1.1.1-by-Cloudflare-with-WARP#更新日志) | [更新日志](../../wiki/☁-Cloudflare-WARP#更新日志) |
-| [说明/讨论](https://t.me/GetSomeFriesChannel/) | [说明/讨论](https://t.me/GetSomeFriesChannel/) | [说明/讨论](https://t.me/GetSomeFriesChannel/) |
+| [说明/讨论](https://t.me/GetSomeFriesChannel/) | [说明/讨论](https://t.me/GetSomeFriesChannel/142) | [说明/讨论](https://t.me/GetSomeFriesChannel/) |
 
 ---
 # 鸣谢
