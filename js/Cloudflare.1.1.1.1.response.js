@@ -41,7 +41,7 @@ for (const [key, value] of Object.entries($request.headers)) {
 				const result = body?.result?.[0] ?? body?.result; // body.result, body.meta
 				if (result) {
 					const verify = `当前客户端公钥为:\n${result.key}\n用户设置公钥为:\n${WireGuard.Settings.PublicKey}\n如两者一致，下列配置有效`
-					const surge = `[WireGuard Cloudflare]\nprivate-key = ${WireGuard.Settings.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 1.1.1.1, 1.0.0.1, 2606:4700:4700::1111, 2606:4700:4700::1001\nmtu = 1400\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.nanocat.me:2408, keepalive = 45)`;
+					const surge = `[WireGuard Cloudflare]\nprivate-key = ${WireGuard.Settings.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 162.159.36.1, 2606:4700:4700::1111\nmtu = 1400\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.nanocat.me:2408, keepalive = 45)`;
 					const config = JSON.stringify(result);
 					let URI = `mailto:engage@nanocat.me?subject=☁️ Cloudflare for ${result.account.account_type}配置文件&body=有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\n完整配置内容:\n${config}`;
 					let message = encodeURI(URI);
