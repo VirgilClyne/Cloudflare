@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v1.0.2-panel");
+const $ = new Env("1.1.1.1 by Cloudflare v1.1.0-panel");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -33,10 +33,22 @@ const DataBase = {
 		};
 		Account = await Cloudflare("GET", Request).then(result => formatAccount(result?.account ?? {}));
 	};
+	let content = {}
+	switch ($environment.language) {
+		case "zh-Hans":
+		case "zh-Hant":
+			content = `公用IP: ${Trace.ip}\n主机托管中心: ${Trace.loc} | ${Trace.colo}\nWARP隐私: ${Trace.warp}\n账户类型: ${Account?.data?.type ?? "获取失败"}\n流量信息: ${Account?.data?.text ?? "获取失败"}`
+			break;
+		case "en":
+		case "en-US":
+		default:
+			content = `Public IP: ${Trace.ip}\nColocation Center: ${Trace.loc} | ${Trace.colo}\nWARP Level: ${Trace.warp}\nAccount Type: ${Account?.data?.type ?? "Failed to get"}\nData Information: ${Account?.data?.text ?? "Failed to get"}`
+			break;
+	};
 	const Panel = {
 		"title": "☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤",
 		"icon": "lock.icloud.fill",
-		"content": `公用IP: ${Trace.ip}\n主机托管中心: ${Trace.loc} | ${Trace.colo}\nWARP隐私: ${Trace.warp}\n账户类型: ${Account?.data?.type ?? "获取失败"}\n流量信息: ${Account?.data?.text ?? "获取失败"}`,
+		"content": content,
 	};
     $done(Panel);
 })()
@@ -154,7 +166,17 @@ function formatAccount(account) {
 	};
 	switch (account.data.limited) {
 		case true:
-			account.data.text = `\n已用流量: ${account.data.used.toFixed(2)}GB\n剩余流量: ${account.data.flow.toFixed(2)}GB\n总计流量: ${account.data.total.toFixed(2)}GB`
+			switch ($environment.language) {
+				case "zh-Hans":
+				case "zh-Hant":
+					account.data.text = `\n已用流量: ${account.data.used.toFixed(2)}GB\n剩余流量: ${account.data.flow.toFixed(2)}GB\n总计流量: ${account.data.total.toFixed(2)}GB`
+					break;
+				case "en":
+				case "en-US":
+				default:
+					account.data.text = `\nUsed: ${account.data.used.toFixed(2)}GB\nResidual: ${account.data.flow.toFixed(2)}GB\nTotal: ${account.data.total.toFixed(2)}GB`
+					break;
+			};
 			break;
 		case false:
 			account.data.text = "无限制 | unlimited"
