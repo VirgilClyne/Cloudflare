@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.3.0-response-beta3");
+const $ = new Env("1.1.1.1 by Cloudflare v2.3.0-response-beta4");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -41,11 +41,7 @@ for (const [key, value] of Object.entries($request.headers)) {
 				const result = body?.result?.[0] ?? body?.result; // body.result, body.meta
 				if (result) {
 					await setConfigs("WireGuard", "VPN", result.config);
-					const verify = `当前客户端公钥为:\n${result.key}\n用户设置公钥为:\n${WireGuard.Settings.PublicKey}\n如两者一致，下列配置有效`
-					const surge = `[WireGuard Cloudflare]\nprivate-key = ${WireGuard.Settings.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 162.159.36.1, 2606:4700:4700::1111\nmtu = 1280\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.nanocat.me:2408, keepalive = 45)`;
-					const config = JSON.stringify(result);
-					let URI = `mailto:engage@nanocat.me?subject=☁️ Cloudflare for ${result.account.account_type}配置文件&body=有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\n完整配置内容:\n${config}`;
-					let message = encodeURI(URI);
+					const message = await setMessage(result, WireGuard);
 					switch (Type) {
 						case "Registration": // 是链接
 							if ($request.method === "GET" || $request.method === "PUT") { // 是GET或PUT方法
@@ -118,6 +114,25 @@ async function setENV(name, platform, database) {
 	};
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	return { Settings, Caches, Configs }
+};
+
+/**
+ * Set Message
+ * @author VirgilClyne
+ * @param {String} name - Persistent Store Key
+ * @param {String} platform - Platform Name
+ * @param {Object} headers - Configs
+ * @return {Promise<*>}
+ */
+async function setMessage(result, WireGuard) {
+	$.log(`⚠ ${$.name}, Set Message`, "");
+	const verify = `当前客户端公钥为:\n${result.key}\n用户设置公钥为:\n${WireGuard?.Settings?.PublicKey ?? "请到BoxJs面板中进行设置"}\n如两者一致，下列配置有效`
+	const surge = `[WireGuard Cloudflare]\nprivate-key = ${WireGuard.Settings.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 162.159.36.1, 2606:4700:4700::1111\nmtu = 1280\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.nanocat.me:2408, keepalive = 45)`;
+	const config = JSON.stringify(result);
+	let URI = `mailto:engage@nanocat.me?subject=☁️ Cloudflare for ${result.account.account_type}配置文件&body=有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\n完整配置内容:\n${config}`;
+	let message = encodeURI(URI);
+	$.log(`🎉 ${$.name}, Set Message`, "");
+	return message;
 };
 
 /**
