@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v1.3.0-panel");
+const $ = new Env("1.1.1.1 by Cloudflare v1.3.1-panel");
 const DataBase = {
 	"1dot1dot1dot1": {
 		"Settings": {"Switch":true,"setupMode":"ChangeKeypair","Verify":{"RegistrationId":null,"Mode":"Token","Content":null}},
@@ -106,18 +106,20 @@ async function setENV(name, platform, database) {
 };
 
 function formatTrace(trace) {
-	switch (trace.warp) {
+	switch (trace?.warp) {
 		case "off":
-			trace.warp = "没有保护 | off";
+			trace.warp += " | 没有保护";
 			break;
 		case "on":
-			trace.warp = "部分保护 | on";
+			trace.warp += " | 部分保护";
 			break;
 		case "plus":
-			trace.warp = "完整保护 | plus";
+			trace.warp += " | 完整保护";
+			break;
+		case undefined:
 			break;
 		default:
-			trace.warp = "未知类型 | unknown";
+			trace.warp += " | 未知类型";
 			break;
 	};
 	return trace;
