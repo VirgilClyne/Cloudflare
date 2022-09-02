@@ -1,0 +1,22 @@
+{
+	"Settings": {
+		"Switch": true,
+		"setupMode": "ChangeKeypair",
+		"Verify": {
+			"RegistrationId": null,
+			"Mode": "Token",
+			"Content": null
+		}
+	},
+	"Configs": {
+		"Request": {
+			"url": "https://api.cloudflareclient.com",
+			"headers": {
+				"authorization": null,
+				"content-Type": "application/json",
+				"user-Agent": "1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0",
+				"cf-client-version": "i-6.7-2109031904.1"
+			}
+		}
+	}
+}
