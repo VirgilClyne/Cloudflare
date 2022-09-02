@@ -7,6 +7,148 @@
   "repo": "https://github.com/VirgilClyne/Cloudflare",
   "apps": [
     {
+      "id": "Cloudflare.1dot1dot1dot1.beta",
+      "name": "☁️ Cloudflare 1.1.1.1 β",
+      "descs_html": [
+        "不同运行方式所要填写的内容也不相同",
+        "使用说明请见<a href=\"https://github.com/VirgilClyne/Cloudflare/wiki/☁-1.1.1.1-by-Cloudflare-with-WARP#使用说明\">使用说明</a>",
+        "填写完成后请先点击此页面底端右下角的\"保存\"后，再到App中执行后续操作。"
+      ],
+      "keys": [
+        "@Cloudflare.1dot1dot1dot1.Settings",
+        "@Cloudflare.1dot1dot1dot1.Caches"
+      ],
+      "settings": [
+        {
+					"id": "@Cloudflare.1dot1dot1dot1.Settings.Switch",
+					"name": "总功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此模块"
+				},
+        {
+          "id": "@Cloudflare.1dot1dot1dot1.Settings.setupMode",
+          "name": "1.1.1.1: 运行方式/setupMode",
+          "val": "ChangeKeypair",
+          "type": "radios",
+          "items": [
+            {
+              "key": "ChangeKeypair",
+              "label": "更换公钥(用自定义密钥对)(公钥 & 注册ID & 令牌)/Change Public Key(with custom Keypair)(Public Key & Registration Id/id & Token)"
+            }
+          ],
+          "desc": "请选择运行模式"
+        },
+        {
+          "id": "@Cloudflare.1dot1dot1dot1.Settings.Verify.RegistrationId",
+          "name": "WARP: 注册ID(设备ID/客户端ID/配置文件ID)/Registration Id(Device ID/Client ID/Config ID)",
+          "val": "",
+          "type": "text",
+          "placeholder": "123e4567-e89b-12d3-a456-426614174000",
+          "desc": "设备ID, UUID, 请妥善保管，注册新设备时可以自己通过UUID生成器生成，每个设备和对应配置文件的唯一身份识别代码，不填写的话视为新设备注册，会自动生成，一个设备生成一个配置文件，想找回配置文件可以通过设备ID找回"
+        },
+        {
+          "id": "@WireGuard.VPN.Settings.PrivateKey",
+          "name": "WireGuard: 私钥/Private Key",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": "在Wireguard的iOS客户端里新建隧道，生成一个密钥对，私钥贴在这里，公钥贴下面"
+        },
+        {
+          "id": "@WireGuard.VPN.Settings.PublicKey",
+          "name": "WireGuard: 公钥/Public Key",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": "在Wireguard的iOS客户端里新建隧道，生成一个密钥对，公钥贴在这里，私钥贴上面"
+        }
+      ],
+      "author": "@VirgilClyne",
+      "icons": [
+        "https://is5-ssl.mzstatic.com/image/thumb/Purple122/v4/d3/c5/bb/d3c5bbed-08d4-481c-8585-f7d2e45abd5f/AppIcon-0-0-1x_U007emarketing-0-0-0-10-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/246x0w.png"
+      ]
+    },
+    {
+      "id": "WireGuard.VPN.beta",
+      "name": "🐲 WireGuard VPN β",
+      "keys": [
+        "@WireGuard.VPN.Settings",
+        "@WireGuard.VPN.Configs"
+      ],
+      "settings": [
+        {
+          "id": "@WireGuard.VPN.Settings.PrivateKey",
+          "name": "Interface: 私钥",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": "在Wireguard的iOS客户端里新建隧道，生成一个密钥对，私钥贴在这里，公钥贴下面"
+        },
+        {
+          "id": "@WireGuard.VPN.Settings.PublicKey",
+          "name": "Interface: 公钥",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": "在Wireguard的iOS客户端里新建隧道，生成一个密钥对，公钥贴在这里，私钥贴上面"
+        },
+        {
+          "id": "@WireGuard.VPN.Configs.interface.addresses.v4",
+          "name": "Interface: IPV4地址",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": ""
+        },
+        {
+          "id": "@WireGuard.VPN.Configs.interface.addresses.v6",
+          "name": "Interface: IPV6地址",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": ""
+        },
+        {
+          "id": "@WireGuard.VPN.Configs.peers[0].public_key",
+          "name": "Peer: 公钥",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": ""
+        },
+        {
+          "id": "@WireGuard.VPN.Configs.peers[0].endpoint.host",
+          "name": "Peer: endpoint 主机名",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": ""
+        },
+        {
+          "id": "@WireGuard.VPN.Configs.peers[0].endpoint.v4",
+          "name": "Peer: endpoint IPV4地址",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": ""
+        },
+        {
+          "id": "@WireGuard.VPN.Configs.peers[0].endpoint.v6",
+          "name": "Peer: endpoint IPV6地址",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": ""
+        }
+      ],
+      "author": "@VirgilClyne",
+      "icons": [
+        "https://www.wireguard.com/img/emblem.svg",
+        "https://www.wireguard.com/img/icons/favicon-128.png"
+      ]
+    },
+    {
       "id": "Cloudflare.DNS.beta",
       "name": "☁️ Cloudflare DNS β",
       "descs_html": [
@@ -95,6 +237,8 @@
       "id": "Cloudflare.WARP.beta",
       "name": "☁️ Cloudflare WARP β",
       "descs_html": [
+        "⚠️注意：此脚本已停止供应",
+        "请移步<a href=\"https://github.com/VirgilClyne/Cloudflare/wiki/☁-1.1.1.1-by-Cloudflare-with-WARP\">☁ 1.1.1.1 by Cloudflare with WARP</a>查看新脚本",
         "不同运行方式所要填写的内容也不相同",
         "使用说明请见<a href=\"https://github.com/VirgilClyne/Cloudflare/wiki/☁-Cloudflare-WARP\">使用说明</a>",
         "填写完成后请先点击此页面底端右下角的\"保存\"后，再点击此页面右上角的圆箭头按钮\"运行\"。"
@@ -241,85 +385,6 @@
       "icons": [
         "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Cloudflare.png",
         "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png"
-      ]
-    },
-    {
-      "id": "WireGuard.VPN.beta",
-      "name": "🐲 WireGuard VPN β",
-      "keys": [
-        "@WireGuard.VPN.Settings",
-        "@WireGuard.VPN.Configs"
-      ],
-      "settings": [
-        {
-          "id": "@WireGuard.VPN.Settings.PrivateKey",
-          "name": "Interface: 私钥",
-          "val": "",
-          "type": "text",
-          "placeholder": "",
-          "desc": "在Wireguard的iOS客户端里新建隧道，生成一个密钥对，私钥贴在这里，公钥贴下面"
-        },
-        {
-          "id": "@WireGuard.VPN.Settings.PublicKey",
-          "name": "Interface: 公钥",
-          "val": "",
-          "type": "text",
-          "placeholder": "",
-          "desc": "在Wireguard的iOS客户端里新建隧道，生成一个密钥对，公钥贴在这里，私钥贴上面"
-        },
-        {
-          "id": "@WireGuard.VPN.Configs.interface.addresses.v4",
-          "name": "Interface: IPV4地址",
-          "val": "",
-          "type": "text",
-          "placeholder": "",
-          "desc": ""
-        },
-        {
-          "id": "@WireGuard.VPN.Configs.interface.addresses.v6",
-          "name": "Interface: IPV6地址",
-          "val": "",
-          "type": "text",
-          "placeholder": "",
-          "desc": ""
-        },
-        {
-          "id": "@WireGuard.VPN.Configs.peers[0].public_key",
-          "name": "Peer: 公钥",
-          "val": "",
-          "type": "text",
-          "placeholder": "",
-          "desc": ""
-        },
-        {
-          "id": "@WireGuard.VPN.Configs.peers[0].endpoint.host",
-          "name": "Peer: endpoint 主机名",
-          "val": "",
-          "type": "text",
-          "placeholder": "",
-          "desc": ""
-        },
-        {
-          "id": "@WireGuard.VPN.Configs.peers[0].endpoint.v4",
-          "name": "Peer: endpoint IPV4地址",
-          "val": "",
-          "type": "text",
-          "placeholder": "",
-          "desc": ""
-        },
-        {
-          "id": "@WireGuard.VPN.Configs.peers[0].endpoint.v6",
-          "name": "Peer: endpoint IPV6地址",
-          "val": "",
-          "type": "text",
-          "placeholder": "",
-          "desc": ""
-        }
-      ],
-      "author": "@VirgilClyne",
-      "icons": [
-        "https://www.wireguard.com/img/emblem.svg",
-        "https://www.wireguard.com/img/icons/favicon-128.png"
       ]
     }
   ]

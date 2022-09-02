@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.2.5-request-beta");
+const $ = new Env("1.1.1.1 by Cloudflare v2.3.0-request-beta1");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -26,13 +26,13 @@ for (const [key, value] of Object.entries($request.headers)) {
 
 /***************** Processing *****************/
 (async () => {
-	const { Settings, Caches } = await setENV("Cloudflare", "WARP", DataBase);
+	const { Settings, Caches } = await setENV("Cloudflare", "1dot1dot1dot1", DataBase);
 	const WireGuard = await getENV("WireGuard", "VPN", DataBase);
 	const Type = RegExp(`/reg/${Settings.Verify.RegistrationId}$`, "i").test($request.url) ? "RegistrationId"
 		: /\/reg\//i.test($request.url) ? "Registration"
 			: undefined
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
-	await setCaches("Cloudflare", "WARP", $request.url, $request.headers);
+	await setCaches("Cloudflare", "1dot1dot1dot1", $request.url, $request.headers);
 	if (typeof $request.body !== "undefined") { // 有请求体
 		let body = JSON.parse($request.body);
 		switch (Type) {

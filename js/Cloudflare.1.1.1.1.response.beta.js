@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.2.0-response-beta5");
+const $ = new Env("1.1.1.1 by Cloudflare v2.3.0-response-beta1");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -26,7 +26,7 @@ for (const [key, value] of Object.entries($request.headers)) {
 
 /***************** Processing *****************/
 (async () => {
-	const { Settings } = await setENV("Cloudflare", "WARP", DataBase);
+	const { Settings } = await setENV("Cloudflare", "1dot1dot1dot1", DataBase);
 	const WireGuard = await getENV("WireGuard", "VPN", DataBase);
 	const Token = $request?.headers?.authorization?.match(/Bearer (\S*)/)?.[1] ?? $request?.headers?.Authorization?.match(/Bearer (\S*)/)?.[1]
 	const Type = RegExp(`/reg/${Settings.Verify.RegistrationId}$`, "i").test($request.url) ? "RegistrationId"
@@ -112,7 +112,7 @@ async function setENV(name, platform, database) {
 			Configs.Request.headers["x-auth-email"] = Settings.Verify.Content[1];
 			break;
 		default:
-			$.log("无可用授权方式", `Mode=${Settings.Verify.Mode}`, `Content=${Settings.Verify.Content}`);
+			$.log("无可用授权方式", `Mode=${Settings.Verify.Mode}`, `Content=${Settings.Verify.Content}`, "");
 			break;
 	};
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
