@@ -2,8 +2,16 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.2.0-response");
+const $ = new Env("1.1.1.1 by Cloudflare v2.3.0-response");
 const DataBase = {
+	"1dot1dot1dot1": {
+		"Settings": {"Switch":true,"setupMode":"ChangeKeypair","Verify":{"RegistrationId":null,"Mode":"Token","Content":null}},
+		"Configs": {"Request":{"url":"https://api.cloudflareclient.com","headers":{"authorization":null,"content-Type":"application/json","user-Agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","cf-client-version":"i-6.7-2109031904.1"}}}
+	},
+	"VPN": {
+		"Settings":{"Switch":true,"PrivateKey":"","PublicKey":""},
+		"Configs":{"interface":{"addresses":{"v4":"","v6":""}},"peers":[{"public_key":"","endpoint":{"host":"","v4":"","v6":""}}]}
+	},
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
 		"Configs":{"Request":{"url":"https://api.cloudflare.com/client/v4","headers":{"content-type":"application/json"}}}
@@ -11,10 +19,6 @@ const DataBase = {
 	"WARP": {
 		"Settings":{"Switch":true,"setupMode":null,"deviceType":"iOS","Verify":{"License":null,"Mode":"Token","Content":null,"RegistrationId":null}},
 		"Configs":{"Request":{"url":"https://api.cloudflareclient.com","headers":{"authorization":null,"content-type":"application/json","user-agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","cf-client-version":"i-6.7-2109031904.1"}},"Environment":{"iOS":{"Type":"i","Version":"v0i2109031904","headers":{"user-agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","cf-client-version":"i-6.7-2109031904.1"}},"macOS":{"Type":"m","Version":"v0i2109031904","headers":{"user-agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","cf-client-version":"m-2021.12.1.0-0"}},"Android":{"Type":"a","Version":"v0a1922","headers":{"user-agent":"okhttp/3.12.1","cf-client-version":"a-6.3-1922"}},"Windows":{"Type":"w","Version":"","headers":{"user-agent":"","cf-client-version":""}},"Linux":{"Type":"l","Version":"","headers":{"user-agent":"","cf-client-version":""}}}}
-	},
-	"VPN": {
-		"Settings":{"Switch":true,"PrivateKey":"","PublicKey":""},
-		"Configs":{"interface":{"addresses":{"v4":"","v6":""}},"peers":[{"public_key":"","endpoint":{"host":"","v4":"","v6":""}}]}
 	}
 };
 
@@ -26,7 +30,7 @@ for (const [key, value] of Object.entries($request.headers)) {
 
 /***************** Processing *****************/
 (async () => {
-	const { Settings } = await setENV("Cloudflare", "WARP", DataBase);
+	const { Settings } = await setENV("Cloudflare", "1dot1dot1dot1", DataBase);
 	const WireGuard = await getENV("WireGuard", "VPN", DataBase);
 	const Token = $request?.headers?.authorization?.match(/Bearer (\S*)/)?.[1] ?? $request?.headers?.Authorization?.match(/Bearer (\S*)/)?.[1]
 	const Type = RegExp(`/reg/${Settings.Verify.RegistrationId}$`, "i").test($request.url) ? "RegistrationId"
@@ -40,11 +44,8 @@ for (const [key, value] of Object.entries($request.headers)) {
 			case true:
 				const result = body?.result?.[0] ?? body?.result; // body.result, body.meta
 				if (result) {
-					const verify = `当前客户端公钥为:\n${result.key}\n用户设置公钥为:\n${WireGuard.Settings.PublicKey}\n如两者一致，下列配置有效`
-					const surge = `[WireGuard Cloudflare]\nprivate-key = ${WireGuard.Settings.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 162.159.36.1, 2606:4700:4700::1111\nmtu = 1280\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.nanocat.me:2408, keepalive = 45)`;
-					const config = JSON.stringify(result);
-					let URI = `mailto:engage@nanocat.me?subject=☁️ Cloudflare for ${result.account.account_type}配置文件&body=有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\n完整配置内容:\n${config}`;
-					let message = encodeURI(URI);
+					await setConfigs("WireGuard", "VPN", result.config);
+					const message = await setMessage(result, WireGuard);
 					switch (Type) {
 						case "Registration": // 是链接
 							if ($request.method === "GET" || $request.method === "PUT") { // 是GET或PUT方法
@@ -112,11 +113,50 @@ async function setENV(name, platform, database) {
 			Configs.Request.headers["x-auth-email"] = Settings.Verify.Content[1];
 			break;
 		default:
-			$.log("无可用授权方式", `Mode=${Settings.Verify.Mode}`, `Content=${Settings.Verify.Content}`);
+			$.log("无可用授权方式", `Mode=${Settings.Verify.Mode}`, `Content=${Settings.Verify.Content}`, "");
 			break;
 	};
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	return { Settings, Caches, Configs }
+};
+
+/**
+ * Set Message
+ * @author VirgilClyne
+ * @param {String} name - Persistent Store Key
+ * @param {String} platform - Platform Name
+ * @param {Object} headers - Configs
+ * @return {Promise<*>}
+ */
+async function setMessage(result, WireGuard) {
+	$.log(`⚠ ${$.name}, Set Message`, "");
+	const verify = `当前客户端公钥为:\n${result.key}\n用户设置公钥为:\n${WireGuard?.Settings?.PublicKey ?? "请到BoxJs面板中进行设置"}\n如两者一致，下列配置有效`
+	const surge = `[Proxy]WARP = wireguard, section-name=Cloudflare, test-url=http://cp.cloudflare.com/generate_204\n\n[WireGuard Cloudflare]\nprivate-key = ${WireGuard.Settings.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 162.159.36.1, 2606:4700:4700::1111\nmtu = 1280\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.nanocat.me:2408, keepalive = 45)`;
+	const config = JSON.stringify(result);
+	let URI = `mailto:engage@nanocat.me?subject=☁️ Cloudflare for ${result.account.account_type}配置文件&body=有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\n完整配置内容:\n${config}`;
+	let message = encodeURI(URI);
+	$.log(`🎉 ${$.name}, Set Message`, "");
+	return message;
+};
+
+/**
+ * Set Configs
+ * @author VirgilClyne
+ * @param {String} name - Persistent Store Key
+ * @param {String} platform - Platform Name
+ * @param {Object} headers - Configs
+ * @return {Promise<*>}
+ */
+async function setConfigs(name, platform, Configs) {
+	$.log(`⚠ ${$.name}, Set Configs`, "");
+	// 写入Caches
+	$.setjson(Configs.interface.addresses.v4, `@${name}.${platform}.Configs.interface.addresses.v4`);
+	$.setjson(Configs.interface.addresses.v6, `@${name}.${platform}.Configs.interface.addresses.v6`);
+	$.setjson(Configs.peers[0].public_key, `@${name}.${platform}.Configs.peers[0].public_key`);
+	$.setjson(Configs.peers[0].endpoint.host, `@${name}.${platform}.Configs.peers[0].endpoint.host`);
+	$.setjson(Configs.peers[0].endpoint.v4, `@${name}.${platform}.Configs.peers[0].endpoint.v4`);
+	$.setjson(Configs.peers[0].endpoint.v6, `@${name}.${platform}.Configs.peers[0].endpoint.v6`);
+	return $.log(`🎉 ${$.name}, Set Configs`, "");
 };
 
 /***************** Env *****************/
