@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.1.5-response");
+const $ = new Env("1.1.1.1 by Cloudflare v2.2.0-response");
 const DataBase = {
 	"DNS": {
 		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
@@ -40,24 +40,22 @@ for (const [key, value] of Object.entries($request.headers)) {
 			case true:
 				const result = body?.result?.[0] ?? body?.result; // body.result, body.meta
 				if (result) {
+					const surge = `[WireGuard Cloudflare]\nprivate-key = ${WireGuard.Settings.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 1.1.1.1, 1.0.0.1, 2606:4700:4700::1111, 2606:4700:4700::1001\nmtu = 1400\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.nanocat.me:2408, keepalive = 45)`;
+					const config = JSON.stringify(result);
+					let URI = `mailto:engage@nanocat.me?subject=☁️ Cloudflare for ${result.account.account_type}配置文件&body=Surge用配置:\n${surge}\n\n\n完整配置内容:\n${config}`;
+					let message = encodeURI(URI);
 					switch (Type) {
 						case "Registration": // 是链接
 							if ($request.method === "GET" || $request.method === "PUT") { // 是GET或PUT方法
-								if (result.id.startsWith("t.")) {
-									$.msg($.name, "检测到WARP Teams配置文件", `设备注册ID:\n${result.id}\n设备令牌Token:\n${Token}\n账户类型:${result.account.account_type}\n账户组织:${result.account.organization}\n客户端公钥:\n${result.key}\n节点公钥:\n${result.config.peers[0].public_key}`);
-									//$.log($.name, "检测到WARP Teams配置文件", `设备注册ID/id: ${result.id}`, `设备令牌Token: ${Token}`, `账户ID/account.id: ${result.account.id}`, `账户类型/account.account_type: ${result.account.account_type}`, `账户组织/account.organization: ${result.account.organization}`, `客户端公钥/key: ${result.key}`, `节点公钥/config.peers[0].public_key: ${result.config.peers[0].public_key}`, '', `原始配置文件:\n${JSON.stringify(result)}`);
-									$.log($.name, "检测到WARP Teams配置文件", `原始配置文件:\n注意！文本内容未转义！字符串中可能包含额外字符！\n${JSON.stringify(result)}`, '');
-								} else {
-									$.msg($.name, "检测到WARP Personal配置文件", `设备注册ID:\n${result.id}\n设备令牌Token:\n${Token}\nWARP启用状态: ${result.warp_enabled},账户类型:${result.account.account_type},WARP+:${result.account.warp_plus},WARP+流量:${result.account.premium},邀请人数:${result.account.referral_count}\n许可证/account.license:\n${result.account.license}\n客户端公钥:\n${result.key}\n节点公钥:\n${result.config.peers[0].public_key}`);
-									//$.log($.name, "检测到WARP Personal配置文件", `设备注册ID/id: ${result.id}`, `设备令牌Token: ${Token}`, `WARP启用状态/warp_enabled: ${result.warp_enabled}`, `账户ID/account.id: ${result.account.id}`, `许可证/account.license: ${result.account.license}`, `账户类型/account.account_type: ${result.account.account_type}`, `WARP+/account.warp_plus: ${result.account.warp_plus}`, `WARP+流量/account.premium: ${result.account.premium}`, `邀请人数/account.referral_count: ${result.account.referral_count}`, `客户端公钥/key: ${result.key}`, `节点公钥/config.peers[0].public_key: ${result.config.peers[0].public_key}`, '', `原始配置文件:\n${JSON.stringify(result)}`);
-									$.log($.name, "检测到WARP Personal配置文件", `原始配置文件:\n注意！文本内容未转义！字符串中可能包含额外字符！\n${JSON.stringify(result)}`, '');
-								}
+								$.msg($.name, `检测到${result.account.account_type}配置文件`, `点击此通知在“邮件”中打开，查看完整配置。\n设备注册ID:\n${result.id}\n设备令牌Token:\n${Token}\n客户端公钥:\n${result.key}\n节点公钥:\n${result.config.peers[0].public_key}`, message);
+								$.log($.name, `检测到${result.account.account_type}配置文件`, `原始配置文件:\n注意！文本内容未转义！字符串中可能包含额外字符！\n${JSON.stringify(result)}`, '');
 							}
 							break;
 						case "RegistrationId": // 是指定链接
 							if ($request.method === "PUT") { // 是PUT方法
-								$.msg($.name, "重置密钥", `收到回复数据，当前客户端公钥为:\n${result.key}\n用户设置公钥为:\n${WireGuard.Settings.PublicKey}\n如两者一致，则替换成功`);
+								$.msg($.name, "重置密钥", `点击此通知在“邮件”中打开，查看完整配置。\n收到回复数据，当前客户端公钥为:\n${result.key}\n用户设置公钥为:\n${WireGuard.Settings.PublicKey}\n如两者一致，则替换成功`, message);
 								//$.log($.name, "重置密钥", "收到回复数据，当前替换客户端公钥为:", result.key, "用户设置公钥为:", WireGuard.Settings.PublicKey, "如两者一致，则替换成功", "");
+								$.log($.name, `检测到${result.account.account_type}配置文件`, `原始配置文件:\n注意！文本内容未转义！字符串中可能包含额外字符！\n${JSON.stringify(result)}`, '');
 							}
 							break;
 					};
@@ -68,14 +66,11 @@ for (const [key, value] of Object.entries($request.headers)) {
 			case undefined:
 				throw new Error($response);
 		};
-		$response.body = JSON.stringify(body);
+		//$response.body = JSON.stringify(body);
 	};
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => {
-		if ($.isQuanX()) $.done({ body: $response.body })
-		else $.done($response)
-	})
+	.finally(() => $.done())
 
 /***************** Function *****************/
 /**
