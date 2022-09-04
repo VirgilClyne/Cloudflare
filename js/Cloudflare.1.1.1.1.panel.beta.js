@@ -2,11 +2,59 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v1.3.1-panel-beta1");
+const $ = new Env("1.1.1.1 by Cloudflare v1.4.0-panel-beta1");
 const DataBase = {
 	"1dot1dot1dot1": {
 		"Settings": {"Switch":true,"setupMode":"ChangeKeypair","Verify":{"RegistrationId":null,"Mode":"Token","Content":null}},
-		"Configs": {"Request":{"url":"https://api.cloudflareclient.com","headers":{"authorization":null,"content-Type":"application/json","user-Agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","cf-client-version":"i-6.7-2109031904.1"}}}
+		"Configs": {
+			"Request":{"url":"https://api.cloudflareclient.com","headers":{"authorization":null,"content-Type":"application/json","user-Agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","cf-client-version":"i-6.7-2109031904.1"}},
+			"i18n": {
+				"zh-Hans": {
+					"IPv4": "公用IPv4",
+					"IPv6": "公用IPv6",
+					"COLO": "主机托管中心",
+					"WARP_Level": "WARP隐私",
+					"Account_Type": "账户类型",
+					"Data_Info": "流量信息",
+					"Unknown": "未知",
+					"Fail": "获取失败",
+					"WARP_Level_Off": "没有保护",
+					"WARP_Level_On": "部分保护",
+					"WARP_Level_Plus": "完整保护",
+					"Account_Type_unlimited": "无限版",
+					"Account_Type_limited": "有限版",
+					"Account_Type_team": "团队版",
+					"Account_Type_plus": "WARP+",
+					"Account_Type_free": "免费版",
+					"Data_Info_Used": "已用流量",
+					"Data_Info_Residual": "剩余流量",
+					"Data_Info_Total": "总计流量",
+					"Data_Info_Unlimited": "无限流量"
+				},
+				"en": {
+					"IPv4": "Public IPv4",
+					"IPv6": "Public IPv6",
+					"COLO": "Colocation Center",
+					"WARP_Level": "WARP Level",
+					"Account_Type": "Account Type",
+					"Data_Info": "Data Information",
+					"Unknown": "Unknown",
+					"Fail": "Fail to Get",
+					"WARP_Level_Off": "No Protection",
+					"WARP_Level_On": "Partial Protection",
+					"WARP_Level_Plus": "Complete Protection",
+					"Account_Type_unlimited": "Unlimited Ver.",
+					"Account_Type_limited": "Limited Ver.",
+					"Account_Type_team": "Team Ver.",
+					"Account_Type_plus": "WARP+",
+					"Account_Type_free": "Free Ver.",
+					"Data_Info_Used": "Used",
+					"Data_Info_Residual": "Residual",
+					"Data_Info_Total": "Total",
+					"Data_Info_Unlimited": "Unlimited"
+				}
+			}
+		}
 	},
 	"VPN": {
 		"Settings":{"Switch":true,"PrivateKey":"","PublicKey":""},
@@ -26,6 +74,7 @@ const DataBase = {
 (async () => {
 	const { Settings, Caches, Configs } = await setENV("Cloudflare", "1dot1dot1dot1", DataBase);
 	const [Trace4, Trace6] = await Promise.allSettled([Cloudflare("trace4"), Cloudflare("trace6")]).then(results => results.map(result => formatTrace(result.value)));
+	const Language = $environment?.language ?? "zh-Hans"
 	let Account = {};
 	if (Caches?.url && Caches?.headers) {
 		const Request = {
@@ -37,22 +86,15 @@ const DataBase = {
 		};
 		Account = await Cloudflare("GET", Request).then(result => formatAccount(result?.account ?? {}));
 	};
-	let content = {}
-	switch ($environment.language) {
-		case "zh-Hans":
-		case "zh-Hant":
-			content = `公用IPv4: ${Trace4?.ip}\n公用IPv6: ${Trace6?.ip}\n主机托管中心: ${Trace4?.loc ?? Trace6?.loc} | ${Trace4?.colo ?? Trace6?.colo}\nWARP隐私: ${Trace4?.warp ?? Trace6?.warp}\n账户类型: ${Account?.data?.type ?? "获取失败"}\n流量信息: ${Account?.data?.text ?? "获取失败"}`
-			break;
-		case "en":
-		case "en-US":
-		default:
-			content = `Public IPv4: ${Trace4?.ip}\nPublic IPv6: ${Trace6?.ip}\nColocation Center: ${Trace4?.loc ?? Trace6?.loc} | ${Trace4?.colo ?? Trace6?.colo}\nWARP Level: ${Trace4?.warp ?? Trace6?.warp}\nAccount Type: ${Account?.data?.type ?? "Failed to get"}\nData Information: ${Account?.data?.text ?? "Failed to get"}`
-			break;
-	};
 	const Panel = {
 		"title": "☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤",
 		"icon": "lock.icloud.fill",
-		"content": content,
+		"content": `${Configs.i18n[Language].IPv4}: ${Trace4?.ip}\n`
+			+ `${Configs.i18n[Language].IPv6}: ${Trace6?.ip}\n`
+			+ `${Configs.i18n[Language].COLO}: ${Trace4?.loc ?? Trace6?.loc} | ${Trace4?.colo ?? Trace6?.colo}\n`
+			+ `${Configs.i18n[Language].WARP_Level}: ${Trace4?.warp ?? Trace6?.warp}\n`
+			+ `${Configs.i18n[Language].Account_Type}: ${Account?.data?.type ?? Configs.i18n[Language].Fail}\n`
+			+ `${Configs.i18n[Language].Data_Info}: ${Account?.data?.text ?? Configs.i18n[Language].Fail}`,
 	};
     $done(Panel);
 })()
