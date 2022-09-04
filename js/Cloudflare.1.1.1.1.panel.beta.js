@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v1.4.0-panel-beta2");
+const $ = new Env("1️⃣ 1.1.1.1 by Cloudflare v1.4.0-panel-beta3");
 const DataBase = {
 	"1dot1dot1dot1": {
 		"Settings": {"Switch":true,"setupMode":"ChangeKeypair","Verify":{"RegistrationId":null,"Mode":"Token","Content":null}},
@@ -125,17 +125,17 @@ function formatTrace(trace, i18n = DataBase["1dot1dot1dot1"].Configs.i18n, langu
 	return trace;
 };
 
-function formatAccount(account) {
+function formatAccount(account, i18n = DataBase["1dot1dot1dot1"].Configs.i18n, language = $environment?.language ?? "zh-Hans") {
 	switch (account.account_type) {
 		case "unlimited":
 			account.data = {
-				"type": "无限版 | unlimited",
+				"type": `${i18n[language].Account_Type_unlimited} | ${account?.account_type}`,
 				"limited": false,
 			}
 			break;
 		case "limited":
 			account.data = {
-				"type": "有限版 | limited",
+				"type": `${i18n[language].Account_Type_limited} | ${account?.account_type}`,
 				"limited": true,
 				"used": parseInt(account.premium_data - account.quota) / 1024 / 1024 / 1024,
 				"flow": parseInt(account.quota) / 1024 / 1024 / 1024,
@@ -144,19 +144,19 @@ function formatAccount(account) {
 			break;
 		case "team":
 			account.data = {
-				"type": "团队版 | team",
+				"type": `${i18n[language].Account_Type_team} | ${account?.account_type}`,
 				"limited": false,
 			}
 			break;
 		case "plus":
 			account.data = {
-				"type": "WARP+ | plus",
+				"type": `${i18n[language].Account_Type_plus} | ${account?.account_type}`,
 				"limited": false,
 			}
 			break;
 		case "free":
 			account.data = {
-				"type": "免费版 | free",
+				"type": `${i18n[language].Account_Type_free} | ${account?.account_type}`,
 				"limited": true,
 				"used": parseInt(account.premium_data - account.quota) / 1024 / 1024 / 1024,
 				"flow": parseInt(account.quota) / 1024 / 1024 / 1024,
@@ -165,34 +165,27 @@ function formatAccount(account) {
 			break;
 		default:
 			account.data = {
-				"type": account?.account_type,
+				"type": `${i18n[language].Unknown} | ${account?.account_type}`,
 				"limited": undefined
 			}
 			break;
 	};
 	switch (account.data.limited) {
 		case true:
-			switch ($environment.language) {
-				case "zh-Hans":
-				case "zh-Hant":
-					account.data.text = `\n已用流量: ${account.data.used.toFixed(2)}GB\n剩余流量: ${account.data.flow.toFixed(2)}GB\n总计流量: ${account.data.total.toFixed(2)}GB`
-					break;
-				case "en":
-				case "en-US":
-				default:
-					account.data.text = `\nUsed: ${account.data.used.toFixed(2)}GB\nResidual: ${account.data.flow.toFixed(2)}GB\nTotal: ${account.data.total.toFixed(2)}GB`
-					break;
-			};
+			account.data.text = `\n${i18n[language].Data_Info_Used}: ${account.data.used.toFixed(2)}GB`
+				+ `\n${i18n[language].Data_Info_Residual}: ${account.data.flow.toFixed(2)}GB`
+				+ `\n${i18n[language].Data_Info_Total}: ${account.data.total.toFixed(2)}GB`
 			break;
 		case false:
-			account.data.text = "无限制 | unlimited"
+			account.data.text = `${i18n[language].Data_Info_Unlimited} | ♾️`
 			break;
 		default:
-			account.data.text = "未知 | unknown"
+			account.data.text = `${i18n[language].Unknown} | unknown`
 			break;
 	}
 	return account;
 };
+
 async function Cloudflare(opt, Request = DataBase.WARP.Configs.Request, Environment = DataBase.WARP.Configs.Environment, Settings = DataBase.WARP.Settings ) {
 	/*
 	let Request = {
