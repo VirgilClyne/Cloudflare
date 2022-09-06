@@ -41,6 +41,28 @@
 				"Data_Info_Total": "总计流量",
 				"Data_Info_Unlimited": "无限流量"
 			},
+			"zh-Hant": {
+				"IPv4": "公用IPv4",
+				"IPv6": "公用IPv6",
+				"COLO": "主機託管中心",
+				"WARP_Level": "WARP隱私",
+				"Account_Type": "賬戶類型",
+				"Data_Info": "流量信息",
+				"Unknown": "未知",
+				"Fail": "獲取失敗",
+				"WARP_Level_Off": "沒有保護",
+				"WARP_Level_On": "部分保護",
+				"WARP_Level_Plus": "完整保護",
+				"Account_Type_unlimited": "無限版",
+				"Account_Type_limited": "有限版",
+				"Account_Type_team": "團隊版",
+				"Account_Type_plus": "WARP+",
+				"Account_Type_free": "免費版",
+				"Data_Info_Used": "已用流量",
+				"Data_Info_Residual": "剩餘流量",
+				"Data_Info_Total": "總計流量",
+				"Data_Info_Unlimited": "無限流量"
+			},
 			"en": {
 				"IPv4": "Public IPv4",
 				"IPv6": "Public IPv6",
