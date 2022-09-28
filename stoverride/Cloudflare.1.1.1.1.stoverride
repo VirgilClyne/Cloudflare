@@ -6,6 +6,13 @@ homepage: https://github.com/VirgilClyne
 manual: https://github.com/VirgilClyne/Cloudflare/wiki/☁-1.1.1.1-by-Cloudflare-with-WARP
 icon: https://is5-ssl.mzstatic.com/image/thumb/Purple122/v4/d3/c5/bb/d3c5bbed-08d4-481c-8585-f7d2e45abd5f/AppIcon-0-0-1x_U007emarketing-0-0-0-10-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/246x0w.png
 
+tiles:
+  - name: Cloudflare.1.1.1.1.panel
+    interval: 600
+    title: '☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤'
+    icon: 'lock.icloud.fill'
+    backgroundColor: '#f6821f'
+
 http:
   mitm:
     - "api.cloudflareclient.com"
@@ -13,30 +20,33 @@ http:
 
   script:
     - match: ^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$
-      name: 1.1.1.1.request
+      name: Cloudflare.1.1.1.1.request
       type: request
       require-body: true
       timeout: 10
     - match: ^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$
-      name: 1.1.1.1.response
+      name: Cloudflare.1.1.1.1.response
       type: response
       require-body: true
       timeout: 10
     - match: ^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/t\.[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$
-      name: 1.1.1.1.response
+      name: Cloudflare.1.1.1.1.response
       type: request
       require-body: true
       timeout: 10
     - match: ^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/t\.[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$
-      name: 1.1.1.1.request
+      name: Cloudflare.1.1.1.1.request
       type: response
       require-body: true
       timeout: 10
 
 script-providers:
-  1.1.1.1.request:
+  Cloudflare.1.1.1.1.panel:
+    url: https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.1.1.1.1.panel.js
+    interval: 86400
+  Cloudflare.1.1.1.1.request:
     url: https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.1.1.1.1.request.js
     interval: 86400
-  1.1.1.1.request:
+  Cloudflare.1.1.1.1.request:
     url: https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.1.1.1.1.response.js
     interval: 86400
