@@ -47,6 +47,6 @@ script-providers:
   Cloudflare.1.1.1.1.request:
     url: https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.1.1.1.1.request.js
     interval: 86400
-  Cloudflare.1.1.1.1.request:
+  Cloudflare.1.1.1.1.response:
     url: https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.1.1.1.1.response.js
     interval: 86400
