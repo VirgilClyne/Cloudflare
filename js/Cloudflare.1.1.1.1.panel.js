@@ -47,8 +47,8 @@ const DataBase = {
 		Account = await Cloudflare("GET", Request).then(result => formatAccount(result?.account ?? {}));
 	};
 	const Panel = {
-		"title": "☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤",
-		"icon": "lock.icloud.fill",
+		"title": "𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤",
+		"icon": "https://raw.githubusercontent.com/shindgewongxj/WHATSINStash/main/icon/cloudflare.png",
 		"content": `${Configs.i18n[Language].IPv4}: ${Trace4?.ip}\n`
 			+ `${Configs.i18n[Language].IPv6}: ${Trace6?.ip}\n`
 			+ `${Configs.i18n[Language].COLO}: ${Trace4?.loc ?? Trace6?.loc} | ${Trace4?.colo ?? Trace6?.colo}\n`
