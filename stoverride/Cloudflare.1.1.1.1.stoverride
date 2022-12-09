@@ -9,8 +9,8 @@ icon: https://is5-ssl.mzstatic.com/image/thumb/Purple122/v4/d3/c5/bb/d3c5bbed-08
 tiles:
   - name: Cloudflare.1.1.1.1.panel
     interval: 600
-    title: '☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤'
-    icon: 'lock.icloud.fill'
+    title: '𝙄𝙣𝙛𝙤'
+    icon: 'https://raw.githubusercontent.com/shindgewongxj/WHATSINStash/main/icon/warp.png'
     backgroundColor: '#f6821f'
 
 http:
