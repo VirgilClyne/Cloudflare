@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1️⃣ 1.1.1.1 by Cloudflare v1.4.2-panel-beta1");
+const $ = new Env("1️⃣ 1.1.1.1 by Cloudflare v1.4.3-panel-beta1");
 const DataBase = {
 	"1dot1dot1dot1": {
 		"Settings": {"Switch":true,"setupMode":"ChangeKeypair","Verify":{"RegistrationId":null,"Mode":"Token","Content":null}},
@@ -47,8 +47,8 @@ const DataBase = {
 		Account = await Cloudflare("GET", Request).then(result => formatAccount(result?.account ?? {}));
 	};
 	const Panel = {
-		"title": "☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤",
-		"icon": "lock.icloud.fill",
+		"title": $.isStash() ? "𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤" : "☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤",
+		"icon": $.isStash() ? "https://raw.githubusercontent.com/shindgewongxj/WHATSINStash/main/icon/warp.png" : "lock.icloud.fill",
 		"content": `${Configs.i18n[Language].IPv4}: ${Trace4?.ip}\n`
 			+ `${Configs.i18n[Language].IPv6}: ${Trace6?.ip}\n`
 			+ `${Configs.i18n[Language].COLO}: ${Trace4?.loc ?? Trace6?.loc} | ${Trace4?.colo ?? Trace6?.colo}\n`
