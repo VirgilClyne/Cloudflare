@@ -12,6 +12,8 @@ tiles:
     title: '𝙄𝙣𝙛𝙤'
     icon: 'https://raw.githubusercontent.com/shindgewongxj/WHATSINStash/main/icon/warp.png'
     backgroundColor: '#f6821f'
+    content: '首次使用前请先打开1.1.1.1 app提取流量信息'
+
 
 http:
   mitm:
