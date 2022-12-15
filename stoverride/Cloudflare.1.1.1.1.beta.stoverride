@@ -31,12 +31,12 @@ http:
       require-body: true
       timeout: 10
     - match: ^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/t\.[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$
-      name: Cloudflare.1.1.1.1.response
+      name: Cloudflare.1.1.1.1.request
       type: request
       require-body: true
       timeout: 10
     - match: ^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/t\.[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$
-      name: Cloudflare.1.1.1.1.request
+      name: Cloudflare.1.1.1.1.response
       type: response
       require-body: true
       timeout: 10
