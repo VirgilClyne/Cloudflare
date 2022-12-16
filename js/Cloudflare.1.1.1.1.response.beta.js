@@ -144,20 +144,19 @@ async function setMessage(result, WireGuard) {
 	$.log(`⚠ ${$.name}, Set Message`, "");
 	const verify = `当前客户端公钥为:\n${result.key}\n用户设置公钥为:\n${WireGuard?.Settings?.PublicKey ?? "请到BoxJs面板中进行设置"}\n如两者一致，下列配置有效`;
 	const config = JSON.stringify(result);
-	let URI = "";
+	let message = "";
 	if ($.isStash()) {
 		const stash = `name: Cloudflare\ntype: wireguard\nserver: engage.nanocat.me # domain is supported\nport: 2048\nip: ${result?.config?.interface?.addresses?.v4}\nipv6: ${result?.config?.interface?.addresses?.v6} # optional\nprivate-key: ${WireGuard?.Settings?.PrivateKey}\npublic-key: bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo= # peer public key\n# preshared-key: # optional\ndns: [162.159.36.1, 2606:4700:4700::1111] # optional\nmtu: 1280 # optional\n# reserved: [${result?.config?.reserved}] # optional\nkeepalive: 45 # optional\n# underlying-proxy: # optional\n#   type: trojan\n#   server: your-underlying-proxy\n#   port: 443\n#   password: your-password`;
-		URI = `mailto:engage@nanocat.me?subject=☁️ Cloudflare for ${result.account.account_type}配置文件&body=有效性验证:\n${verify}\n\n\nStash用配置:\n${stash}\n\n\n完整配置内容:\n${config}`;
+		message = `mailto:engage@nanocat.me?subject=${encodeURIComponent(`☁️ Cloudflare for ${result.account.account_type}配置文件`)}&body=${encodeURIComponent(`有效性验证:\n${verify}\n\n\nStash用配置:\n${stash}\n\n\n完整配置内容:\n${config}`)}`;
 	} else if ($.isSurge()) {
 		const surge = `[Proxy]\nWARP = wireguard, section-name=Cloudflare, test-url=http://cp.cloudflare.com/generate_204\n\n[WireGuard Cloudflare]\nprivate-key = ${WireGuard.Settings.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 162.159.36.1, 2606:4700:4700::1111\nmtu = 1280\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.nanocat.me:2408, keepalive = 45)\nreserved = [${result?.config?.reserved}]`;
-		URI = `mailto:engage@nanocat.me?subject=☁️ Cloudflare for ${result.account.account_type}配置文件&body=有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\n完整配置内容:\n${config}`;
+		message = `mailto:engage@nanocat.me?subject=${encodeURIComponent(`☁️ Cloudflare for ${result.account.account_type}配置文件`)}&body=${encodeURIComponent(`有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\n完整配置内容:\n${config}`)}`;
 	} else {
 		const surge = `[Proxy]\nWARP = wireguard, section-name=Cloudflare, test-url=http://cp.cloudflare.com/generate_204\n\n[WireGuard Cloudflare]\nprivate-key = ${WireGuard?.Settings?.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 162.159.36.1, 2606:4700:4700::1111\nmtu = 1280\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.nanocat.me:2408, keepalive = 45)\nreserved = [${result?.config?.reserved}]`;
 		const stash = `name: Cloudflare\ntype: wireguard\nserver: engage.nanocat.me # domain is supported\nport: 2048\nip: ${result?.config?.interface?.addresses?.v4}\nipv6: ${result?.config?.interface?.addresses?.v6} # optional\nprivate-key: ${WireGuard?.Settings?.PrivateKey}\npublic-key: bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo= # peer public key\n# preshared-key: # optional\ndns: [162.159.36.1, 2606:4700:4700::1111] # optional\nmtu: 1280 # optional\n# reserved: [${result?.config?.reserved}] # optional\nkeepalive: 45 # optional\n# underlying-proxy: # optional\n#   type: trojan\n#   server: your-underlying-proxy\n#   port: 443\n#   password: your-password`;
-		URI = `mailto:engage@nanocat.me?subject=☁️ Cloudflare for ${result?.account?.account_type}配置文件&body=有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\nStash用配置:\n${stash}\n\n\n完整配置内容:\n${config}`;
+		message = `mailto:engage@nanocat.me?subject=${encodeURIComponent(`☁️ Cloudflare for ${result?.account?.account_type}配置文件`)}&body=${encodeURIComponent(`有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\nStash用配置:\n${stash}\n\n\n完整配置内容:\n${config}`)}`;
 	}
-	const message = encodeURIComponent(URI);
-	$.log(`🚧 ${$.name}, Set Message`, `encodeURIComponent(URI): ${message}`, "");
+	$.log(`🚧 ${$.name}, Set Message`, `message: ${message}`, "");
 	$.log(`🎉 ${$.name}, Set Message`, "");
 	return message;
 };
