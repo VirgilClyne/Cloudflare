@@ -94,6 +94,14 @@
           "desc": "在Wireguard的iOS客户端里新建隧道，生成一个密钥对，公钥贴在这里，私钥贴上面"
         },
         {
+          "id": "@WireGuard.VPN.Configs.Reserved",
+          "name": "Reserved: routingId",
+          "val": "",
+          "type": "text",
+          "placeholder": "",
+          "desc": ""
+        },
+        {
           "id": "@WireGuard.VPN.Configs.interface.addresses.v4",
           "name": "Interface: IPV4地址",
           "val": "",
