@@ -2,14 +2,13 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1️⃣ 1.1.1.1 by Cloudflare v1.4.3-panel-beta1");
+const $ = new Env("1️⃣ 1.1.1.1 by Cloudflare v1.4.4-panel-beta1");
 const DataBase = {
 	"1dot1dot1dot1": {
 		"Settings": {"Switch":true,"setupMode":"ChangeKeypair","Verify":{"RegistrationId":null,"Mode":"Token","Content":null}},
 		"Configs": {
 			"Request":{"url":"https://api.cloudflareclient.com","headers":{"authorization":null,"content-Type":"application/json","user-Agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","cf-client-version":"i-6.7-2109031904.1"}},
 			"i18n":{
-				"zh":{"IPv4":"公用IPv4","IPv6":"公用IPv6","COLO":"主机托管中心","WARP_Level":"WARP隐私","Account_Type":"账户类型","Data_Info":"流量信息","Unknown":"未知","Fail":"获取失败","WARP_Level_Off":"没有保护","WARP_Level_On":"部分保护","WARP_Level_Plus":"完整保护","Account_Type_unlimited":"无限版","Account_Type_limited":"有限版","Account_Type_team":"团队版","Account_Type_plus":"WARP+","Account_Type_free":"免费版","Data_Info_Used":"已用流量","Data_Info_Residual":"剩余流量","Data_Info_Total":"总计流量","Data_Info_Unlimited":"无限流量"},
 				"zh-Hans":{"IPv4":"公用IPv4","IPv6":"公用IPv6","COLO":"主机托管中心","WARP_Level":"WARP隐私","Account_Type":"账户类型","Data_Info":"流量信息","Unknown":"未知","Fail":"获取失败","WARP_Level_Off":"没有保护","WARP_Level_On":"部分保护","WARP_Level_Plus":"完整保护","Account_Type_unlimited":"无限版","Account_Type_limited":"有限版","Account_Type_team":"团队版","Account_Type_plus":"WARP+","Account_Type_free":"免费版","Data_Info_Used":"已用流量","Data_Info_Residual":"剩余流量","Data_Info_Total":"总计流量","Data_Info_Unlimited":"无限流量"},
 				"zh-Hant":{"IPv4":"公用IPv4","IPv6":"公用IPv6","COLO":"主機託管中心","WARP_Level":"WARP隱私","Account_Type":"賬戶類型","Data_Info":"流量信息","Unknown":"未知","Fail":"獲取失敗","WARP_Level_Off":"沒有保護","WARP_Level_On":"部分保護","WARP_Level_Plus":"完整保護","Account_Type_unlimited":"無限版","Account_Type_limited":"有限版","Account_Type_team":"團隊版","Account_Type_plus":"WARP+","Account_Type_free":"免費版","Data_Info_Used":"已用流量","Data_Info_Residual":"剩餘流量","Data_Info_Total":"總計流量","Data_Info_Unlimited":"無限流量"},
 				"en":{"IPv4":"Public IPv4","IPv6":"Public IPv6","COLO":"Colocation Center","WARP_Level":"WARP Level","Account_Type":"Account Type","Data_Info":"Data Information","Unknown":"Unknown","Fail":"Fail to Get","WARP_Level_Off":"No Protection","WARP_Level_On":"Partial Protection","WARP_Level_Plus":"Complete Protection","Account_Type_unlimited":"Unlimited Ver.","Account_Type_limited":"Limited Ver.","Account_Type_team":"Team Ver.","Account_Type_plus":"WARP+","Account_Type_free":"Free Ver.","Data_Info_Used":"Used","Data_Info_Residual":"Residual","Data_Info_Total":"Total","Data_Info_Unlimited":"Unlimited"}
@@ -49,12 +48,12 @@ const DataBase = {
 	const Panel = {
 		"title": $.isStash() ? "𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤" : "☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤",
 		"icon": $.isStash() ? "https://raw.githubusercontent.com/shindgewongxj/WHATSINStash/main/icon/warp.png" : "lock.icloud.fill",
-		"content": `${Configs.i18n[Language].IPv4}: ${Trace4?.ip}\n`
-			+ `${Configs.i18n[Language].IPv6}: ${Trace6?.ip}\n`
-			+ `${Configs.i18n[Language].COLO}: ${Trace4?.loc ?? Trace6?.loc} | ${Trace4?.colo ?? Trace6?.colo}\n`
-			+ `${Configs.i18n[Language].WARP_Level}: ${Trace4?.warp ?? Trace6?.warp}\n`
-			+ `${Configs.i18n[Language].Account_Type}: ${Account?.data?.type ?? Configs.i18n[Language].Fail}\n`
-			+ `${Configs.i18n[Language].Data_Info}: ${Account?.data?.text ?? Configs.i18n[Language].Fail}`,
+		"content": `${Configs.i18n[Language]?.IPv4 ?? "公用IPv4"}: ${Trace4?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
+			+ `${Configs.i18n[Language]?.IPv6 ?? "公用IPv6"}: ${Trace6?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
+			+ `${Configs.i18n[Language]?.COLO ?? "主机托管中心"}: ${Trace4?.loc ?? Trace6?.loc} | ${Trace4?.colo ?? Trace6?.colo | Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
+			+ `${Configs.i18n[Language]?.WARP_Level ?? "WARP隐私"}: ${Trace4?.warp ?? Trace6?.warp ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
+			+ `${Configs.i18n[Language]?.Account_Type ?? "账户类型"}: ${Account?.data?.type ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
+			+ `${Configs.i18n[Language]?.Data_Info ?? "流量信息"}: ${Account?.data?.text ?? Configs.i18n[Language]?.Fail ?? "获取失败"}`,
 	};
     $done(Panel);
 })()
@@ -110,18 +109,18 @@ async function setENV(name, platform, database) {
 function formatTrace(trace, i18n = DataBase["1dot1dot1dot1"].Configs.i18n, language = $environment?.language ?? "zh-Hans") {
 	switch (trace?.warp) {
 		case "off":
-			trace.warp += ` | ${i18n[language].WARP_Level_Off}`;
+			trace.warp += ` | ${i18n[language]?.WARP_Level_Off ?? "没有保护"}`;
 			break;
 		case "on":
-			trace.warp += ` | ${i18n[language].WARP_Level_On}`;
+			trace.warp += ` | ${i18n[language]?.WARP_Level_On ?? "部分保护"}`;
 			break;
 		case "plus":
-			trace.warp += ` | ${i18n[language].WARP_Level_Plus}`;
+			trace.warp += ` | ${i18n[language]?.WARP_Level_Plus ?? "完整保护"}`;
 			break;
 		case undefined:
 			break;
 		default:
-			trace.warp += ` | ${i18n[language].Unknown}`;
+			trace.warp += ` | ${i18n[language]?.Unknown ?? "未知"}`;
 			break;
 	};
 	return trace;
@@ -131,13 +130,13 @@ function formatAccount(account, i18n = DataBase["1dot1dot1dot1"].Configs.i18n, l
 	switch (account.account_type) {
 		case "unlimited":
 			account.data = {
-				"type": `${i18n[language].Account_Type_unlimited} | ${account?.account_type}`,
+				"type": `${i18n[language]?.Account_Type_unlimited ?? "无限版"} | ${account?.account_type}`,
 				"limited": false,
 			}
 			break;
 		case "limited":
 			account.data = {
-				"type": `${i18n[language].Account_Type_limited} | ${account?.account_type}`,
+				"type": `${i18n[language]?.Account_Type_limited ?? "有限版"} | ${account?.account_type}`,
 				"limited": true,
 				"used": parseInt(account.premium_data - account.quota) / 1024 / 1024 / 1024,
 				"flow": parseInt(account.quota) / 1024 / 1024 / 1024,
@@ -146,19 +145,19 @@ function formatAccount(account, i18n = DataBase["1dot1dot1dot1"].Configs.i18n, l
 			break;
 		case "team":
 			account.data = {
-				"type": `${i18n[language].Account_Type_team} | ${account?.account_type}`,
+				"type": `${i18n[language]?.Account_Type_team ?? "团队版"} | ${account?.account_type}`,
 				"limited": false,
 			}
 			break;
 		case "plus":
 			account.data = {
-				"type": `${i18n[language].Account_Type_plus} | ${account?.account_type}`,
+				"type": `${i18n[language]?.Account_Type_plus ?? "WARP+"} | ${account?.account_type}`,
 				"limited": false,
 			}
 			break;
 		case "free":
 			account.data = {
-				"type": `${i18n[language].Account_Type_free} | ${account?.account_type}`,
+				"type": `${i18n[language]?.Account_Type_free ?? "免费版"} | ${account?.account_type}`,
 				"limited": true,
 				"used": parseInt(account.premium_data - account.quota) / 1024 / 1024 / 1024,
 				"flow": parseInt(account.quota) / 1024 / 1024 / 1024,
@@ -167,22 +166,22 @@ function formatAccount(account, i18n = DataBase["1dot1dot1dot1"].Configs.i18n, l
 			break;
 		default:
 			account.data = {
-				"type": `${i18n[language].Unknown} | ${account?.account_type}`,
+				"type": `${i18n[language]?.Unknown ?? "未知"} | ${account?.account_type}`,
 				"limited": undefined
 			}
 			break;
 	};
 	switch (account.data.limited) {
 		case true:
-			account.data.text = `\n${i18n[language].Data_Info_Used}: ${account.data.used.toFixed(2)}GB`
-				+ `\n${i18n[language].Data_Info_Residual}: ${account.data.flow.toFixed(2)}GB`
-				+ `\n${i18n[language].Data_Info_Total}: ${account.data.total.toFixed(2)}GB`
+			account.data.text = `\n${i18n[language]?.Data_Info_Used ?? "已用流量"}: ${account.data.used.toFixed(2)}GB`
+				+ `\n${i18n[language]?.Data_Info_Residual ?? "剩余流量"}: ${account.data.flow.toFixed(2)}GB`
+				+ `\n${i18n[language]?.Data_Info_Total ?? "总计流量"}: ${account.data.total.toFixed(2)}GB`
 			break;
 		case false:
-			account.data.text = `${i18n[language].Data_Info_Unlimited} | ♾️`
+			account.data.text = `${i18n[language]?.Data_Info_Unlimited ?? "无限流量"} | ♾️`
 			break;
 		default:
-			account.data.text = `${i18n[language].Unknown} | unknown`
+			account.data.text = `${i18n[language]?.Unknown ?? "未知"} | unknown`
 			break;
 	}
 	return account;
