@@ -156,7 +156,7 @@ async function setMessage(result, WireGuard) {
 		const stash = `name: Cloudflare\ntype: wireguard\nserver: engage.nanocat.me # domain is supported\nport: 2048\nip: ${result?.config?.interface?.addresses?.v4}\nipv6: ${result?.config?.interface?.addresses?.v6} # optional\nprivate-key: ${WireGuard?.Settings?.PrivateKey}\npublic-key: bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo= # peer public key\n# preshared-key: # optional\ndns: [162.159.36.1, 2606:4700:4700::1111] # optional\nmtu: 1280 # optional\n# reserved: [${result?.config?.reserved}] # optional\nkeepalive: 45 # optional\n# underlying-proxy: # optional\n#   type: trojan\n#   server: your-underlying-proxy\n#   port: 443\n#   password: your-password`;
 		URI = `mailto:engage@nanocat.me?subject=☁️ Cloudflare for ${result?.account?.account_type}配置文件&body=有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\nStash用配置:\n${stash}\n\n\n完整配置内容:\n${config}`;
 	}
-	let message = encodeURI(URI);
+	let message = encodeURIComponent(URI);
 	$.log(`🎉 ${$.name}, Set Message`, "");
 	return message;
 };
