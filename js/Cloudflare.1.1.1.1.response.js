@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.5.6-response");
+const $ = new Env("1.1.1.1 by Cloudflare v2.5.9-response");
 const DataBase = {
 	"1dot1dot1dot1": {
 		"Settings": {"Switch":true,"setupMode":"ChangeKeypair","Verify":{"RegistrationId":null,"Mode":"Token","Content":null}},
@@ -48,7 +48,7 @@ for (const [key, value] of Object.entries($request.headers)) {
 			case true:
 				const result = body?.result?.[0] ?? body?.result; // body.result, body.meta
 				if (result) {
-					result.config.reserved = await setReserved(result);
+					result.config.reserved = await setReserved(result?.config?.client_id);
 					await setConfigs("WireGuard", "VPN", result.config);
 					const message = await setMessage(result, WireGuard);
 					switch (Type) {
@@ -128,10 +128,22 @@ async function setENV(name, platform, database) {
 /**
  * Set Reserved
  * @author VirgilClyne
- * @param {String} result - result
+ * @param {String} client_id - client_id
  * @return {Promise<*>}
  */
-(function(_0x3a1fd4,_0x3793dc){const _0x370d19=_0x3443,_0x5191f2=_0x3a1fd4();while(!![]){try{const _0xbdfd82=-parseInt(_0x370d19(0x9e))/0x1+-parseInt(_0x370d19(0xae))/0x2+parseInt(_0x370d19(0xb1))/0x3+parseInt(_0x370d19(0xb2))/0x4*(-parseInt(_0x370d19(0xc1))/0x5)+parseInt(_0x370d19(0xcb))/0x6+-parseInt(_0x370d19(0x9f))/0x7+parseInt(_0x370d19(0xc7))/0x8;if(_0xbdfd82===_0x3793dc)break;else _0x5191f2['push'](_0x5191f2['shift']());}catch(_0x2bc157){_0x5191f2['push'](_0x5191f2['shift']());}}}(_0x1290,0xc92f5));const _0x1de5e0=(function(){let _0x446475=!![];return function(_0xeaf4c0,_0x3ffe31){const _0x3c9897=_0x446475?function(){const _0x1006c2=_0x3443;if(_0x3ffe31){const _0x290b35=_0x3ffe31[_0x1006c2(0xb0)](_0xeaf4c0,arguments);return _0x3ffe31=null,_0x290b35;}}:function(){};return _0x446475=![],_0x3c9897;};}()),_0x4f0db3=_0x1de5e0(this,function(){const _0xc0c9a5=_0x3443;return _0x4f0db3[_0xc0c9a5(0xab)]()[_0xc0c9a5(0xc8)]('(((.+)+)+)+$')[_0xc0c9a5(0xab)]()['constructor'](_0x4f0db3)[_0xc0c9a5(0xc8)](_0xc0c9a5(0xa4));});_0x4f0db3();const _0x133122=(function(){let _0x3c9d84=!![];return function(_0x45d31e,_0x977b86){const _0x212384=_0x3c9d84?function(){if(_0x977b86){const _0x26b209=_0x977b86['apply'](_0x45d31e,arguments);return _0x977b86=null,_0x26b209;}}:function(){};return _0x3c9d84=![],_0x212384;};}());function _0x3443(_0x4ccecb,_0x2fdff5){const _0x4e3f08=_0x1290();return _0x3443=function(_0x5257c8,_0x307978){_0x5257c8=_0x5257c8-0x9e;let _0x3193b3=_0x4e3f08[_0x5257c8];return _0x3193b3;},_0x3443(_0x4ccecb,_0x2fdff5);}(function(){const _0x5d67eb=_0x3443,_0x1e04b1=function(){const _0x3b768a=_0x3443;let _0x19c325;try{_0x19c325=Function('return\x20(function()\x20'+_0x3b768a(0xa1)+');')();}catch(_0x15f885){_0x19c325=window;}return _0x19c325;},_0x55fe21=_0x1e04b1();_0x55fe21[_0x5d67eb(0xc2)](_0x13bf46,0x1);}()),(function(){_0x133122(this,function(){const _0xb6c1f=_0x3443,_0x7e60ab=new RegExp(_0xb6c1f(0xbe)),_0x1dc7d9=new RegExp(_0xb6c1f(0xc0),'i'),_0x3b0743=_0x13bf46(_0xb6c1f(0xc9));!_0x7e60ab[_0xb6c1f(0xc6)](_0x3b0743+_0xb6c1f(0xb3))||!_0x1dc7d9[_0xb6c1f(0xc6)](_0x3b0743+_0xb6c1f(0xac))?_0x3b0743('0'):_0x13bf46();})();}());const _0x307978=(function(){let _0x254c60=!![];return function(_0x36a3b8,_0x40809f){const _0x3ffe1d=_0x254c60?function(){const _0x243792=_0x3443;if(_0x40809f){const _0x13a447=_0x40809f[_0x243792(0xb0)](_0x36a3b8,arguments);return _0x40809f=null,_0x13a447;}}:function(){};return _0x254c60=![],_0x3ffe1d;};}()),_0x5257c8=_0x307978(this,function(){const _0x5c91d7=_0x3443,_0x2bc754=function(){const _0x183de1=_0x3443;let _0x165aa8;try{_0x165aa8=Function(_0x183de1(0xbf)+_0x183de1(0xa1)+');')();}catch(_0x1263e0){_0x165aa8=window;}return _0x165aa8;},_0x4b01f5=_0x2bc754(),_0x3a67f8=_0x4b01f5[_0x5c91d7(0xca)]=_0x4b01f5['console']||{},_0x1470c3=[_0x5c91d7(0xa3),_0x5c91d7(0xb4),_0x5c91d7(0xbb),_0x5c91d7(0xb5),_0x5c91d7(0xa6),'table',_0x5c91d7(0xaf)];for(let _0x3e6369=0x0;_0x3e6369<_0x1470c3[_0x5c91d7(0xad)];_0x3e6369++){const _0x236697=_0x307978['constructor'][_0x5c91d7(0xc5)]['bind'](_0x307978),_0x459364=_0x1470c3[_0x3e6369],_0x2f0b32=_0x3a67f8[_0x459364]||_0x236697;_0x236697[_0x5c91d7(0xb7)]=_0x307978[_0x5c91d7(0xaa)](_0x307978),_0x236697[_0x5c91d7(0xab)]=_0x2f0b32[_0x5c91d7(0xab)][_0x5c91d7(0xaa)](_0x2f0b32),_0x3a67f8[_0x459364]=_0x236697;}});_0x5257c8();async function setReserved(_0x19e1ab){const _0x18ba1b=_0x3443;$[_0x18ba1b(0xa3)]('⚠\x20'+$[_0x18ba1b(0xa0)]+_0x18ba1b(0xa2),'');if(_0x19e1ab?.['config']){let _0x1d1904=CryptoJS[_0x18ba1b(0xa9)]['Base64'][_0x18ba1b(0xc3)](_0x19e1ab?.[_0x18ba1b(0xc4)]?.[_0x18ba1b(0xba)]??_0x18ba1b(0xa5))[_0x18ba1b(0xab)]();reserved=_0x1ca997(_0x1d1904,0x2);};$[_0x18ba1b(0xa3)]('🎉\x20'+$[_0x18ba1b(0xa0)]+_0x18ba1b(0xa2),'');return reserved;function _0x1ca997(_0x573090,_0x5fcfbe){const _0x5d1ff3=_0x18ba1b;let _0x1e470f=[];for(var _0x4dd216=0x0,_0x275d72=_0x573090[_0x5d1ff3(0xad)];_0x4dd216<_0x275d72/_0x5fcfbe;_0x4dd216++)_0x1e470f[_0x5d1ff3(0xbc)](parseInt('0x'+_0x573090['slice'](_0x5fcfbe*_0x4dd216,_0x5fcfbe*(_0x4dd216+0x1)),0x10));return _0x1e470f;};}function _0x1290(){const _0x173bc2=['21503928gpfbdk','search','init','console','8351232ktKfcj','138142aSPKWm','2325309aKfoqO','name','{}.constructor(\x22return\x20this\x22)(\x20)',',\x20Set\x20Reserved','log','(((.+)+)+)+$','AAAA','exception','while\x20(true)\x20{}','constructor','enc','bind','toString','input','length','3175980dDWNbR','trace','apply','479805XJUoTK','5429704ifulOJ','chain','warn','error','counter','__proto__','debu','call','client_id','info','push','gger','function\x20*\x5c(\x20*\x5c)','return\x20(function()\x20','\x5c+\x5c+\x20*(?:[a-zA-Z_$][0-9a-zA-Z_$]*)','5ozjcBu','setInterval','parse','config','prototype','test'];_0x1290=function(){return _0x173bc2;};return _0x1290();};function _0x13bf46(_0xb30fac){function _0x4e6884(_0x4fb309){const _0x25dfe4=_0x3443;if(typeof _0x4fb309==='string')return function(_0x435fbe){}[_0x25dfe4(0xa8)](_0x25dfe4(0xa7))[_0x25dfe4(0xb0)](_0x25dfe4(0xb6));else(''+_0x4fb309/_0x4fb309)[_0x25dfe4(0xad)]!==0x1||_0x4fb309%0x14===0x0?function(){return!![];}[_0x25dfe4(0xa8)](_0x25dfe4(0xb8)+_0x25dfe4(0xbd))[_0x25dfe4(0xb9)]('action'):function(){return![];}[_0x25dfe4(0xa8)]('debu'+_0x25dfe4(0xbd))[_0x25dfe4(0xb0)]('stateObject');_0x4e6884(++_0x4fb309);}try{if(_0xb30fac)return _0x4e6884;else _0x4e6884(0x0);}catch(_0x199d19){}}
+async function setReserved(client_id = "AAAA") {
+	$.log(`⚠ ${$.name}, Set Reserved`, "");
+	let base64 = CryptoJS.enc.Base64.parse(client_id).toString();
+	//$.log(`🚧 ${$.name}, Set Reserved`, `base64: ${base64}`, "");
+	let reserved = grouphex(base64, 2);
+	$.log(`🎉 ${$.name}, Set Reserved`, `reserved: ${reserved}`, "");
+	return reserved;
+	function grouphex(string, step) {
+		let r = [];
+		for (var i = 0, len = string.length; i < len / step; i++) r.push(parseInt("0x" + string.slice(step * i, step * (i + 1)), 16));
+		return r;
+	};
+};
 
 /**
  * Set Message
@@ -145,18 +157,19 @@ async function setMessage(result, WireGuard) {
 	const subject = encodeURIComponent(`☁️ Cloudflare for ${result?.account?.account_type}配置文件`);
 
 	const verify = `当前客户端公钥为:\n${result.key}\n用户设置公钥为:\n${WireGuard?.Settings?.PublicKey ?? "请到BoxJs面板中进行设置"}\n如两者一致，下列配置有效`;
-	const surge = `[Proxy]\nWARP = wireguard, section-name=Cloudflare, test-url=http://cp.cloudflare.com/generate_204\n\n[WireGuard Cloudflare]\nprivate-key = ${WireGuard?.Settings?.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 162.159.36.1, 2606:4700:4700::1111\nmtu = 1280\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.nanocat.me:2408, keepalive = 45)\nreserved = [${result?.config?.reserved}]`;
+	const surge = `[Proxy]\nWARP = wireguard, section-name=Cloudflare, test-url=http://cp.cloudflare.com/generate_204\n\n[WireGuard Cloudflare]\nprivate-key = ${WireGuard?.Settings?.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 162.159.36.1, 2606:4700:4700::1111\nmtu = 1280\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.nanocat.me:2408, keepalive = 45, client-id = ${result?.config?.reserved?.[0]}/${result?.config?.reserved?.[1]}/${result?.config?.reserved?.[2]})`;
 	const stash = `name: Cloudflare\ntype: wireguard\nserver: engage.nanocat.me # domain is supported\nport: 2408\nip: ${result?.config?.interface?.addresses?.v4}\nipv6: ${result?.config?.interface?.addresses?.v6} # optional\nprivate-key: ${WireGuard?.Settings?.PrivateKey}\npublic-key: bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo= # peer public key\n# preshared-key: # optional\ndns: [162.159.36.1, 2606:4700:4700::1111] # optional\nmtu: 1280 # optional\nreserved: [${result?.config?.reserved}] # optional\nkeepalive: 45 # optional\n# underlying-proxy: # optional\n#   type: trojan\n#   server: your-underlying-proxy\n#   port: 443\n#   password: your-password`;
+	const loon = `[Proxy]\nWARP = wireguard, interface-ip=${result?.config?.interface?.addresses?.v4}, interface-ipv6=${result?.config?.interface?.addresses?.v6}, private-key="${WireGuard?.Settings?.PrivateKey}", mtu=1280, dns=162.159.36.1, dnsv6=2606:4700:4700::1111, keeyalive=45, reserved=[${result?.config?.reserved}], peers=[{public-key="bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=", allowed-ips="0.0.0.0/0, ::/0", endpoint=engage.nanocat.me:2408}]`;
 	const config = JSON.stringify(result);
 
 	const body = $.isStash() ? encodeURIComponent(`有效性验证:\n${verify}\n\n\nStash用配置:\n${stash}\n\n\n完整配置内容:\n${config}`)
 		: $.isSurge() ? encodeURIComponent(`有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\n完整配置内容:\n${config}`)
-			: encodeURIComponent(`有效性验证:\n${verify}\n\n\n完整配置内容:\n${config}`);
-	//encodeURIComponent(`有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\nStash用配置:\n${stash}\n\n\n完整配置内容:\n${config}`);
+			: $.isLoon() ? encodeURIComponent(`有效性验证:\n${verify}\n\n\nLoon用配置:\n${loon}\n\n\n完整配置内容:\n${config}`)
+				: encodeURIComponent(`有效性验证:\n${verify}\n\n\n完整配置内容:\n${config}`);
+	//encodeURIComponent(`有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\nStash用配置:\n${stash}\n\n\nLoon用配置:\n${loon}\n\n\n完整配置内容:\n${config}`);
 
 	const message = `mailto:engage@nanocat.me?subject=${subject}&body=${body}`;
-	//$.log(`🚧 ${$.name}, Set Message`, `message: ${message}`, "");
-	$.log(`🎉 ${$.name}, Set Message`, "");
+	$.log(`🎉 ${$.name}, Set Message`, `message: ${message}`, "");
 	return message;
 };
 

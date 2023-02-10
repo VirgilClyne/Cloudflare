@@ -169,8 +169,7 @@ async function setMessage(result, WireGuard) {
 	//encodeURIComponent(`有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\nStash用配置:\n${stash}\n\n\nLoon用配置:\n${loon}\n\n\n完整配置内容:\n${config}`);
 
 	const message = `mailto:engage@nanocat.me?subject=${subject}&body=${body}`;
-	$.log(`🚧 ${$.name}, Set Message`, `message: ${message}`, "");
-	$.log(`🎉 ${$.name}, Set Message`, "");
+	$.log(`🎉 ${$.name}, Set Message`, `message: ${message}`, "");
 	return message;
 };
 
