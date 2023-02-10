@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1.1.1.1 by Cloudflare v2.3.0-request-beta1");
+const $ = new Env("1️⃣ 1.1.1.1 by Cloudflare v2.3.0-request-beta1");
 const DataBase = {
 	"1dot1dot1dot1": {
 		"Settings": {"Switch":true,"setupMode":"ChangeKeypair","Verify":{"RegistrationId":null,"Mode":"Token","Content":null}},
