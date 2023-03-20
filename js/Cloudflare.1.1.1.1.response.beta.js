@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1️⃣ 1.1.1.1 by Cloudflare v2.5.11-response-beta");
+const $ = new Env("1️⃣ 1.1.1.1 by Cloudflare v2.5.12-response-beta");
 const DataBase = {
 	"1dot1dot1dot1": {
 		"Settings": {"Switch":true,"setupMode":"ChangeKeypair","Verify":{"RegistrationId":null,"Mode":"Token","Content":null}},
@@ -160,12 +160,14 @@ async function setMessage(result, WireGuard) {
 	const surge = `[Proxy]\nWARP = wireguard, section-name=Cloudflare, test-url=http://cp.cloudflare.com/generate_204\n\n[WireGuard Cloudflare]\nprivate-key = ${WireGuard?.Settings?.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 162.159.36.1, 2606:4700:4700::1111\nmtu = 1280\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.nanocat.me:2408, keepalive = 45, client-id = ${result?.config?.reserved?.[0]}/${result?.config?.reserved?.[1]}/${result?.config?.reserved?.[2]})`;
 	const stash = `name: Cloudflare\ntype: wireguard\nserver: engage.nanocat.me # domain is supported\nport: 2408\nip: ${result?.config?.interface?.addresses?.v4}\nipv6: ${result?.config?.interface?.addresses?.v6} # optional\nprivate-key: ${WireGuard?.Settings?.PrivateKey}\npublic-key: bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo= # peer public key\n# preshared-key: # optional\ndns: [162.159.36.1, 2606:4700:4700::1111] # optional\nmtu: 1280 # optional\nreserved: [${result?.config?.reserved}] # optional\nkeepalive: 45 # optional\n# underlying-proxy: # optional\n#   type: trojan\n#   server: your-underlying-proxy\n#   port: 443\n#   password: your-password`;
 	const loon = `[Proxy]\nWARP = wireguard, interface-ip=${result?.config?.interface?.addresses?.v4}, interface-ipv6=${result?.config?.interface?.addresses?.v6}, private-key="${WireGuard?.Settings?.PrivateKey}", mtu=1280, dns=162.159.36.1, dnsv6=2606:4700:4700::1111, keepalive=45, peers=[{public-key="bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=", allowed-ips="0.0.0.0/0, ::/0", endpoint=engage.nanocat.me:2408, reserved=[${result?.config?.reserved}]}]`;
+	const shadowrocket = `[Proxy]\nWARP = wireguard, section-name=Cloudflare, test-url=http://cp.cloudflare.com/generate_204\n\n[WireGuard Cloudflare]\nprivate-key = ${WireGuard?.Settings?.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 162.159.36.1, 2606:4700:4700::1111\nmtu = 1280\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.nanocat.me:2408, keepalive = 45, client-id = ${result?.config?.reserved?.[0]}/${result?.config?.reserved?.[1]}/${result?.config?.reserved?.[2]})`;
 	const config = JSON.stringify(result);
 
 	const body = $.isStash() ? encodeURIComponent(`有效性验证:\n${verify}\n\n\nStash用配置:\n${stash}\n\n\n完整配置内容:\n${config}`)
 		: $.isSurge() ? encodeURIComponent(`有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\n完整配置内容:\n${config}`)
 			: $.isLoon() ? encodeURIComponent(`有效性验证:\n${verify}\n\n\nLoon用配置:\n${loon}\n\n\n完整配置内容:\n${config}`)
-				: encodeURIComponent(`有效性验证:\n${verify}\n\n\n完整配置内容:\n${config}`);
+				: $.isShadowrocket() ? encodeURIComponent(`有效性验证:\n${verify}\n\n\nShadowrocket用配置:\n${shadowrocket}\n\n\n完整配置内容:\n${config}`)
+					: encodeURIComponent(`有效性验证:\n${verify}\n\n\n完整配置内容:\n${config}`);
 	//encodeURIComponent(`有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\nStash用配置:\n${stash}\n\n\nLoon用配置:\n${loon}\n\n\n完整配置内容:\n${config}`);
 
 	const message = `mailto:engage@nanocat.me?subject=${subject}&body=${body}`;
