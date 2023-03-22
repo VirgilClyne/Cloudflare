@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("1️⃣ 1.1.1.1 by Cloudflare v1.4.5-panel-beta1");
+const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.0(5).panel.beta");
 const DataBase = {
 	"1dot1dot1dot1": {
 		"Settings": {"Switch":true,"setupMode":"ChangeKeypair","Verify":{"RegistrationId":null,"Mode":"Token","Content":null}},
@@ -33,30 +33,53 @@ const DataBase = {
 (async () => {
 	const { Settings, Caches, Configs } = await setENV("Cloudflare", "1dot1dot1dot1", DataBase);
 	const Language = $environment?.language ?? "zh-Hans"
-	const [Trace4, Trace6] = await Promise.allSettled([Cloudflare("trace4"), Cloudflare("trace6")]).then(results => results.map(result => formatTrace(result.value)));
-	let Account = {};
-	if (Caches?.url && Caches?.headers) {
-		const Request = {
-			"url": Caches?.url,
-			"headers": {
-				...Caches?.headers ?? {},
-				"x-surge-skip-scripting": "true"
-			}
-		};
-		Account = await Cloudflare("GET", Request).then(result => formatAccount(result?.account ?? {}));
+	// 构造面板信息
+	let Panel = {
+		title: $.isStash() ? "𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤" : "☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤"
 	};
-	const Panel = {
-		"title": $.isStash() ? "𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤" : "☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤",
-		"icon": $.isStash() ? "https://raw.githubusercontent.com/shindgewongxj/WHATSINStash/main/icon/warp.png" : "lock.icloud.fill",
-		"icon-color": "#f48220",
-		"content": `${Configs.i18n[Language]?.IPv4 ?? "公用IPv4"}: ${Trace4?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
+	// 获取WARP信息
+	const [Trace4, Trace6] = await Promise.allSettled([Cloudflare("trace4"), Cloudflare("trace6")]).then(results => results.map(result => formatTrace(result.value)));
+	// 填充面板信息
+	if ($.isLoon() || $.isQuanX()) {
+		Panel.message = `${Configs.i18n[Language]?.IPv4 ?? "公用IPv4"}: ${Trace4?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
 			+ `${Configs.i18n[Language]?.IPv6 ?? "公用IPv6"}: ${Trace6?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
 			+ `${Configs.i18n[Language]?.COLO ?? "主机托管中心"}: ${Trace4?.loc ?? Trace6?.loc} | ${Trace4?.colo ?? Trace6?.colo | Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
-			+ `${Configs.i18n[Language]?.WARP_Level ?? "WARP隐私"}: ${Trace4?.warp ?? Trace6?.warp ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
-			+ `${Configs.i18n[Language]?.Account_Type ?? "账户类型"}: ${Account?.data?.type ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
-			+ `${Configs.i18n[Language]?.Data_Info ?? "流量信息"}: ${Account?.data?.text ?? Configs.i18n[Language]?.Fail ?? "获取失败"}`,
+			+ `${Configs.i18n[Language]?.WARP_Level ?? "WARP隐私"}: ${Trace4?.warp ?? Trace6?.warp ?? Configs.i18n[Language]?.Fail ?? "获取失败"}`;
+	} else if ($.isSurge() || $.isStash()) {
+		Panel.icon = $.isStash() ? "https://raw.githubusercontent.com/shindgewongxj/WHATSINStash/main/icon/warp.png" : "lock.icloud.fill";
+		Panel["icon-color"] = "#f48220";
+		Panel.content = `${Configs.i18n[Language]?.IPv4 ?? "公用IPv4"}: ${Trace4?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
+			+ `${Configs.i18n[Language]?.IPv6 ?? "公用IPv6"}: ${Trace6?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
+			+ `${Configs.i18n[Language]?.COLO ?? "主机托管中心"}: ${Trace4?.loc ?? Trace6?.loc} | ${Trace4?.colo ?? Trace6?.colo | Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
+			+ `${Configs.i18n[Language]?.WARP_Level ?? "WARP隐私"}: ${Trace4?.warp ?? Trace6?.warp ?? Configs.i18n[Language]?.Fail ?? "获取失败"}`;
 	};
-    $done(Panel);
+	// 获取账户信息
+	if (Caches?.url && Caches?.headers) {
+		// 构造请求信息
+		let Request = {
+			"url": Caches?.url,
+			"headers": Caches?.headers ?? {}
+		};
+		// 兼容性修正
+		if ($.isLoon()) Request = ReReqeust(Request, $environment?.params?.node);
+		//else if ($.isQuanX()) Request = ReReqeust(Request, $environment?.params?.node);;
+		else if ($.isSurge()) Request.headers["x-surge-skip-scripting"] = "true";
+		// 获取账户信息
+		const Account = await Cloudflare("GET", Request).then(result => formatAccount(result?.account ?? {}));
+		// 填充面板信息
+		if ($.isLoon() || $.isQuanX()) {
+			Panel.message += `\n`
+				+ `${Configs.i18n[Language]?.Account_Type ?? "账户类型"}: ${Account?.data?.type ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
+				+ `${Configs.i18n[Language]?.Data_Info ?? "流量信息"}: ${Account?.data?.text ?? Configs.i18n[Language]?.Fail ?? "获取失败"}`;
+
+		} else if ($.isSurge() || $.isStash()) {
+			Panel.content += `\n`
+				+ `${Configs.i18n[Language]?.Account_Type ?? "账户类型"}: ${Account?.data?.type ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
+				+ `${Configs.i18n[Language]?.Data_Info ?? "流量信息"}: ${Account?.data?.text ?? Configs.i18n[Language]?.Fail ?? "获取失败"}`;
+		};
+	};
+	// 输出面板信息
+	$.done(Panel);
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => $.done())
@@ -302,6 +325,35 @@ async function Cloudflare(opt, Request = DataBase.WARP.Configs.Request, Environm
 	};
 
 }
+
+/**
+ * Construct Redirect Reqeusts
+ * @author VirgilClyne
+ * @param {Object} request - Original Request Content
+ * @param {Object} proxyName - Proxies Name
+ * @return {Object} Modify Request Content with Policy
+ */
+function ReReqeust(request = {}, proxyName = "") {
+	$.log(`⚠ ${$.name}, Construct Redirect Reqeusts`, "");
+	if (proxyName) {
+		if ($.isLoon()) request.node = proxyName;
+		if ($.isQuanX()) {
+			if (request.opts) request.opts.policy = proxyName;
+			else request.opts = { "policy": proxyName };
+		};
+		if ($.isSurge()) {
+			delete request.id;
+			request.headers["X-Surge-Policy"] = proxyName;
+			request.policy = proxyName;
+		};
+		if ($.isStash()) $.logErr(`❗️${$.name}, ${Fetch.name}执行失败`, `不支持的app: Stash`, "");
+		if ($.isShadowrocket()) $.logErr(`❗️${$.name}, ${Fetch.name}执行失败`, `不支持的app: Shadowrocket`, "");
+	}
+	//$.log(`🎉 ${$.name}, Construct Redirect Reqeusts`, "");
+	$.log(`🚧 ${$.name}, Construct Redirect Reqeusts`, `Request:${JSON.stringify(request)}`, "");
+	return request;
+};
+
 /***************** Env *****************/
 // prettier-ignore
 // https://github.com/chavyleung/scripts/blob/master/Env.min.js
