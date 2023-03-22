@@ -349,8 +349,8 @@ function ReReqeust(request = {}, proxyName = "") {
 		if ($.isStash()) $.logErr(`❗️${$.name}, ${Fetch.name}执行失败`, `不支持的app: Stash`, "");
 		if ($.isShadowrocket()) $.logErr(`❗️${$.name}, ${Fetch.name}执行失败`, `不支持的app: Shadowrocket`, "");
 	}
-	//$.log(`🎉 ${$.name}, Construct Redirect Reqeusts`, "");
-	$.log(`🚧 ${$.name}, Construct Redirect Reqeusts`, `Request:${JSON.stringify(request)}`, "");
+	$.log(`🎉 ${$.name}, Construct Redirect Reqeusts`, "");
+	//$.log(`🚧 ${$.name}, Construct Redirect Reqeusts`, `Request:${JSON.stringify(request)}`, "");
 	return request;
 };
 
