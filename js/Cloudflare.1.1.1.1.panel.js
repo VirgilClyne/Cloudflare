@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.0(5).panel");
+const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.1(3).panel");
 const DataBase = {
 	"1dot1dot1dot1": {
 		"Settings": {"Switch":true,"setupMode":"ChangeKeypair","Verify":{"RegistrationId":null,"Mode":"Token","Content":null}},
@@ -37,8 +37,14 @@ const DataBase = {
 	let Panel = {
 		title: $.isStash() ? "𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤" : "☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤"
 	};
+	// 构造请求信息
+	let Request = DataBase.WARP.Configs.Request;
+	// 兼容性修正
+	if ($.isLoon()) Request = ReReqeust(Request, $environment?.params?.node);
+	//else if ($.isQuanX()) Request = ReReqeust(Request, $environment?.params?.node);;
+	else if ($.isSurge()) Request.headers["x-surge-skip-scripting"] = "true";
 	// 获取WARP信息
-	const [Trace4, Trace6] = await Promise.allSettled([Cloudflare("trace4"), Cloudflare("trace6")]).then(results => results.map(result => formatTrace(result.value)));
+	const [Trace4, Trace6] = await Promise.allSettled([Cloudflare(Request, "trace4"), Cloudflare(Request, "trace6")]).then(results => results.map(result => formatTrace(result.value)));
 	// 填充面板信息
 	if ($.isLoon() || $.isQuanX()) {
 		Panel.message = `${Configs.i18n[Language]?.IPv4 ?? "公用IPv4"}: ${Trace4?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
@@ -56,16 +62,10 @@ const DataBase = {
 	// 获取账户信息
 	if (Caches?.url && Caches?.headers) {
 		// 构造请求信息
-		let Request = {
-			"url": Caches?.url,
-			"headers": Caches?.headers ?? {}
-		};
-		// 兼容性修正
-		if ($.isLoon()) Request = ReReqeust(Request, $environment?.params?.node);
-		//else if ($.isQuanX()) Request = ReReqeust(Request, $environment?.params?.node);;
-		else if ($.isSurge()) Request.headers["x-surge-skip-scripting"] = "true";
+		Request.url = Caches?.url;
+		Request.headers = Caches?.headers ?? {};
 		// 获取账户信息
-		const Account = await Cloudflare("GET", Request).then(result => formatAccount(result?.account ?? {}));
+		const Account = await Cloudflare(Request, "GET").then(result => formatAccount(result?.account ?? {}));
 		// 填充面板信息
 		if ($.isLoon() || $.isQuanX()) {
 			Panel.message += `\n`
@@ -211,7 +211,7 @@ function formatAccount(account, i18n = DataBase["1dot1dot1dot1"].Configs.i18n, l
 	return account;
 };
 
-async function Cloudflare(opt, Request = DataBase.WARP.Configs.Request, Environment = DataBase.WARP.Configs.Environment, Settings = DataBase.WARP.Settings ) {
+async function Cloudflare(Request = DataBase.WARP.Configs.Request, opt = "trace") {
 	/*
 	let Request = {
 		// Endpoints
