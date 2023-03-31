@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.2(10).panel");
+const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.2(12).panel");
 const DataBase = {
 	"Panel": {
 		"Settings":{"Switch":true,"Title":"☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤","Icon":"lock.icloud.fill","IconColor":"#f48220","BackgroundColor":"#f6821f"},
@@ -56,7 +56,7 @@ const DataBase = {
 				Panel.message = `${Configs.i18n[Language]?.IPv4 ?? "IPv4"}: ${Trace4?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
 					+ `${Configs.i18n[Language]?.IPv6 ?? "IPv6"}: ${Trace6?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
 					+ `${Configs.i18n[Language]?.COLO ?? "托管中心"}: ${Trace4?.loc ?? Trace6?.loc} | ${Trace4?.colo ?? Trace6?.colo | Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
-					+ `${Configs.i18n[Language]?.WARP_Level ?? "隐私保护"}: ${Trace4?.warp ?? Trace6?.warp ?? Configs.i18n[Language]?.Fail ?? "获取失败"}`;
+					+ `${Configs.i18n[Language]?.WARP_Level ?? "隐私保护"}: ${Trace4?.warp?.toUpperCase() ?? Trace6?.warp?.toUpperCase() ?? Configs.i18n[Language]?.Fail ?? "获取失败"}`;
 			} else if ($.isSurge() || $.isStash()) {
 				if ($.isStash()) Panel.icon = Settings?.Icon ?? "https://raw.githubusercontent.com/shindgewongxj/WHATSINStash/main/icon/warp.png";
 				else Panel.icon = Settings?.Icon ?? "lock.icloud.fill";
@@ -65,7 +65,7 @@ const DataBase = {
 				Panel.content = `${Configs.i18n[Language]?.IPv4 ?? "IPv4"}: ${Trace4?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
 					+ `${Configs.i18n[Language]?.IPv6 ?? "IPv6"}: ${Trace6?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
 					+ `${Configs.i18n[Language]?.COLO ?? "托管中心"}: ${Trace4?.loc ?? Trace6?.loc} | ${Trace4?.colo ?? Trace6?.colo | Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
-					+ `${Configs.i18n[Language]?.WARP_Level ?? "隐私保护"}: ${Trace4?.warp ?? Trace6?.warp ?? Configs.i18n[Language]?.Fail ?? "获取失败"}`;
+					+ `${Configs.i18n[Language]?.WARP_Level ?? "隐私保护"}: ${Trace4?.warp?.toUpperCase() ?? Trace6?.warp?.toUpperCase() ?? Configs.i18n[Language]?.Fail ?? "获取失败"}`;
 			};
 			// 获取账户信息
 			const Caches = $.getjson("@Cloudflare.1dot1dot1dot1.Caches", {});
@@ -140,13 +140,13 @@ function formatAccount(account, i18n = DataBase.Panel.Configs.i18n, language = $
 	switch (account.account_type) {
 		case "unlimited":
 			account.data = {
-				"type": `${i18n[language]?.Account_Type_unlimited ?? "无限版"} | ${account?.account_type}`,
+				"type": `${account?.account_type?.toUpperCase()} | ${i18n[language]?.Account_Type_unlimited ?? "无限版"}`,
 				"limited": false,
 			}
 			break;
 		case "limited":
 			account.data = {
-				"type": `${i18n[language]?.Account_Type_limited ?? "有限版"} | ${account?.account_type}`,
+				"type": `${account?.account_type?.toUpperCase()} | ${i18n[language]?.Account_Type_limited ?? "有限版"}`,
 				"limited": true,
 				"used": parseInt(account.premium_data - account.quota) / 1024 / 1024 / 1024,
 				"flow": parseInt(account.quota) / 1024 / 1024 / 1024,
@@ -155,19 +155,19 @@ function formatAccount(account, i18n = DataBase.Panel.Configs.i18n, language = $
 			break;
 		case "team":
 			account.data = {
-				"type": `${i18n[language]?.Account_Type_team ?? "团队版"} | ${account?.account_type}`,
+				"type": `${account?.account_type?.toUpperCase()} | ${i18n[language]?.Account_Type_team ?? "团队版"}`,
 				"limited": false,
 			}
 			break;
 		case "plus":
 			account.data = {
-				"type": `${i18n[language]?.Account_Type_plus ?? "WARP+"} | ${account?.account_type}`,
+				"type": `${account?.account_type?.toUpperCase()} | ${i18n[language]?.Account_Type_plus ?? "WARP+"}`,
 				"limited": false,
 			}
 			break;
 		case "free":
 			account.data = {
-				"type": `${i18n[language]?.Account_Type_free ?? "免费版"} | ${account?.account_type}`,
+				"type": `${account?.account_type?.toUpperCase()} | ${i18n[language]?.Account_Type_free ?? "免费版"}`,
 				"limited": true,
 				"used": parseInt(account.premium_data - account.quota) / 1024 / 1024 / 1024,
 				"flow": parseInt(account.quota) / 1024 / 1024 / 1024,
@@ -176,7 +176,7 @@ function formatAccount(account, i18n = DataBase.Panel.Configs.i18n, language = $
 			break;
 		default:
 			account.data = {
-				"type": `${i18n[language]?.Unknown ?? "未知"} | ${account?.account_type}`,
+				"type": `${account?.account_type} | ${i18n[language]?.Unknown ?? "未知"}`,
 				"limited": undefined
 			}
 			break;
@@ -188,10 +188,10 @@ function formatAccount(account, i18n = DataBase.Panel.Configs.i18n, language = $
 				+ `\n${i18n[language]?.Data_Info_Total ?? "总计流量"}: ${account.data.total.toFixed(2)}GB`
 			break;
 		case false:
-			account.data.text = `${i18n[language]?.Data_Info_Unlimited ?? "无限流量"} | ♾️`
+			account.data.text = `♾️ | ${i18n[language]?.Data_Info_Unlimited ?? "无限流量"}`
 			break;
 		default:
-			account.data.text = `${i18n[language]?.Unknown ?? "未知"} | unknown`
+			account.data.text = `UNKNOWN | ${i18n[language]?.Unknown ?? "未知"}`
 			break;
 	}
 	return account;
