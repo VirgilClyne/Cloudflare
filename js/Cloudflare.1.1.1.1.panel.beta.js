@@ -2,15 +2,15 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.2(9).panel.beta");
+const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.2(10).panel.beta");
 const DataBase = {
 	"Panel": {
 		"Settings":{"Switch":true,"Title":"☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤","Icon":"lock.icloud.fill","IconColor":"#f48220","BackgroundColor":"#f6821f"},
 		"Configs": {
 			"Request":{"url":"https://api.cloudflareclient.com","headers":{"authorization":null,"content-Type":"application/json","user-Agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","cf-client-version":"i-6.7-2109031904.1"}},
 			"i18n":{
-				"zh-Hans":{"IPv4":"公用IPv4","IPv6":"公用IPv6","COLO":"主机托管中心","WARP_Level":"WARP隐私","Account_Type":"账户类型","Data_Info":"流量信息","Unknown":"未知","Fail":"获取失败","WARP_Level_Off":"没有保护","WARP_Level_On":"部分保护","WARP_Level_Plus":"完整保护","Account_Type_unlimited":"无限版","Account_Type_limited":"有限版","Account_Type_team":"团队版","Account_Type_plus":"WARP+","Account_Type_free":"免费版","Data_Info_Used":"已用流量","Data_Info_Residual":"剩余流量","Data_Info_Total":"总计流量","Data_Info_Unlimited":"无限流量"},
-				"zh-Hant":{"IPv4":"公用IPv4","IPv6":"公用IPv6","COLO":"主機託管中心","WARP_Level":"WARP隱私","Account_Type":"賬戶類型","Data_Info":"流量信息","Unknown":"未知","Fail":"獲取失敗","WARP_Level_Off":"沒有保護","WARP_Level_On":"部分保護","WARP_Level_Plus":"完整保護","Account_Type_unlimited":"無限版","Account_Type_limited":"有限版","Account_Type_team":"團隊版","Account_Type_plus":"WARP+","Account_Type_free":"免費版","Data_Info_Used":"已用流量","Data_Info_Residual":"剩餘流量","Data_Info_Total":"總計流量","Data_Info_Unlimited":"無限流量"},
+				"zh-Hans":{"IPv4":"IPv4","IPv6":"IPv6","COLO":"托管中心","WARP_Level":"隐私保护","Account_Type":"账户类型","Data_Info":"流量信息","Unknown":"未知","Fail":"获取失败","WARP_Level_Off":"没有保护","WARP_Level_On":"部分保护","WARP_Level_Plus":"完整保护","Account_Type_unlimited":"无限版","Account_Type_limited":"有限版","Account_Type_team":"团队版","Account_Type_plus":"WARP+","Account_Type_free":"免费版","Data_Info_Used":"已用流量","Data_Info_Residual":"剩余流量","Data_Info_Total":"总计流量","Data_Info_Unlimited":"无限流量"},
+				"zh-Hant":{"IPv4":"IPv4","IPv6":"IPv6","COLO":"託管中心","WARP_Level":"隱私保護","Account_Type":"賬戶類型","Data_Info":"流量信息","Unknown":"未知","Fail":"獲取失敗","WARP_Level_Off":"沒有保護","WARP_Level_On":"部分保護","WARP_Level_Plus":"完整保護","Account_Type_unlimited":"無限版","Account_Type_limited":"有限版","Account_Type_team":"團隊版","Account_Type_plus":"WARP+","Account_Type_free":"免費版","Data_Info_Used":"已用流量","Data_Info_Residual":"剩餘流量","Data_Info_Total":"總計流量","Data_Info_Unlimited":"無限流量"},
 				"en":{"IPv4":"Public IPv4","IPv6":"Public IPv6","COLO":"Colocation Center","WARP_Level":"WARP Level","Account_Type":"Account Type","Data_Info":"Data Information","Unknown":"Unknown","Fail":"Fail to Get","WARP_Level_Off":"No Protection","WARP_Level_On":"Partial Protection","WARP_Level_Plus":"Complete Protection","Account_Type_unlimited":"Unlimited Ver.","Account_Type_limited":"Limited Ver.","Account_Type_team":"Team Ver.","Account_Type_plus":"WARP+","Account_Type_free":"Free Ver.","Data_Info_Used":"Used","Data_Info_Residual":"Residual","Data_Info_Total":"Total","Data_Info_Unlimited":"Unlimited"}
 			}
 		}
@@ -53,19 +53,19 @@ const DataBase = {
 			else Panel.title = Settings?.Title ?? "☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤"
 			// 填充面板信息
 			if ($.isLoon() || $.isQuanX()) {
-				Panel.message = `${Configs.i18n[Language]?.IPv4 ?? "公用IPv4"}: ${Trace4?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
-					+ `${Configs.i18n[Language]?.IPv6 ?? "公用IPv6"}: ${Trace6?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
-					+ `${Configs.i18n[Language]?.COLO ?? "主机托管中心"}: ${Trace4?.loc ?? Trace6?.loc} | ${Trace4?.colo ?? Trace6?.colo | Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
-					+ `${Configs.i18n[Language]?.WARP_Level ?? "WARP隐私"}: ${Trace4?.warp ?? Trace6?.warp ?? Configs.i18n[Language]?.Fail ?? "获取失败"}`;
+				Panel.message = `${Configs.i18n[Language]?.IPv4 ?? "IPv4"}: ${Trace4?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
+					+ `${Configs.i18n[Language]?.IPv6 ?? "IPv6"}: ${Trace6?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
+					+ `${Configs.i18n[Language]?.COLO ?? "托管中心"}: ${Trace4?.loc ?? Trace6?.loc} | ${Trace4?.colo ?? Trace6?.colo | Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
+					+ `${Configs.i18n[Language]?.WARP_Level ?? "隐私保护"}: ${Trace4?.warp ?? Trace6?.warp ?? Configs.i18n[Language]?.Fail ?? "获取失败"}`;
 			} else if ($.isSurge() || $.isStash()) {
 				if ($.isStash()) Panel.icon = Settings?.Icon ?? "https://raw.githubusercontent.com/shindgewongxj/WHATSINStash/main/icon/warp.png";
 				else Panel.icon = Settings?.Icon ?? "lock.icloud.fill";
 				Panel["icon-color"] = Settings?.IconColor ?? "#f48220";
 				if ($.isStash()) Panel.backgroundColor = Settings?.BackgroundColor ?? "#f6821f";
-				Panel.content = `${Configs.i18n[Language]?.IPv4 ?? "公用IPv4"}: ${Trace4?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
-					+ `${Configs.i18n[Language]?.IPv6 ?? "公用IPv6"}: ${Trace6?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
-					+ `${Configs.i18n[Language]?.COLO ?? "主机托管中心"}: ${Trace4?.loc ?? Trace6?.loc} | ${Trace4?.colo ?? Trace6?.colo | Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
-					+ `${Configs.i18n[Language]?.WARP_Level ?? "WARP隐私"}: ${Trace4?.warp ?? Trace6?.warp ?? Configs.i18n[Language]?.Fail ?? "获取失败"}`;
+				Panel.content = `${Configs.i18n[Language]?.IPv4 ?? "IPv4"}: ${Trace4?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
+					+ `${Configs.i18n[Language]?.IPv6 ?? "IPv6"}: ${Trace6?.ip ?? Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
+					+ `${Configs.i18n[Language]?.COLO ?? "托管中心"}: ${Trace4?.loc ?? Trace6?.loc} | ${Trace4?.colo ?? Trace6?.colo | Configs.i18n[Language]?.Fail ?? "获取失败"}\n`
+					+ `${Configs.i18n[Language]?.WARP_Level ?? "隐私保护"}: ${Trace4?.warp ?? Trace6?.warp ?? Configs.i18n[Language]?.Fail ?? "获取失败"}`;
 			};
 			// 获取账户信息
 			const Caches = $.getjson("@Cloudflare.1dot1dot1dot1.Caches", {});
