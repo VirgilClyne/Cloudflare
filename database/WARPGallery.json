@@ -1,7 +1,0 @@
-{
-    "name":"☁ WARP Panel",
-    "description":"显示当前线路的WARP状态 by Virgil C",
-    "task":[
-        "event-interaction https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.1.1.1.1.panel.js, tag=☁ WARP Panel, img-url=lock.icloud.fill.system, enabled=true"
-    ]
-}
