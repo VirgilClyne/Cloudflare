@@ -2,16 +2,16 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.2(14).panel");
+const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.2(16).panel");
 const DataBase = {
 	"Panel": {
 		"Settings":{"Switch":true,"Title":"☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤","Icon":"lock.icloud.fill","IconColor":"#f48220","BackgroundColor":"#f6821f"},
 		"Configs": {
 			"Request":{"url":"https://api.cloudflareclient.com","headers":{"authorization":null,"content-Type":"application/json","user-Agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","cf-client-version":"i-6.7-2109031904.1"}},
 			"i18n":{
-				"zh-Hans":{"IPv4":"IPv4","IPv6":"IPv6","COLO":"托管中心","WARP_Level":"隐私保护","Account_Type":"账户类型","Data_Info":"流量信息","Unknown":"未知","Fail":"获取失败","WARP_Level_Off":"没有保护","WARP_Level_On":"部分保护","WARP_Level_Plus":"完整保护","Account_Type_unlimited":"无限版","Account_Type_limited":"有限版","Account_Type_team":"团队版","Account_Type_plus":"WARP+","Account_Type_free":"免费版","Data_Info_Used":"已用流量","Data_Info_Residual":"剩余流量","Data_Info_Total":"总计流量","Data_Info_Unlimited":"无限流量"},
-				"zh-Hant":{"IPv4":"IPv4","IPv6":"IPv6","COLO":"託管中心","WARP_Level":"隱私保護","Account_Type":"賬戶類型","Data_Info":"流量信息","Unknown":"未知","Fail":"獲取失敗","WARP_Level_Off":"沒有保護","WARP_Level_On":"部分保護","WARP_Level_Plus":"完整保護","Account_Type_unlimited":"無限版","Account_Type_limited":"有限版","Account_Type_team":"團隊版","Account_Type_plus":"WARP+","Account_Type_free":"免費版","Data_Info_Used":"已用流量","Data_Info_Residual":"剩餘流量","Data_Info_Total":"總計流量","Data_Info_Unlimited":"無限流量"},
-				"en":{"IPv4":"Public IPv4","IPv6":"Public IPv6","COLO":"Colocation Center","WARP_Level":"WARP Level","Account_Type":"Account Type","Data_Info":"Data Information","Unknown":"Unknown","Fail":"Fail to Get","WARP_Level_Off":"No Protection","WARP_Level_On":"Partial Protection","WARP_Level_Plus":"Complete Protection","Account_Type_unlimited":"Unlimited Ver.","Account_Type_limited":"Limited Ver.","Account_Type_team":"Team Ver.","Account_Type_plus":"WARP+","Account_Type_free":"Free Ver.","Data_Info_Used":"Used","Data_Info_Residual":"Residual","Data_Info_Total":"Total","Data_Info_Unlimited":"Unlimited"}
+				"zh-Hans":{"IPv4":"IPv4","IPv6":"IPv6","COLO":"托管中心","WARP_Level":"隐私保护","Account_Type":"账户类型","Data_Info":"流量信息","Unknown":"未知","Fail":"获取失败","WARP_Level_Off":"关闭","WARP_Level_On":"开启","WARP_Level_Plus":"增强","Account_Type_unlimited":"无限版","Account_Type_limited":"有限版","Account_Type_team":"团队版","Account_Type_plus":"WARP+","Account_Type_free":"免费版","Data_Info_Used":"已用流量","Data_Info_Residual":"剩余流量","Data_Info_Total":"总计流量","Data_Info_Unlimited":"无限流量"},
+				"zh-Hant":{"IPv4":"IPv4","IPv6":"IPv6","COLO":"託管中心","WARP_Level":"隱私保護","Account_Type":"賬戶類型","Data_Info":"流量信息","Unknown":"未知","Fail":"獲取失敗","WARP_Level_Off":"關閉","WARP_Level_On":"開啟","WARP_Level_Plus":"增強","Account_Type_unlimited":"無限版","Account_Type_limited":"有限版","Account_Type_team":"團隊版","Account_Type_plus":"WARP+","Account_Type_free":"免費版","Data_Info_Used":"已用流量","Data_Info_Residual":"剩餘流量","Data_Info_Total":"總計流量","Data_Info_Unlimited":"無限流量"},
+				"en":{"IPv4":"Public IPv4","IPv6":"Public IPv6","COLO":"Colocation Center","WARP_Level":"WARP Level","Account_Type":"Account Type","Data_Info":"Data Information","Unknown":"Unknown","Fail":"Fail to Get","WARP_Level_Off":"OFF","WARP_Level_On":"ON","WARP_Level_Plus":"PLUS","Account_Type_unlimited":"Unlimited Ver.","Account_Type_limited":"Limited Ver.","Account_Type_team":"Team Ver.","Account_Type_plus":"WARP+","Account_Type_free":"Free Ver.","Data_Info_Used":"Used","Data_Info_Residual":"Residual","Data_Info_Total":"Total","Data_Info_Unlimited":"Unlimited"}
 			}
 		}
 	},
@@ -148,9 +148,9 @@ function formatAccount(account, i18n = DataBase.Panel.Configs.i18n, language = $
 			account.data = {
 				"type": `${account?.account_type?.toUpperCase()} | ${i18n[language]?.Account_Type_limited ?? "有限版"}`,
 				"limited": true,
-				"used": parseInt(account.premium_data - account.quota) / 1024 / 1024 / 1024,
-				"flow": parseInt(account.quota) / 1024 / 1024 / 1024,
-				"total": parseInt(account.premium_data) / 1024 / 1024 / 1024
+				"used": account.premium_data - account.quota,
+				"flow": account.quota,
+				"total": account.premium_data
 			}
 			break;
 		case "team":
@@ -169,9 +169,9 @@ function formatAccount(account, i18n = DataBase.Panel.Configs.i18n, language = $
 			account.data = {
 				"type": `${account?.account_type?.toUpperCase()} | ${i18n[language]?.Account_Type_free ?? "免费版"}`,
 				"limited": true,
-				"used": parseInt(account.premium_data - account.quota) / 1024 / 1024 / 1024,
-				"flow": parseInt(account.quota) / 1024 / 1024 / 1024,
-				"total": parseInt(account.premium_data) / 1024 / 1024 / 1024
+				"used": account.premium_data - account.quota,
+				"flow": account.quota,
+				"total": account.premium_data
 			}
 			break;
 		default:
@@ -184,17 +184,10 @@ function formatAccount(account, i18n = DataBase.Panel.Configs.i18n, language = $
 
 	switch (account.data.limited) {
 		case true:
-			// 单位转换
-			if (account.data.used > 1024) account.data.used = (account.data.used / 1024).toFixed(2) + "TB";
-			else account.data.used = account.data.used.toFixed(2) + "GB";
-			if (account.data.flow > 1024) account.data.flow = (account.data.flow / 1024).toFixed(2) + "TB";
-			else account.data.flow = account.data.flow.toFixed(2) + "GB";
-			if (account.data.total > 1024) account.data.total = (account.data.total / 1024).toFixed(2) + "TB";
-			else account.data.total = account.data.total.toFixed(2) + "GB";
 			// 拼接文本
-			account.data.text = `\n${i18n[language]?.Data_Info_Used ?? "已用流量"}: ${account.data.used}`
-				+ `\n${i18n[language]?.Data_Info_Residual ?? "剩余流量"}: ${account.data.flow}`
-				+ `\n${i18n[language]?.Data_Info_Total ?? "总计流量"}: ${account.data.total}`
+			account.data.text = `\n${i18n[language]?.Data_Info_Used ?? "已用流量"}: ${bytesToSize(account?.data?.used)}`
+				+ `\n${i18n[language]?.Data_Info_Residual ?? "剩余流量"}: ${bytesToSize(account?.data?.flow)}`
+				+ `\n${i18n[language]?.Data_Info_Total ?? "总计流量"}: ${bytesToSize(account?.data?.total)}`
 			break;
 		case false:
 			account.data.text = `♾️ | ${i18n[language]?.Data_Info_Unlimited ?? "无限流量"}`
@@ -253,6 +246,7 @@ async function Cloudflare(Request = DataBase.WARP.Configs.Request, opt = "trace"
 			return Object.fromEntries(arr)
 		})
 	};
+
 	// Function 0A
 	// Get Cloudflare JSON
 	function getCFjson(request) {
@@ -347,6 +341,14 @@ function ReReqeust(request = {}, proxyName = "") {
 	$.log(`🎉 ${$.name}, Construct Redirect Reqeusts`, "");
 	//$.log(`🚧 ${$.name}, Construct Redirect Reqeusts`, `Request:${JSON.stringify(request)}`, "");
 	return request;
+};
+
+function bytesToSize(bytes = 0) {
+	if (bytes === 0) return '0 B';
+	const k = 1024;
+	const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+	const i = Math.floor(Math.log(bytes) / Math.log(k));
+	return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
 };
 
 /***************** Env *****************/
