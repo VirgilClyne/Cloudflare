@@ -1,0 +1,9 @@
+{
+    "name":"☁ Cloudflare",
+    "description":"Cloudflare相关插件/模块",
+    "task":[
+        {"config": "event-interaction https://github.com/VirgilClyne/Cloudflare/raw/main/js/Cloudflare.1.1.1.1.panel.js, tag=☁ WARP Panel, img-url=lock.icloud.fill.system, enabled=true", "addons": "http://boxjs.com/#/sub/add/https%3A%2F%2Fgithub.com%2FVirgilClyne%2FCloudflare%2Fblob%2Fmain%2Fbox%2FCloudflare.boxjs.json%3Fraw%3Dtrue"},
+        {"config": "event-network https://github.com/VirgilClyne/Cloudflare/raw/main/js/Cloudflare.DNS.js, tag=☁ Cloudflare DNS: event-network, img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png, enabled=true", "addons": "http://boxjs.com/#/sub/add/https%3A%2F%2Fgithub.com%2FVirgilClyne%2FCloudflare%2Fblob%2Fmain%2Fbox%2FCloudflare.boxjs.json%3Fraw%3Dtrue"},
+        {"config": "*/10 * * * * https://github.com/VirgilClyne/Cloudflare/raw/main/js/Cloudflare.DNS.js, tag=☁ Cloudflare DNS: cron, img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png, enabled=true", "addons": "http://boxjs.com/#/sub/add/https%3A%2F%2Fgithub.com%2FVirgilClyne%2FCloudflare%2Fblob%2Fmain%2Fbox%2FCloudflare.boxjs.json%3Fraw%3Dtrue"}
+    ]
+}
