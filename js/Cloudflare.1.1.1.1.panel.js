@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.2(12).panel");
+const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.2(14).panel");
 const DataBase = {
 	"Panel": {
 		"Settings":{"Switch":true,"Title":"☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤","Icon":"lock.icloud.fill","IconColor":"#f48220","BackgroundColor":"#f6821f"},
@@ -119,13 +119,13 @@ function setENV(name, platform, database) {
 function formatTrace(trace, i18n = DataBase.Panel.Configs.i18n, language = $environment?.language ?? "zh-Hans") {
 	switch (trace?.warp) {
 		case "off":
-			trace.warp += ` | ${i18n[language]?.WARP_Level_Off ?? "没有保护"}`;
+			trace.warp += ` | ${i18n[language]?.WARP_Level_Off ?? "关闭"}`;
 			break;
 		case "on":
-			trace.warp += ` | ${i18n[language]?.WARP_Level_On ?? "部分保护"}`;
+			trace.warp += ` | ${i18n[language]?.WARP_Level_On ?? "开启"}`;
 			break;
 		case "plus":
-			trace.warp += ` | ${i18n[language]?.WARP_Level_Plus ?? "完整保护"}`;
+			trace.warp += ` | ${i18n[language]?.WARP_Level_Plus ?? "增强"}`;
 			break;
 		case undefined:
 			break;
@@ -181,11 +181,20 @@ function formatAccount(account, i18n = DataBase.Panel.Configs.i18n, language = $
 			}
 			break;
 	};
+
 	switch (account.data.limited) {
 		case true:
-			account.data.text = `\n${i18n[language]?.Data_Info_Used ?? "已用流量"}: ${account.data.used.toFixed(2)}GB`
-				+ `\n${i18n[language]?.Data_Info_Residual ?? "剩余流量"}: ${account.data.flow.toFixed(2)}GB`
-				+ `\n${i18n[language]?.Data_Info_Total ?? "总计流量"}: ${account.data.total.toFixed(2)}GB`
+			// 单位转换
+			if (account.data.used > 1024) account.data.used = (account.data.used / 1024).toFixed(2) + "TB";
+			else account.data.used = account.data.used.toFixed(2) + "GB";
+			if (account.data.flow > 1024) account.data.flow = (account.data.flow / 1024).toFixed(2) + "TB";
+			else account.data.flow = account.data.flow.toFixed(2) + "GB";
+			if (account.data.total > 1024) account.data.total = (account.data.total / 1024).toFixed(2) + "TB";
+			else account.data.total = account.data.total.toFixed(2) + "GB";
+			// 拼接文本
+			account.data.text = `\n${i18n[language]?.Data_Info_Used ?? "已用流量"}: ${account.data.used}`
+				+ `\n${i18n[language]?.Data_Info_Residual ?? "剩余流量"}: ${account.data.flow}`
+				+ `\n${i18n[language]?.Data_Info_Total ?? "总计流量"}: ${account.data.total}`
 			break;
 		case false:
 			account.data.text = `♾️ | ${i18n[language]?.Data_Info_Unlimited ?? "无限流量"}`
