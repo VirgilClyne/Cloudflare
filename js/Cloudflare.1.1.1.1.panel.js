@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.2(16).panel");
+const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.2(18).panel");
 const DataBase = {
 	"Panel": {
 		"Settings":{"Switch":true,"Title":"☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤","Icon":"lock.icloud.fill","IconColor":"#f48220","BackgroundColor":"#f6821f"},
@@ -185,9 +185,13 @@ function formatAccount(account, i18n = DataBase.Panel.Configs.i18n, language = $
 	switch (account.data.limited) {
 		case true:
 			// 拼接文本
+			account.data.text = `\n${i18n[language]?.Data_Info_Used ?? "已用流量"}|${i18n[language]?.Data_Info_Residual ?? "剩余流量"}|${i18n[language]?.Data_Info_Total ?? "总计流量"}`
+				+ `\n${bytesToSize(account?.data?.used)}|${bytesToSize(account?.data?.flow)}|${bytesToSize(account?.data?.total)}`;
+			/*
 			account.data.text = `\n${i18n[language]?.Data_Info_Used ?? "已用流量"}: ${bytesToSize(account?.data?.used)}`
 				+ `\n${i18n[language]?.Data_Info_Residual ?? "剩余流量"}: ${bytesToSize(account?.data?.flow)}`
 				+ `\n${i18n[language]?.Data_Info_Total ?? "总计流量"}: ${bytesToSize(account?.data?.total)}`
+			*/
 			break;
 		case false:
 			account.data.text = `♾️ | ${i18n[language]?.Data_Info_Unlimited ?? "无限流量"}`
@@ -348,7 +352,7 @@ function bytesToSize(bytes = 0) {
 	const k = 1024;
 	const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 	const i = Math.floor(Math.log(bytes) / Math.log(k));
-	return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+	return (bytes / Math.pow(k, i)).toPrecision(4) + ' ' + sizes[i];
 };
 
 /***************** Env *****************/
