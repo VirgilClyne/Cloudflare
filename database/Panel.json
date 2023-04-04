@@ -80,8 +80,8 @@
 				"Account_Type_plus": "WARP+",
 				"Account_Type_free": "Free",
 				"Data_Info_Used": "Used",
-				"Data_Info_Residual": "Residual",
-				"Data_Info_Total": "Total",
+				"Data_Info_Residual": "Remaining",
+				"Data_Info_Total": "Earned",
 				"Data_Info_Unlimited": "Unlimited"
 			}
 		}
