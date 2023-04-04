@@ -2,16 +2,16 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.2(19).panel");
+const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.3(1).panel");
 const DataBase = {
 	"Panel": {
-		"Settings":{"Switch":true,"Title":"☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤","Icon":"lock.icloud.fill","IconColor":"#f48220","BackgroundColor":"#f6821f"},
+		"Settings":{"Switch":true,"Title":"☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤","Icon":"lock.icloud.fill","IconColor":"#f48220","BackgroundColor":"#f6821f","Language":"auto"},
 		"Configs": {
 			"Request":{"url":"https://api.cloudflareclient.com","headers":{"authorization":null,"content-Type":"application/json","user-Agent":"1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0","cf-client-version":"i-6.7-2109031904.1"}},
 			"i18n":{
 				"zh-Hans":{"IPv4":"IPv4","IPv6":"IPv6","COLO":"托管中心","WARP_Level":"隐私保护","Account_Type":"账户类型","Data_Info":"流量信息","Unknown":"未知","Fail":"获取失败","WARP_Level_Off":"关闭","WARP_Level_On":"开启","WARP_Level_Plus":"增强","Account_Type_unlimited":"无限版","Account_Type_limited":"有限版","Account_Type_team":"团队版","Account_Type_plus":"WARP+","Account_Type_free":"免费版","Data_Info_Used":"已用流量","Data_Info_Residual":"剩余流量","Data_Info_Total":"总计流量","Data_Info_Unlimited":"无限流量"},
 				"zh-Hant":{"IPv4":"IPv4","IPv6":"IPv6","COLO":"託管中心","WARP_Level":"隱私保護","Account_Type":"賬戶類型","Data_Info":"流量信息","Unknown":"未知","Fail":"獲取失敗","WARP_Level_Off":"關閉","WARP_Level_On":"開啟","WARP_Level_Plus":"增強","Account_Type_unlimited":"無限版","Account_Type_limited":"有限版","Account_Type_team":"團隊版","Account_Type_plus":"WARP+","Account_Type_free":"免費版","Data_Info_Used":"已用流量","Data_Info_Residual":"剩餘流量","Data_Info_Total":"總計流量","Data_Info_Unlimited":"無限流量"},
-				"en":{"IPv4":"Public IPv4","IPv6":"Public IPv6","COLO":"Colocation Center","WARP_Level":"WARP Level","Account_Type":"Account Type","Data_Info":"Data Information","Unknown":"Unknown","Fail":"Fail to Get","WARP_Level_Off":"OFF","WARP_Level_On":"ON","WARP_Level_Plus":"PLUS","Account_Type_unlimited":"Unlimited Ver.","Account_Type_limited":"Limited Ver.","Account_Type_team":"Team Ver.","Account_Type_plus":"WARP+","Account_Type_free":"Free Ver.","Data_Info_Used":"Used","Data_Info_Residual":"Residual","Data_Info_Total":"Total","Data_Info_Unlimited":"Unlimited"}
+				"en":{"IPv4":"IPv4","IPv6":"IPv6","COLO":"Colocation Center","WARP_Level":"WARP Level","Account_Type":"Account Type","Data_Info":"Data Information","Unknown":"Unknown","Fail":"Fail to Get","WARP_Level_Off":"OFF","WARP_Level_On":"ON","WARP_Level_Plus":"PLUS","Account_Type_unlimited":"Unlimited Ver.","Account_Type_limited":"Limited Ver.","Account_Type_team":"Team Ver.","Account_Type_plus":"WARP+","Account_Type_free":"Free Ver.","Data_Info_Used":"Used","Data_Info_Residual":"Residual","Data_Info_Total":"Total","Data_Info_Unlimited":"Unlimited"}
 			}
 		}
 	},
@@ -38,7 +38,7 @@ const DataBase = {
 	switch (Settings.Switch) {
 		case "true":
 		default:
-			const Language = $environment?.language ?? "zh-Hans"
+			const Language = (Settings?.Language == "auto") ? $environment?.language : Settings?.Language ?? "zh-Hans"
 			// 构造请求信息
 			let Request = DataBase.WARP.Configs.Request;
 			// 兼容性修正
@@ -347,12 +347,12 @@ function ReReqeust(request = {}, proxyName = "") {
 	return request;
 };
 
-function bytesToSize(bytes = 0) {
+function bytesToSize(bytes = 0, Precision = 4) {
 	if (bytes === 0) return '0 B';
 	const k = 1024;
 	const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 	const i = Math.floor(Math.log(bytes) / Math.log(k));
-	return (bytes / Math.pow(k, i)).toPrecision(4) + ' ' + sizes[i];
+	return (bytes / Math.pow(k, i)).toPrecision(Precision) + ' ' + sizes[i];
 };
 
 /***************** Env *****************/

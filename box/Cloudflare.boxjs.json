@@ -44,7 +44,7 @@
         },
         {
           "id": "@Cloudflare.Panel.Settings.IconColor",
-          "name": "WARP: 图标颜色/Icon Color",
+          "name": "Panel: 图标颜色/Icon Color",
           "val": "#f48220",
           "type": "text",
           "placeholder": "#f48220",
@@ -52,12 +52,37 @@
         },
         {
           "id": "@Cloudflare.Panel.Settings.BackgroundColor",
-          "name": "WARP: 背景颜色/Background Color",
+          "name": "Panel: 背景颜色/Background Color",
           "val": "#f6821f",
           "type": "text",
           "placeholder": "#f6821f",
           "desc": "请填写面板背景HEX颜色代码（仅Stash支持）"
-        }
+        },
+				{
+					"id": "@Cloudflare.Panel.Settings.Language",
+					"name": "Panel: 语言",
+					"val": "auto",
+					"type": "selects",
+					"items": [
+						{
+							"key": "auto",
+							"label": "自动"
+						},
+						{
+							"key": "zh-Hans",
+							"label": "简体中文"
+						},
+						{
+							"key": "zh-Hant",
+							"label": "繁体中文"
+						},
+						{
+							"key": "en",
+							"label": "英文"
+						}
+					],
+					"desc": "选择面板语言"
+				}
       ],
       "author": "@VirgilClyne",
       "icons": [
