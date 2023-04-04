@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.2(18).panel");
+const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.2(19).panel");
 const DataBase = {
 	"Panel": {
 		"Settings":{"Switch":true,"Title":"☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤","Icon":"lock.icloud.fill","IconColor":"#f48220","BackgroundColor":"#f6821f"},
@@ -339,7 +339,7 @@ function ReReqeust(request = {}, proxyName = "") {
 			request.headers["X-Surge-Policy"] = proxyName;
 			request.policy = proxyName;
 		};
-		if ($.isStash()) $.logErr(`❗️${$.name}, ${Fetch.name}执行失败`, `不支持的app: Stash`, "");
+		if ($.isStash()) request.headers["X-Stash-Selected-Proxy"] = encodeURI(proxyName);
 		if ($.isShadowrocket()) $.logErr(`❗️${$.name}, ${Fetch.name}执行失败`, `不支持的app: Shadowrocket`, "");
 	}
 	$.log(`🎉 ${$.name}, Construct Redirect Reqeusts`, "");
