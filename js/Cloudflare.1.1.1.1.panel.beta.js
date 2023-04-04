@@ -2,7 +2,7 @@
 README:https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.3(3).panel.beta");
+const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v1.5.3(5).panel.beta");
 const DataBase = {
 	"Panel": {
 		"Settings":{"Switch":true,"Title":"☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤","Icon":"lock.icloud.fill","IconColor":"#f48220","BackgroundColor":"#f6821f","Language":"auto"},
@@ -46,7 +46,7 @@ const DataBase = {
 			else if ($.isQuanX()) Request = ReReqeust(Request, $environment?.params);
 			else if ($.isSurge()) Request.headers["x-surge-skip-scripting"] = "true";
 			// 获取WARP信息
-			const [Trace4, Trace6] = await Promise.allSettled([Cloudflare(Request, "trace4"), Cloudflare(Request, "trace6")]).then(results => results.map(result => formatTrace(result.value)));
+			const [Trace4, Trace6] = await Promise.allSettled([Cloudflare(Request, "trace4"), Cloudflare(Request, "trace6")]).then(results => results.map(result => formatTrace(result?.value, Language)));
 			// 构造面板信息
 			let Panel = {};
 			if ($.isStash()) Panel.title = Settings?.Title ?? "𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤"
@@ -74,7 +74,7 @@ const DataBase = {
 				Request.url = Caches?.url;
 				Request.headers = Caches?.headers ?? {};
 				// 获取账户信息
-				const Account = await Cloudflare(Request, "GET").then(result => formatAccount(result?.account ?? {}));
+				const Account = await Cloudflare(Request, "GET").then(result => formatAccount(result?.account ?? {}, Language));
 				// 填充面板信息
 				if ($.isLoon() || $.isQuanX()) {
 					Panel.message += `\n`
@@ -116,7 +116,7 @@ function setENV(name, platform, database) {
 	return { Settings, Caches, Configs }
 };
 
-function formatTrace(trace, i18n = DataBase.Panel.Configs.i18n, language = $environment?.language ?? "zh-Hans") {
+function formatTrace(trace, language = $environment?.language ?? "zh-Hans", i18n = DataBase.Panel.Configs.i18n) {
 	switch (trace?.warp) {
 		case "off":
 			trace.warp += ` | ${i18n[language]?.WARP_Level_Off ?? "关闭"}`;
@@ -136,7 +136,7 @@ function formatTrace(trace, i18n = DataBase.Panel.Configs.i18n, language = $envi
 	return trace;
 };
 
-function formatAccount(account, i18n = DataBase.Panel.Configs.i18n, language = $environment?.language ?? "zh-Hans") {
+function formatAccount(account, language = $environment?.language ?? "zh-Hans", i18n = DataBase.Panel.Configs.i18n) {
 	switch (account.account_type) {
 		case "unlimited":
 			account.data = {
@@ -185,8 +185,8 @@ function formatAccount(account, i18n = DataBase.Panel.Configs.i18n, language = $
 	switch (account.data.limited) {
 		case true:
 			// 拼接文本
-			account.data.text = `${i18n[language]?.Data_Info_Used ?? "已用"}|${i18n[language]?.Data_Info_Residual ?? "剩余"}|${i18n[language]?.Data_Info_Total ?? "总计"}`
-				+ `\n${bytesToSize(account?.data?.used)}|${bytesToSize(account?.data?.flow)}|${bytesToSize(account?.data?.total)}`;
+			account.data.text = `${i18n[language]?.Data_Info_Used ?? "已用"} | ${i18n[language]?.Data_Info_Residual ?? "剩余"} | ${i18n[language]?.Data_Info_Total ?? "总计"}`
+				+ `\n${bytesToSize(account?.data?.used)} | ${bytesToSize(account?.data?.flow)} | ${bytesToSize(account?.data?.total)}`;
 			break;
 		case false:
 			account.data.text = `♾️ | ${i18n[language]?.Data_Info_Unlimited ?? "无限"}`
