@@ -16,17 +16,17 @@
 			"headers": {
 				"authorization": null,
 				"content-Type": "application/json",
-				"user-Agent": "1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0",
-				"cf-client-version": "i-6.7-2109031904.1"
+				"user-agent": "1.1.1.1/6.22",
+				"cf-client-version": "i-6.22-2308151957.1"
 			}
 		},
 		"Environment": {
 			"iOS": {
 				"Type": "i",
-				"Version": "v0i2109031904",
+				"Version": "v0i2308151957",
 				"headers": {
-					"user-agent": "1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0",
-					"cf-client-version": "i-6.7-2109031904.1"
+					"user-agent": "1.1.1.1/6.22",
+					"cf-client-version": "i-6.22-2308151957.1"
 				}
 			},
 			"macOS": {
