@@ -2,7 +2,7 @@
 README: https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.0.0(2).response.beta");
+const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.0.0(3).response.beta");
 const URL = new URLs();
 const DataBase = {
 	"Panel": {
@@ -234,24 +234,39 @@ async function setReserved(client_id = "AAAA") {
  */
 async function setMessage(result, WireGuard) {
 	$.log(`⚠ ${$.name}, Set Message`, "");
-	const subject = encodeURIComponent(`☁️ Cloudflare for ${result?.account?.account_type}配置文件`);
-
-	const verify = `当前客户端公钥为:\n${result.key}\n用户设置公钥为:\n${WireGuard?.Settings?.PublicKey ?? "请到BoxJs面板中进行设置"}\n如两者一致，下列配置有效`;
-	const surge = `[Proxy]\nWARP = wireguard, section-name=Cloudflare, test-url=http://cp.cloudflare.com/generate_204\n\n[WireGuard Cloudflare]\nprivate-key = ${WireGuard?.Settings?.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 162.159.36.1, 2606:4700:4700::1111\nmtu = 1280\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.nanocat.cloud:2408, keepalive = 45, client-id = ${result?.config?.reserved?.[0]}/${result?.config?.reserved?.[1]}/${result?.config?.reserved?.[2]})`;
-	const stash = `name: Cloudflare\ntype: wireguard\nserver: engage.nanocat.cloud # domain is supported\nport: 2408\nip: ${result?.config?.interface?.addresses?.v4}\nipv6: ${result?.config?.interface?.addresses?.v6} # optional\nprivate-key: ${WireGuard?.Settings?.PrivateKey}\npublic-key: bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo= # peer public key\n# preshared-key: # optional\ndns: [162.159.36.1, 2606:4700:4700::1111] # optional\nmtu: 1280 # optional\nreserved: [${result?.config?.reserved}] # optional\nkeepalive: 45 # optional\n# underlying-proxy: # optional\n#   type: trojan\n#   server: your-underlying-proxy\n#   port: 443\n#   password: your-password`;
-	const loon = `[Proxy]\nWARP = wireguard, interface-ip=${result?.config?.interface?.addresses?.v4}, interface-ipv6=${result?.config?.interface?.addresses?.v6}, private-key="${WireGuard?.Settings?.PrivateKey}", mtu=1280, dns=162.159.36.1, dnsv6=2606:4700:4700::1111, keepalive=45, peers=[{public-key="bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=", allowed-ips="0.0.0.0/0, ::/0", endpoint=engage.nanocat.cloud:2408, reserved=[${result?.config?.reserved}]}]`;
-	const shadowrocket = `[Proxy]\nWARP = wireguard, section-name=Cloudflare, test-url=http://cp.cloudflare.com/generate_204\n\n[WireGuard Cloudflare]\nprivate-key = ${WireGuard?.Settings?.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 162.159.36.1, 2606:4700:4700::1111\nmtu = 1280\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.nanocat.cloud:2408, keepalive = 45, client-id = ${result?.config?.reserved?.[0]}/${result?.config?.reserved?.[1]}/${result?.config?.reserved?.[2]})`;
-	const urlScheme = `wg://engage.nanocat.cloud:2408?publicKey=bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=&privateKey=${WireGuard?.Settings?.PrivateKey}&ip=${result?.config?.interface?.addresses?.v4}&dns=162.159.36.1&mtu=1280&keepalive=45&udp=1&reserved=${result?.config?.reserved?.[0]}/${result?.config?.reserved?.[1]}/${result?.config?.reserved?.[2]}#☁️%20Cloudflare%20for%20${result?.account?.account_type}`;
+	const verify = `当前客户端公钥为:\n${result.key}\n用户设置公钥为:\n${WireGuard?.Settings?.PublicKey ?? "未设置，请到BoxJs面板中进行设置"}\n如两者一致，下列配置有效`;
+	let body = `有效性验证:\n${verify}\n\n\n⚠️注意留存本文件\n\n\n`;
+	switch ($.getEnv()) {
+		case "Surge":
+			const surge = `[Proxy]\nWARP = wireguard, section-name=Cloudflare, test-url=http://cp.cloudflare.com/generate_204\n\n[WireGuard Cloudflare]\nprivate-key = ${WireGuard?.Settings?.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 1.1.1.1, 2606:4700:4700::1111\nmtu = 1280\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.cloudflareclient.com:2408, keepalive = 45, client-id = ${result?.config?.reserved?.[0]}/${result?.config?.reserved?.[1]}/${result?.config?.reserved?.[2]})`;
+			body += `Surge用配置:\n${surge}`;
+			break;
+		case "Loon":
+			const loon = `[Proxy]\nWARP = wireguard, interface-ip=${result?.config?.interface?.addresses?.v4}, interface-ipv6=${result?.config?.interface?.addresses?.v6}, private-key="${WireGuard?.Settings?.PrivateKey}", mtu=1280, dns=1.1.1.1, dnsv6=2606:4700:4700::1111, keepalive=45, peers=[{public-key="bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=", allowed-ips="0.0.0.0/0, ::/0", endpoint=engage.nanocat.cloud:2408, reserved=[${result?.config?.reserved}]}]`;
+			body += `Loon用配置:\n${loon}`;
+			break;
+		case "Shadowrocket":
+			const shadowrocket = `[Proxy]\nWARP = wireguard, section-name=Cloudflare, test-url=http://cp.cloudflare.com/generate_204\n\n[WireGuard Cloudflare]\nprivate-key = ${WireGuard?.Settings?.PrivateKey}\nself-ip = ${result?.config?.interface?.addresses?.v4}\nself-ip-v6 = ${result?.config?.interface?.addresses?.v6}\ndns-server = 1.1.1.1, 2606:4700:4700::1111\nmtu = 1280\npeer = (public-key = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=, allowed-ips = "0.0.0.0/0, ::/0", endpoint = engage.nanocat.cloud:2408, keepalive = 45, client-id = ${result?.config?.reserved?.[0]}/${result?.config?.reserved?.[1]}/${result?.config?.reserved?.[2]})`;
+			const urlScheme = `wg://engage.nanocat.cloud:2408?publicKey=bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=&privateKey=${WireGuard?.Settings?.PrivateKey}&ip=${result?.config?.interface?.addresses?.v4}&dns=1.1.1.1&mtu=1280&keepalive=45&udp=1&reserved=${result?.config?.reserved?.[0]}/${result?.config?.reserved?.[1]}/${result?.config?.reserved?.[2]}#☁️%20Cloudflare%20for%20${result?.account?.account_type}`;
+			body += `Shadowrocket用配置:\n${shadowrocket}\n\n\nShadowrocket点击一键添加:\nshadowrocket://add/${urlScheme}`;
+			break;
+		case "Stash":
+			const stash = `name: Cloudflare\ntype: wireguard\nserver: engage.nanocat.cloud # domain is supported\nport: 2408\nip: ${result?.config?.interface?.addresses?.v4}\nipv6: ${result?.config?.interface?.addresses?.v6} # optional\nprivate-key: ${WireGuard?.Settings?.PrivateKey}\npublic-key: bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo= # peer public key\n# preshared-key: # optional\ndns: [1.1.1.1, 2606:4700:4700::1111] # optional\nmtu: 1280 # optional\nreserved: [${result?.config?.reserved}] # optional\nkeepalive: 45 # optional\n# underlying-proxy: # optional\n#   type: trojan\n#   server: your-underlying-proxy\n#   port: 443\n#   password: your-password`;
+			body += `Stash用配置:\n${stash}`;
+			break;
+		case "Node.js":
+			//body += `Surge用配置:\n${surge}\n\n\nStash用配置:\n${stash}\n\n\nLoon用配置:\n${loon}\n\n\nShadowrocket用配置:\n${shadowrocket}\n\n\n点击一键添加:\nshadowrocket://add/${urlScheme}`;
+			break;
+		case "Quantumult X":
+			body += `Quantumult X不支持 Wireguard 协议，仅显示提取后完整配置`
+			break;
+	};
 	const config = JSON.stringify(result);
+	body += `\n\n\n完整配置内容:\n${config}`;
 
-	const body = $.isStash() ? encodeURIComponent(`有效性验证:\n${verify}\n\n\nStash用配置:\n${stash}\n\n\n完整配置内容:\n${config}`)
-		: $.isSurge() ? encodeURIComponent(`有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\n完整配置内容:\n${config}`)
-			: $.isLoon() ? encodeURIComponent(`有效性验证:\n${verify}\n\n\nLoon用配置:\n${loon}\n\n\n完整配置内容:\n${config}`)
-				: $.isShadowrocket() ? encodeURIComponent(`有效性验证:\n${verify}\n\n\n点击一键添加:\nshadowrocket://add/${urlScheme}\n\n\nShadowrocket用配置:\n${shadowrocket}\n\n\n完整配置内容:\n${config}`)
-					: encodeURIComponent(`有效性验证:\n${verify}\n\n\n完整配置内容:\n${config}`);
-	//encodeURIComponent(`有效性验证:\n${verify}\n\n\nSurge用配置:\n${surge}\n\n\nStash用配置:\n${stash}\n\n\nLoon用配置:\n${loon}\n\n\n完整配置内容:\n${config}`);
+	const subject = encodeURIComponent(`☁️ Cloudflare for ${result?.account?.account_type}配置文件`);
+	const message = `mailto:engage@nanocat.me?subject=${subject}&body=${encodeURIComponent(body)}`;
 
-	const message = `mailto:engage@nanocat.me?subject=${subject}&body=${body}`;
 	$.log(`🎉 ${$.name}, Set Message`, `message: ${message}`, "");
 	return message;
 };
