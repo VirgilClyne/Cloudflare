@@ -1,5 +1,5 @@
-#!name=☁️ Cloudflare: 1️⃣ 1.1.1.1 with WARP 客户端配置管理 β
-#!desc=(BETA) 1.1.1.1 by Cloudflare APP with WARP Client Config Management
+#!name=☁️ Cloudflare: 1️⃣ 1.1.1.1 with WARP β
+#!desc=(BETA) WARP检测面板与节点提取
 #!openUrl=http://boxjs.com/#/app/Cloudflare.1dot1dot1dot1.beta
 #!author=VirgilClyne & R·E
 #!homepage=https://github.com/VirgilClyne
@@ -16,11 +16,11 @@ engage.nanocat.cloud = 162.159.192.1, 162.159.192.2, 162.159.192.3, 162.159.192.
 
 [Script]
 # WARP Panel
-#!PROFILE-VERSION-REQUIRED 10 ☁ WARP Panel = type=generic, timeout=15, debug=1, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/beta/js/Cloudflare.1.1.1.1.panel.beta.js
+#!PROFILE-VERSION-REQUIRED 10 ☁ WARP Panel = type=generic, debug=1, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/beta/js/Cloudflare.1.1.1.1.panel.beta.js
 # WARP Personal
 ☁ WARP Personal Request = type=http-request,pattern=^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$, requires-body=1, debug=1, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/beta/js/Cloudflare.1.1.1.1.request.beta.js
 ☁ WARP Personal Response = type=http-response,pattern=^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$, requires-body=1, debug=1, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/beta/js/Cloudflare.1.1.1.1.response.beta.js
-# Cloudflare for Teams
+# Zero Trust Client (Cloudflare for Teams)
 ☁ WARP Teams Request = type=http-request,pattern=^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/t\.[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$, requires-body=1, debug=1, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/beta/js/Cloudflare.1.1.1.1.request.beta.js
 ☁ WARP Teams Response = type=http-response,pattern=^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/t\.[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$, requires-body=1, debug=1, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/beta/js/Cloudflare.1.1.1.1.response.beta.js
 

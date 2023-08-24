@@ -1,5 +1,5 @@
-#!name=☁️ Cloudflare: 1️⃣ 1.1.1.1 with WARP 客户端配置管理
-#!desc=(V2) 1.1.1.1 by Cloudflare APP with WARP Client Config Management
+#!name=☁️ Cloudflare: 1️⃣ 1.1.1.1 with WARP
+#!desc=WARP检测面板与节点提取
 #!openUrl=http://boxjs.com/#/app/Cloudflare.1dot1dot1dot1
 #!author=VirgilClyne & R·E
 #!homepage=https://github.com/VirgilClyne
@@ -12,7 +12,7 @@ generic script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/mai
 # WARP Personal
 http-request ^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$ script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.1.1.1.1.request.js, requires-body=1, tag=☁ WARP Personal Request
 http-response ^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$ script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.1.1.1.1.response.js, requires-body=1, tag=☁ WARP Personal Response
-# Cloudflare for Teams
+# Zero Trust Client (Cloudflare for Teams)
 http-request ^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/t\.[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$ script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.1.1.1.1.request.js, requires-body=1, tag=☁ WARP Teams Request
 http-response ^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/t\.[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$ script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.1.1.1.1.response.js, requires-body=1, tag=☁ WARP Teams Response
 
