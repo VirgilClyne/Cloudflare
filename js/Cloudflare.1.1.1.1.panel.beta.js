@@ -2,7 +2,7 @@
 README: https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v2.0.0(1).panel.beta");
+const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v2.0.0(2).panel.beta");
 const DataBase = {
 	"Panel": {
 		"Settings":{"Switch":true,"Title":"☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤","Icon":"lock.icloud.fill","IconColor":"#f48220","BackgroundColor":"#f6821f","Language":"auto"},
@@ -81,11 +81,13 @@ const DataBase = {
 				default:
 					Panel.title = Settings?.Title ?? "☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤"
 					Panel.icon = Settings?.Icon ?? "lock.icloud.fill";
+					Panel["icon-color"] = Settings?.IconColor ?? "#f48220";
 					Panel.content = connectInfo;
 					break;
 				case "Stash":
 					Panel.title = Settings?.Title ?? "𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤"
 					Panel.icon = Settings?.Icon ?? "https://raw.githubusercontent.com/shindgewongxj/WHATSINStash/main/icon/warp.png";
+					Panel["icon-color"] = Settings?.IconColor ?? "#f48220";
 					Panel.backgroundColor = Settings?.BackgroundColor ?? "#f6821f";
 					Panel.content = connectInfo;
 					break;

@@ -2,7 +2,7 @@
 README: https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v2.0.0(1).panel");
+const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v2.0.0(2).panel");
 const DataBase = {
 	"Panel": {
 		"Settings":{"Switch":true,"Title":"☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤","Icon":"lock.icloud.fill","IconColor":"#f48220","BackgroundColor":"#f6821f","Language":"auto"},
@@ -81,11 +81,13 @@ const DataBase = {
 				default:
 					Panel.title = Settings?.Title ?? "☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤"
 					Panel.icon = Settings?.Icon ?? "lock.icloud.fill";
+					Panel["icon-color"] = Settings?.IconColor ?? "#f48220";
 					Panel.content = connectInfo;
 					break;
 				case "Stash":
 					Panel.title = Settings?.Title ?? "𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤"
 					Panel.icon = Settings?.Icon ?? "https://raw.githubusercontent.com/shindgewongxj/WHATSINStash/main/icon/warp.png";
+					Panel["icon-color"] = Settings?.IconColor ?? "#f48220";
 					Panel.backgroundColor = Settings?.BackgroundColor ?? "#f6821f";
 					Panel.content = connectInfo;
 					break;
@@ -218,11 +220,6 @@ function formatAccount(account, language = $environment?.language ?? "zh-Hans", 
 			// 拼接文本
 			account.data.text = `${i18n[language]?.Data_Info_Used ?? "已用"} | ${i18n[language]?.Data_Info_Residual ?? "剩余"} | ${i18n[language]?.Data_Info_Total ?? "总计"}`
 				+ `\n${bytesToSize(account?.data?.used)} | ${bytesToSize(account?.data?.flow)} | ${bytesToSize(account?.data?.total)}`;
-			/*
-			account.data.text = `\n${i18n[language]?.Data_Info_Used ?? "已用流量"}: ${bytesToSize(account?.data?.used)}`
-				+ `\n${i18n[language]?.Data_Info_Residual ?? "剩余流量"}: ${bytesToSize(account?.data?.flow)}`
-				+ `\n${i18n[language]?.Data_Info_Total ?? "总计流量"}: ${bytesToSize(account?.data?.total)}`
-			*/
 			break;
 		case false:
 			account.data.text = `♾️ | ${i18n[language]?.Data_Info_Unlimited ?? "无限"}`
@@ -235,18 +232,6 @@ function formatAccount(account, language = $environment?.language ?? "zh-Hans", 
 };
 
 async function Cloudflare(Request = DataBase.WARP.Configs.Request, opt = "trace") {
-	/*
-	let Request = {
-		// Endpoints
-		"url": "https://api.cloudflareclient.com",
-		"headers": {
-			"Host": "api.cloudflareclient.com",
-			"content-type": "application/json",
-			"user-agent": "1.1.1.1/2109031904.1 CFNetwork/1327.0.4 Darwin/21.2.0",
-			"cf-client-version": "i-6.7-2109031904.1"
-		}
-	};
-	*/
 	let _Request = JSON.parse(JSON.stringify(Request));
 	switch (opt) {
 		case "trace":
