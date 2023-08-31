@@ -3,7 +3,7 @@ README: https://github.com/VirgilClyne/Cloudflare
 refer:https://github.com/phil-r/node-cloudflare-ddns
 */
 
-const $ = new Env("☁ Cloudflare: DNS v2.1.0(1).beta");
+const $ = new Env("☁ Cloudflare: 🇩 DNS v2.2.0(3).beta");
 const DataBase = {
 	"Panel": {
 		"Settings":{"Switch":true,"Title":"☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤","Icon":"lock.icloud.fill","IconColor":"#f48220","BackgroundColor":"#f6821f","Language":"auto"},
@@ -25,7 +25,7 @@ const DataBase = {
 		"Configs":{"interface":{"addresses":{"v4":"","v6":""}},"peers":[{"public_key":"","endpoint":{"host":"","v4":"","v6":""}}]}
 	},
 	"DNS": {
-		"Settings":{"Switch":true,"Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
+		"Settings":{"Switch":true,"IPServer":"ipw.cn","Verify":{"Mode":"Token","Content":""},"zone":{"id":"","name":"","dns_records":[{"id":"","type":"A","name":"","content":"","ttl":1,"proxied":false}]}},
 		"Configs":{"Request":{"url":"https://api.cloudflare.com/client/v4","headers":{"content-type":"application/json"}}}
 	},
 	"WARP": {
@@ -50,7 +50,7 @@ const DataBase = {
 			//Step 3
 			let oldRecord = await checkRecordInfo(Configs.Request, Settings.zone, dns_record);
 			//Step 4
-			let newRecord = await checkRecordContent(dns_record);
+			let newRecord = await checkRecordContent(dns_record, Settings.IPServer);
 			//Step 5
 			let Record = await setupRecord(Configs.Request, Settings.zone, oldRecord, newRecord);
 			$.log(`${Record.name}上的${Record.type}记录${Record.content}更新完成`, "");
@@ -146,17 +146,17 @@ async function checkZoneInfo(Request, Zone) {
 };
 
 //Step 3
-async function checkRecordContent(Record) {
+async function checkRecordContent(Record, IPServer) {
 	if (Record.type) {
 		$.log(`有类型${Record.type}, 继续`);
 		if (!Record.content) {
 			$.log("无内容, 继续");
 			switch (Record.type) {
 				case "A":
-					Record.content = await getPublicIP(4);
+					Record.content = await getExternalIP(4, IPServer);
 					break;
 				case "AAAA":
-					Record.content = await getPublicIP(6);
+					Record.content = await getExternalIP(6, IPServer);
 					break;
 				case undefined:
 					$.log("无类型, 跳过");
@@ -361,20 +361,29 @@ async function Cloudflare(opt, Request, Zone = {}, Record = { "type": "", name: 
 // Function 1A
 // Get Public IP / External IP address
 // https://www.my-ip.io/api
-async function getPublicIP(type) {
+async function getExternalIP(type, server) {
 	$.log("获取公共IP");
-	let _Request = { url: `https://api${type}.my-ip.io/ip.json` };
-	$.log(`🚧 _Request=${JSON.stringify(_Request)}`);
-	let _data = await $.http.get(_Request).then(response => JSON.parse(response.body));
-	$.log(`🚧 _data=${JSON.stringify(_data)}`);
-	switch (_data.success) {
+	const Request = {};
+	switch (server) {
+		case "ipw.cn":
+			Request.url = `https://${type}.ipw.cn/api/ip/myip?json`;
+			break;
+		case "my-ip.io":
+			Request.url = `https://api${type}.my-ip.io/ip.json`;
+			break;
+	};
+	$.log(`🚧 Request=${JSON.stringify(Request)}`);
+	const Data = await $.http.get(Request).then(response => JSON.parse(response.body));
+	$.log(`🚧 Data=${JSON.stringify(Data)}`);
+	switch (Data?.success ?? Data?.result) {
 		case true:
-			return _data.ip;
+			return Data.IP ?? Data.ip;
 		case false:
-			if (Array.isArray(_data.errors)) _data.errors.forEach(error => { $.msg($.name, `code: ${error.code}`, `message: ${error.message}`); })
+			if (Array.isArray(Data.errors)) Data.errors.forEach(error => { $.msg($.name, `code: ${error.code}`, `message: ${error.message}`); })
+			if (Array.isArray(Data.messages)) $.msg($.name, `code: ${Data.code}`, `message: ${Data.message}`);
 			break;
 		default:
-			return _data?.result?.[0] ?? _data?.result;
+			return Data?.result?.[0] ?? Data?.result;
 	};
 };
 
