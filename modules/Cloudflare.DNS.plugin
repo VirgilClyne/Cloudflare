@@ -1,0 +1,19 @@
+#!name=☁️ Cloudflare: 🇩 DNS
+#!desc=Cloudflare (D)DNS 记录管理
+#!openUrl=http://boxjs.com/#/app/Cloudflare.DNS
+#!author=VirgilClyne
+#!homepage=https://github.com/VirgilClyne
+#!manual=https://github.com/VirgilClyne/Cloudflare/wiki/☁-Cloudflare:-🇩-DNS
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png
+
+[Host]
+api.my-ip.io = 91.107.217.147
+
+[Rule]
+DOMAIN,ipw.cn,DIRECT
+DOMAIN,api4.my-ip.io,DIRECT
+DOMAIN,api6.my-ip.io,DIRECT
+
+[Script]
+network-changed script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.DNS.js, tag=☁ Cloudflare.DNS.event, timeout=60, argument=
+cron "*/5 * * * *" script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.DNS.js, tag=☁ Cloudflare.DNS.cron, timeout=60, argument=

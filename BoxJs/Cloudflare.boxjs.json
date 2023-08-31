@@ -261,6 +261,23 @@
           "desc": "是否启用此模块"
         },
         {
+          "id": "@Cloudflare.DNS.Settings.IPServer",
+          "name": "外部（公共）IP服务",
+          "val": "ipw.cn",
+          "type": "selects",
+          "items": [
+            {
+              "key": "ipw.cn",
+              "label": "ipw.cn"
+            },
+            {
+              "key": "my-ip.io",
+              "label": "my-ip.io"
+            }
+          ],
+          "desc": "选择用来检测外部（公共） IP 的服务"
+        },
+        {
           "id": "@Cloudflare.DNS.Settings.Verify.Mode",
           "name": "验证方式",
           "val": "Token",

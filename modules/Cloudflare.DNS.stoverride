@@ -1,0 +1,26 @@
+name: "☁️ Cloudflare: 🇩 DNS"
+desc: "Cloudflare (D)DNS 记录管理"
+openUrl: "http://boxjs.com/#/app/Cloudflare.DNS"
+author: "VirgilClyne"
+homepage: "https://github.com/VirgilClyne"
+manual: "https://github.com/VirgilClyne/Cloudflare/wiki/☁-Cloudflare:-🇩-DNS"
+icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png"
+
+hosts:
+  'api.my-ip.io': 91.107.217.147
+
+rules:
+  - DOMAIN,ipw.cn,DIRECT
+  - DOMAIN,api4.my-ip.io,DIRECT
+  - DOMAIN,api6.my-ip.io,DIRECT
+
+cron:
+  script:
+    - name: Cloudflare.DNS
+      cron: '*/5 * * * *' # at every 5th minute
+      argument: # optional, if the script needs arguments
+
+script-providers:
+  Cloudflare.DNS:
+    url: https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.DNS.js
+    interval: 86400
