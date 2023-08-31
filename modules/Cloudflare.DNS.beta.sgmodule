@@ -10,6 +10,7 @@
 api.my-ip.io = 91.107.217.147, 18.134.24.67
 
 [Rule]
+DOMAIN,ipw.cn,DIRECT
 DOMAIN,api4.my-ip.io,DIRECT
 DOMAIN,api6.my-ip.io,DIRECT
 
@@ -18,4 +19,4 @@ DOMAIN,api6.my-ip.io,DIRECT
 ☁ Cloudflare.DNS.cron = type=cron, cronexp="*/5 * * * *", timeout=60, debug=1, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/beta/js/Cloudflare.DNS.beta.js, argument=
 
 [MITM]
-hostname = %APPEND% *.my-ip.io, api.cloudflare.com
+hostname = %APPEND% api.cloudflare.com, *.ipw.cn, *.my-ip.io
