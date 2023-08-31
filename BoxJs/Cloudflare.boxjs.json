@@ -8,10 +8,10 @@
   "apps": [
     {
       "id": "Cloudflare.Panel",
-      "name": "☁️ Cloudflare Panel",
+      "name": "☁️ Cloudflare: 📊 Panel",
       "descs_html": [
         "不同运行方式所要填写的内容也不相同",
-        "使用说明请见<a href=\"https://github.com/VirgilClyne/Cloudflare/wiki/☁-1.1.1.1-by-Cloudflare-with-WARP#使用说明\">使用说明</a>",
+        "使用说明请见<a href=\"https://github.com/VirgilClyne/Cloudflare/wiki/☁-Cloudflare:-1%EF%B8%8F⃣-1.1.1.1-with-WARP\">☁ Cloudflare: 1️⃣ 1.1.1.1 with WARP</a>",
         "填写完成后请先点击此页面底端右下角的\"保存\"后，再到App中执行后续操作。"
       ],
       "keys": [
@@ -92,7 +92,7 @@
     },
     {
       "id": "Cloudflare.1dot1dot1dot1",
-      "name": "☁️ Cloudflare 1.1.1.1",
+      "name": "☁️ Cloudflare: 1️⃣ 1.1.1.1",
       "descs_html": [
         "不同运行方式所要填写的内容也不相同",
         "使用说明请见<a href=\"https://github.com/VirgilClyne/Cloudflare/wiki/☁-1.1.1.1-by-Cloudflare-with-WARP#使用说明\">使用说明</a>",
@@ -114,7 +114,7 @@
           "id": "@Cloudflare.1dot1dot1dot1.Settings.setupMode",
           "name": "1.1.1.1: 运行方式/setupMode",
           "val": "ChangeKeypair",
-          "type": "radios",
+          "type": "selects",
           "items": [
             {
               "key": "ChangeKeypair",
@@ -156,7 +156,7 @@
     },
     {
       "id": "WireGuard.VPN",
-      "name": "🐲 WireGuard VPN",
+      "name": "🐲 WireGuard: 🔒 VPN",
       "keys": [
         "@WireGuard.VPN.Settings",
         "@WireGuard.VPN.Configs"
@@ -243,9 +243,9 @@
     },
     {
       "id": "Cloudflare.DNS",
-      "name": "☁️ Cloudflare DNS",
+      "name": "☁️ Cloudflare: 🇩 DNS",
       "descs_html": [
-        "使用说明请见<a href=\"https://github.com/VirgilClyne/Cloudflare/wiki/☁-Cloudflare-DNS\">使用说明</a>进行配置",
+        "使用说明请见<a href=\"https://github.com/VirgilClyne/Cloudflare/wiki/☁-Cloudflare:-🇩-DNS#使用说明\">☁️ Cloudflare: 🇩 DNS#使用说明</a>进行配置",
         "填写完成后请先点击此页面底端右下角的\"保存\"后，再点击此页面右上角的圆箭头按钮\"运行\"。"
       ],
       "keys": [
@@ -264,7 +264,7 @@
           "id": "@Cloudflare.DNS.Settings.Verify.Mode",
           "name": "验证方式",
           "val": "Token",
-          "type": "radios",
+          "type": "selects",
           "items": [
             {
               "key": "Token",
@@ -328,12 +328,12 @@
     },
     {
       "id": "Cloudflare.WARP",
-      "name": "☁️ Cloudflare WARP",
+      "name": "☁️ Cloudflare: WARP",
       "descs_html": [
         "⚠️注意：此脚本已停止供应",
-        "请移步<a href=\"https://github.com/VirgilClyne/Cloudflare/wiki/☁-1.1.1.1-by-Cloudflare-with-WARP\">☁ 1.1.1.1 by Cloudflare with WARP</a>查看新脚本",
+        "请移步<a href=\"https://github.com/VirgilClyne/Cloudflare/wiki/☁-Cloudflare:-1%EF%B8%8F⃣-1.1.1.1-with-WARP\">☁ Cloudflare: 1️⃣ 1.1.1.1 with WARP</a>查看新脚本",
         "不同运行方式所要填写的内容也不相同",
-        "使用说明请见<a href=\"https://github.com/VirgilClyne/Cloudflare/wiki/☁-Cloudflare-WARP\">使用说明</a>",
+        "使用说明请见<a href=\"https://github.com/VirgilClyne/Cloudflare/wiki/☁-Cloudflare:-WARP#使用说明\">☁ Cloudflare: WARP#使用说明</a>",
         "填写完成后请先点击此页面底端右下角的\"保存\"后，再点击此页面右上角的圆箭头按钮\"运行\"。"
       ],
       "keys": [
@@ -352,7 +352,7 @@
           "id": "@Cloudflare.WARP.Settings.setupMode",
           "name": "WARP: 运行方式/setupMode",
           "val": "RegisterNewAccountwithPublicKey",
-          "type": "radios",
+          "type": "selects",
           "items": [
             {
               "key": "RegisterNewAccount",
@@ -425,12 +425,16 @@
           "id": "@Cloudflare.WARP.Settings.Verify.Mode",
           "name": "WARP: 验证方式/Verify Mode",
           "val": "Token",
-          "type": "radios",
+          "type": "selects",
           "items": [
             {
               "key": "Token",
               "label": "令牌/Token"
-            }
+            },
+            {
+							"key": "Key",
+							"label": "密钥/Key（暂不支持，别选）"
+						}
           ],
           "desc": "个人版的WARP的验证方式默认只有Token，Team版的不知道"
         },
@@ -446,7 +450,7 @@
           "id": "@Cloudflare.WARP.Settings.deviceType",
           "name": "WARP: 客户端用户代理类型/Client Device Type",
           "val": "iOS",
-          "type": "radios",
+          "type": "selects",
           "items": [
             {
               "key": "Windows",
