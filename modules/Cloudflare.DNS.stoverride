@@ -10,7 +10,7 @@ hosts:
   'api.my-ip.io': 91.107.217.147
 
 rules:
-  - DOMAIN,ipw.cn,DIRECT
+  - DOMAIN-SUFFIX,ipw.cn,DIRECT
   - DOMAIN,api4.my-ip.io,DIRECT
   - DOMAIN,api6.my-ip.io,DIRECT
 
