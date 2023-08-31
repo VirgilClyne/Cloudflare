@@ -1,6 +1,7 @@
 {
 	"Settings": {
 		"Switch": true,
+		"IPServer": "ipw.cn",
 		"Verify": {
 			"Mode": "Token",
 			// Requests
