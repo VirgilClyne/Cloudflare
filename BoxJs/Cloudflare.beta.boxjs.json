@@ -20,12 +20,12 @@
       ],
       "settings": [
         {
-					"id": "@Cloudflare.Panel.Settings.Switch",
-					"name": "总功能开关",
-					"val": true,
-					"type": "boolean",
-					"desc": "是否启用此模块"
-				},
+          "id": "@Cloudflare.Panel.Settings.Switch",
+          "name": "总功能开关",
+          "val": true,
+          "type": "boolean",
+          "desc": "是否启用此模块"
+        },
         {
           "id": "@Cloudflare.Panel.Settings.Title",
           "name": "Panel: 标题/Title",
@@ -58,31 +58,31 @@
           "placeholder": "#f6821f",
           "desc": "请填写面板背景HEX颜色代码（仅Stash支持）"
         },
-				{
-					"id": "@Cloudflare.Panel.Settings.Language",
-					"name": "Panel: 语言",
-					"val": "auto",
-					"type": "selects",
-					"items": [
-						{
-							"key": "auto",
-							"label": "自动"
-						},
-						{
-							"key": "zh-Hans",
-							"label": "简体中文"
-						},
-						{
-							"key": "zh-Hant",
-							"label": "繁体中文"
-						},
-						{
-							"key": "en",
-							"label": "英文"
-						}
-					],
-					"desc": "选择面板语言"
-				}
+        {
+          "id": "@Cloudflare.Panel.Settings.Language",
+          "name": "Panel: 语言",
+          "val": "auto",
+          "type": "selects",
+          "items": [
+            {
+              "key": "auto",
+              "label": "自动"
+            },
+            {
+              "key": "zh-Hans",
+              "label": "简体中文"
+            },
+            {
+              "key": "zh-Hant",
+              "label": "繁体中文"
+            },
+            {
+              "key": "en",
+              "label": "英文"
+            }
+          ],
+          "desc": "选择面板语言"
+        }
       ],
       "author": "@VirgilClyne",
       "icons": [
@@ -104,12 +104,12 @@
       ],
       "settings": [
         {
-					"id": "@Cloudflare.1dot1dot1dot1.Settings.Switch",
-					"name": "总功能开关",
-					"val": true,
-					"type": "boolean",
-					"desc": "是否启用此模块"
-				},
+          "id": "@Cloudflare.1dot1dot1dot1.Settings.Switch",
+          "name": "总功能开关",
+          "val": true,
+          "type": "boolean",
+          "desc": "是否启用此模块"
+        },
         {
           "id": "@Cloudflare.1dot1dot1dot1.Settings.setupMode",
           "name": "1.1.1.1: 运行方式/setupMode",
@@ -272,12 +272,12 @@
       ],
       "settings": [
         {
-					"id": "@Cloudflare.WARP.Settings.Switch",
-					"name": "总功能开关",
-					"val": true,
-					"type": "boolean",
-					"desc": "是否启用此模块"
-				},
+          "id": "@Cloudflare.WARP.Settings.Switch",
+          "name": "总功能开关",
+          "val": true,
+          "type": "boolean",
+          "desc": "是否启用此模块"
+        },
         {
           "id": "@Cloudflare.WARP.Settings.setupMode",
           "name": "WARP: 运行方式/setupMode",
@@ -362,9 +362,9 @@
               "label": "令牌/Token"
             },
             {
-							"key": "Key",
-							"label": "密钥/Key（暂不支持，别选）"
-						}
+              "key": "Key",
+              "label": "密钥/Key（暂不支持，别选）"
+            }
           ],
           "desc": "个人版的WARP的验证方式默认只有Token，Team版的不知道"
         },
