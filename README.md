@@ -10,7 +10,7 @@
   * 支持 Surge(推荐), 部分也支持🎈Loon(推荐), Stash, Shadowrocket, Quantumult X
   * macOS 12.5.1, iOS 16.0 测试通过
   * 需要启用`重写`、`脚本`、`MitM`功能
-  * 本项目可视化配置面板订阅及使用方法详见[🧰BoxJs](../../wiki/🧰BoxJs)
+  * 本项目可视化配置面板订阅及使用方法详见[🧰 BoxJs](../../wiki/🧰-BoxJs)
   * 点击下方链接直达详细说明
   * 手机等竖屏设备可以👈左右👉划动下列表格查看更多模块
 
