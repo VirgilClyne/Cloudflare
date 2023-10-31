@@ -2,7 +2,7 @@
 README: https://github.com/VirgilClyne/Cloudflare
 */
 
-const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v2.0.0(2).panel.beta");
+const $ = new Env("☁ Cloudflare: 1️⃣ 1.1.1.1 v2.0.0(3).panel.beta");
 const DataBase = {
 	"Panel": {
 		"Settings":{"Switch":true,"Title":"☁ 𝙒𝘼𝙍𝙋 𝙄𝙣𝙛𝙤","Icon":"lock.icloud.fill","IconColor":"#f48220","BackgroundColor":"#f6821f","Language":"auto"},
@@ -256,7 +256,8 @@ async function Cloudflare(Request = DataBase.WARP.Configs.Request, opt = "trace"
 			delete _Request.headers;
 			return await formatCFJSON(_Request);
 		case "trace4":
-			_Request.url = "https://1.1.1.1/cdn-cgi/trace";
+			//_Request.url = "https://1.1.1.1/cdn-cgi/trace";
+			_Request.url = "https://162.159.36.1/cdn-cgi/trace";
 			delete _Request.headers;
 			return await formatCFJSON(_Request);
 		case "trace6":
