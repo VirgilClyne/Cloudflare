@@ -5,6 +5,7 @@
 #!homepage=https://github.com/VirgilClyne
 #!manual=https://github.com/VirgilClyne/Cloudflare/wiki/☁-1.1.1.1-by-Cloudflare-with-WARP
 #!icon=https://is5-ssl.mzstatic.com/image/thumb/Purple122/v4/d3/c5/bb/d3c5bbed-08d4-481c-8585-f7d2e45abd5f/AppIcon-0-0-1x_U007emarketing-0-0-0-10-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/246x0w.png
+#!category=☁️ Cloudflare
 
 [Host]
 # refer: https://developers.cloudflare.com/cloudflare-one/connections/connect-devices/warp/deployment/firewall/#warp-ingress-ip

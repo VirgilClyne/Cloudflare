@@ -5,6 +5,7 @@
 #!homepage=https://github.com/VirgilClyne
 #!manual=https://github.com/VirgilClyne/Cloudflare/wiki/☁-Cloudflare:-🇩-DNS
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png
+#!category=☁️ Cloudflare
 
 [Host]
 api.my-ip.io = 91.107.217.147, 18.134.24.67
