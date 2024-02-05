@@ -1,0 +1,8 @@
+{
+    "name":"☁ Cloudflare",
+    "description":"Cloudflare相关插件/模块",
+    "task":[
+        {"config": "event-interaction https://github.com/VirgilClyne/Cloudflare/raw/main/js/1.1.1.1.panel.js, tag=☁ Cloudflare: 📊 Panel, img-url=lock.icloud.fill.system, enabled=true", "addons": ""},
+        {"config": "*/5 * * * * https://github.com/VirgilClyne/Cloudflare/raw/main/js/DNS.js, tag=☁ Cloudflare: 🇩 DNS (cron), img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png, enabled=true", "addons": ""}
+    ]
+}

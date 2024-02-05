@@ -1,0 +1,23 @@
+{
+    "Settings": {
+        "Switch": true,
+        "PrivateKey": "",
+        "PublicKey": ""
+    },
+    "Configs": {
+        "interface": {
+            "addresses": {
+                "v4": "",
+                "v6": ""
+            }
+        },
+        "peers": [{
+            "public_key": "",
+            "endpoint": {
+                "host": "",
+                "v4": "",
+                "v6": ""
+            }
+        }]
+    }
+}

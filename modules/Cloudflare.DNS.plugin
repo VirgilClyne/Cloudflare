@@ -16,5 +16,5 @@ DOMAIN,api4.my-ip.io,DIRECT
 DOMAIN,api6.my-ip.io,DIRECT
 
 [Script]
-network-changed script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.DNS.js, tag=☁ Cloudflare.DNS.event, timeout=60, argument=
-cron "*/5 * * * *" script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.DNS.js, tag=☁ Cloudflare.DNS.cron, timeout=60, argument=
+network-changed script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/DNS.js, tag=☁ Cloudflare.DNS.event, timeout=60, argument=
+cron "*/5 * * * *" script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/DNS.js, tag=☁ Cloudflare.DNS.cron, timeout=60, argument=

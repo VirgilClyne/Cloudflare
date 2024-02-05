@@ -14,6 +14,7 @@ tiles:
     icon: 'https://raw.githubusercontent.com/shindgewongxj/WHATSINStash/main/icon/warp.png'
     backgroundColor: '#f6821f'
     content: '首次使用前请先打开1.1.1.1 app提取流量信息'
+    timeout: 10
 
 
 http:
@@ -45,11 +46,11 @@ http:
 
 script-providers:
   Cloudflare.1.1.1.1.panel:
-    url: https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.1.1.1.1.panel.js
+    url: https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/1.1.1.1.panel.js
     interval: 86400
   Cloudflare.1.1.1.1.request:
-    url: https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.1.1.1.1.request.js
+    url: https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/1.1.1.1.request.js
     interval: 86400
   Cloudflare.1.1.1.1.response:
-    url: https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.1.1.1.1.response.js
+    url: https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/1.1.1.1.response.js
     interval: 86400

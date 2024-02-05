@@ -1,0 +1,30 @@
+{
+	"Settings": {
+		"Switch": true,
+		"IPServer": "ipw.cn",
+		"Verify": {
+			"Mode": "Token",
+			"Content": ""
+		},
+		"zone": {
+			"id": "",
+			"name": "",
+			"dns_records": [{
+				"id": "",
+				"type": "A",
+				"name": "",
+				"content": "",
+				"ttl": 1,
+				"proxied": false
+			}]
+		}
+	},
+	"Configs": {
+		"Request": {
+			"url": "https://api.cloudflare.com/client/v4",
+			"headers": {
+				"content-type": "application/json"
+			}
+		}
+	}
+}

@@ -20,8 +20,9 @@ cron:
     - name: Cloudflare.DNS
       cron: '*/5 * * * *' # at every 5th minute
       argument: # optional, if the script needs arguments
+      timeout: 60 # optional, timeout in seconds, default is 10
 
 script-providers:
   Cloudflare.DNS:
-    url: https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/Cloudflare.DNS.js
+    url: https://raw.githubusercontent.com/VirgilClyne/Cloudflare/main/js/DNS.js
     interval: 86400

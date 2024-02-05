@@ -16,8 +16,8 @@ DOMAIN,api4.my-ip.io,DIRECT
 DOMAIN,api6.my-ip.io,DIRECT
 
 [Script]
-☁ Cloudflare.DNS.event = type=event, network-changed, timeout=60, debug=1, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/beta/js/Cloudflare.DNS.beta.js, argument=
-☁ Cloudflare.DNS.cron = type=cron, cronexp="*/5 * * * *", timeout=60, debug=1, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/beta/js/Cloudflare.DNS.beta.js, argument=
+☁ Cloudflare.DNS.event = type=event, network-changed, timeout=60, debug=1, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/beta/js/DNS.beta.js, argument=
+☁ Cloudflare.DNS.cron = type=cron, cronexp="*/5 * * * *", timeout=60, debug=1, script-path=https://raw.githubusercontent.com/VirgilClyne/Cloudflare/beta/js/DNS.beta.js, argument=
 
 [MITM]
 hostname = %APPEND% api.cloudflare.com, *.ipw.cn, *.my-ip.io
