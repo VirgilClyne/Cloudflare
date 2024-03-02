@@ -3,12 +3,10 @@ import $Storage from './ENV/$Storage.mjs'
 import ENV from "./ENV/ENV.mjs";
 import URI from "./URI/URI.mjs";
 
-import Base64 from '../node_modules/crypto-js/enc-base64.js';
-
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.0.1(2).response.beta");
+const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.1.0(2).response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -131,16 +129,15 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
  * @return {Promise<*>}
  */
 async function setReserved(client_id = "AAAA") {
-	$.log(`⚠ ${$.name}, Set Reserved`, "");
-	let base64 = Base64.parse(client_id).toString();
-	//$.log(`🚧 ${$.name}, Set Reserved`, `base64: ${base64}`, "");
-	let reserved = grouphex(base64, 2);
-	$.log(`🎉 ${$.name}, Set Reserved`, `reserved: ${reserved}`, "");
+	$.log(`☑️ Set Reserved`, `client_id: ${client_id}`, "");
+	//let base64 = Base64.parse(client_id).toString();
+	let base64 = atob(client_id.toString(16)).toString();
+	let reserved = stringToDec(base64);
+	$.log(`✅ Set Reserved`, `reserve: ${reserved}`, "");
 	return reserved;
-	function grouphex(string, step) {
-		let r = [];
-		for (var i = 0, len = string.length; i < len / step; i++) r.push(parseInt("0x" + string.slice(step * i, step * (i + 1)), 16));
-		return r;
+	// 字符串转十进制
+	function stringToDec(string) {
+		return string.split('').map(char => char.charCodeAt().toString(10));
 	};
 };
 
