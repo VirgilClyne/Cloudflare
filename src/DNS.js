@@ -1,11 +1,13 @@
 /* refer:https://github.com/phil-r/node-cloudflare-ddns */
-import ENVs from "./ENV/ENV.mjs";
+import _ from './ENV/Lodash.mjs'
+import $Storage from './ENV/$Storage.mjs'
+import ENV from "./ENV/ENV.mjs";
 import Cloudflares from "./function/Cloudflare.mjs";
 
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENVs("☁ Cloudflare: 🇩 DNS v2.5.0(1)");
+const $ = new ENV("☁ Cloudflare: 🇩 DNS v2.5.0(2)");
 const Cloudflare = new Cloudflares($);
 
 /***************** Processing *****************/

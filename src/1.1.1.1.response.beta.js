@@ -1,13 +1,14 @@
-import ENVs from "./ENV/ENV.mjs";
-import URIs from "./URI/URI.mjs";
+import _ from './ENV/Lodash.mjs'
+import $Storage from './ENV/$Storage.mjs'
+import ENV from "./ENV/ENV.mjs";
+import URI from "./URI/URI.mjs";
 
 import Base64 from '../node_modules/crypto-js/enc-base64.js';
 
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENVs("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.0.1(1).response.beta");
-const URI = new URIs();
+const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.0.1(2).response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -200,12 +201,12 @@ async function setMessage(result, WireGuard) {
 async function setConfigs(name, platform, Configs) {
 	$.log(`⚠ ${$.name}, Set Configs`, "");
 	// 写入Caches
-	$.setjson(Configs?.interface?.addresses?.v4, `@${name}.${platform}.Configs.interface.addresses.v4`);
-	$.setjson(Configs?.interface?.addresses?.v6, `@${name}.${platform}.Configs.interface.addresses.v6`);
-	$.setjson(Configs?.reserved, `@${name}.${platform}.Configs.Reserved`);
-	$.setjson(Configs?.peers?.[0]?.public_key, `@${name}.${platform}.Configs.peers[0].public_key`);
-	$.setjson(Configs?.peers?.[0]?.endpoint?.host, `@${name}.${platform}.Configs.peers[0].endpoint.host`);
-	$.setjson(Configs?.peers?.[0]?.endpoint?.v4, `@${name}.${platform}.Configs.peers[0].endpoint.v4`);
-	$.setjson(Configs?.peers?.[0]?.endpoint?.v6, `@${name}.${platform}.Configs.peers[0].endpoint.v6`);
+	$Storage.setItem(`@${name}.${platform}.Configs.interface.addresses.v4`, Configs?.interface?.addresses?.v4);
+	$Storage.setItem(`@${name}.${platform}.Configs.interface.addresses.v6`, Configs?.interface?.addresses?.v6);
+	$Storage.setItem(`@${name}.${platform}.Configs.Reserved`, Configs?.reserved);
+	$Storage.setItem(`@${name}.${platform}.Configs.peers[0].public_key`, Configs?.peers?.[0]?.public_key);
+	$Storage.setItem(`@${name}.${platform}.Configs.peers[0].endpoint.host`, Configs?.peers?.[0]?.endpoint?.host);
+	$Storage.setItem(`@${name}.${platform}.Configs.peers[0].endpoint.v4`, Configs?.peers?.[0]?.endpoint?.v4);
+	$Storage.setItem(`@${name}.${platform}.Configs.peers[0].endpoint.v6`, Configs?.peers?.[0]?.endpoint?.v6);
 	return $.log(`🎉 ${$.name}, Set Configs`, "");
 };

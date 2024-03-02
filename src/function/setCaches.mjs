@@ -1,3 +1,5 @@
+import $Storage from '../ENV/$Storage.mjs'
+
 /**
  * Set Caches
  * @author VirgilClyne
@@ -7,12 +9,12 @@
  * @param {Object} headers - Request Headers
  * @return {Boolean}
  */
-export default function setCaches($, name, platform, url, headers) {
+export default function setCaches(name, platform, url, headers) {
 	// 转存必要值
 	const newCaches = {
 		"url": url,
 		"headers": headers
 	};
 	// 写入Caches
-	return $.setjson(newCaches, `@${name}.${platform}.Caches`);
+	return $Storage.getItem(`@${name}.${platform}.Caches`, newCaches);
 };

@@ -1,11 +1,12 @@
-import ENVs from "./ENV/ENV.mjs";
-import URIs from "./URI/URI.mjs";
+import _ from './ENV/Lodash.mjs'
+import $Storage from './ENV/$Storage.mjs'
+import ENV from "./ENV/ENV.mjs";
+import URI from "./URI/URI.mjs";
 
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENVs("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.0.1(1).request.beta");
-const URI = new URIs();
+const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.0.1(2).request.beta");
 
 // 构造回复数据
 let $response = undefined;
@@ -36,7 +37,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				: `/${PATHs[1]}` === `/reg` ? "Registration"
 					: undefined;
 			$.log(`🚧 KIND: ${KIND}`, "");
-			$.setjson($request, `@${"Cloudflare"}.${"1dot1dot1dot1"}.Caches`);
+			$Storage.setItem(`@Cloudflare.1dot1dot1dot1.Caches`, $request);
 			// 创建空数据
 			let body = {};
 			// 方法判断
@@ -127,7 +128,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 			default: // 有构造回复数据，返回构造的回复数据
 				//$.log(`🚧 ${$.name}, finally`, `echo $response: ${JSON.stringify($response, null, 2)}`, "");
 				if ($response.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
-				if ($response.headers?.["content-encoding"]) $response.headers["content-encoding"]
+				if ($response.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
 				if ($.isQuanX()) {
 					if (!$response.status) $response.status = "HTTP/1.1 200 OK";
 					delete $response.headers?.["Content-Length"];

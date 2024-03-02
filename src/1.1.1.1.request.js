@@ -1,11 +1,12 @@
-import ENVs from "./ENV/ENV.mjs";
-import URIs from "./URI/URI.mjs";
+import _ from './ENV/Lodash.mjs'
+import $Storage from './ENV/$Storage.mjs'
+import ENV from "./ENV/ENV.mjs";
+import URI from "./URI/URI.mjs";
 
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENVs("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.0.1(1).request");
-const URI = new URIs();
+const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.0.1(2).request");
 
 // 构造回复数据
 let $response = undefined;
@@ -31,7 +32,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				: `/${PATHs[1]}` === `/reg` ? "Registration"
 					: undefined;
 			$.log(`🚧 KIND: ${KIND}`, "");
-			$.setjson($request, `@${"Cloudflare"}.${"1dot1dot1dot1"}.Caches`);
+			$Storage.setItem(`@Cloudflare.1dot1dot1dot1.Caches`, $request);
 			// 创建空数据
 			let body = {};
 			// 方法判断

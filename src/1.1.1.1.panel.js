@@ -1,10 +1,12 @@
-import ENVs from "./ENV/ENV.mjs";
+import _ from './ENV/Lodash.mjs'
+import $Storage from './ENV/$Storage.mjs'
+import ENV from "./ENV/ENV.mjs";
 import Cloudflares from "./function/Cloudflare.mjs";
 
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENVs("☁ Cloudflare: 1️⃣ 1.1.1.1 v2.1.0(1).panel");
+const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v2.1.0(2).panel");
 const Cloudflare = new Cloudflares($);
 
 /***************** Processing *****************/
@@ -68,7 +70,7 @@ const Cloudflare = new Cloudflares($);
 					break;
 			};
 			// 获取账户信息
-			const Caches = $.getjson("@Cloudflare.1dot1dot1dot1.Caches", {});
+			const Caches = $Storage.getItem("@Cloudflare.1dot1dot1dot1.Caches", {});
 			if (Caches?.url && Caches?.headers) {
 				// 构造请求信息
 				let request = {
