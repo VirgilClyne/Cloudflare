@@ -1173,16 +1173,16 @@ function setENV($, name, platforms, database) {
 	/***************** Settings *****************/
 	switch (Settings.Verify?.Mode) {
 		case "Token":
-			Configs.Request.headers["authorization"] = `Bearer ${Settings.Verify?.Content}`;
+			Lodash.set(Configs, "Request.headers.authorization", `Bearer ${Settings.Verify?.Content}`);
 			break;
 		case "ServiceKey":
-			Configs.Request.headers["x-auth-user-service-key"] = Settings.Verify?.Content;
+			Lodash.set(Configs, "Request.headers.x-auth-user-service-key", Settings.Verify?.Content);
 			break;
 		case "Key":
-			Settings.Verify.Content = Array.from(Settings.Verify?.Content.split("\n"));
+			Lodash.set(Settings, "Verify.Content", Array.from(Settings.Verify?.Content.split("\n")));
 			//$.log(JSON.stringify(Settings.Verify.Content))
-			Configs.Request.headers["x-auth-key"] = Settings.Verify?.Content[0];
-			Configs.Request.headers["x-auth-email"] = Settings.Verify?.Content[1];
+			Lodash.set(Configs, "Request.headers.x-auth-key", Settings.Verify?.Content[0]);
+			Lodash.set(Configs, "Request.headers.x-auth-email", Settings.Verify?.Content[1]);
 			break;
 		default:
 			$.log("无可用授权方式", `Mode=${Settings.Verify?.Mode}`, `Content=${Settings.Verify?.Content}`);

@@ -1,3 +1,4 @@
+import _ from '../ENV/Lodash.mjs'
 /**
  * Set Environment Variables
  * @author VirgilClyne
@@ -12,16 +13,16 @@ export default function setENV($, name, platforms, database) {
 	/***************** Settings *****************/
 	switch (Settings.Verify?.Mode) {
 		case "Token":
-			Configs.Request.headers["authorization"] = `Bearer ${Settings.Verify?.Content}`;
+			_.set(Configs, "Request.headers.authorization", `Bearer ${Settings.Verify?.Content}`);
 			break;
 		case "ServiceKey":
-			Configs.Request.headers["x-auth-user-service-key"] = Settings.Verify?.Content;
+			_.set(Configs, "Request.headers.x-auth-user-service-key", Settings.Verify?.Content);
 			break;
 		case "Key":
-			Settings.Verify.Content = Array.from(Settings.Verify?.Content.split("\n"))
+			_.set(Settings, "Verify.Content", Array.from(Settings.Verify?.Content.split("\n")));
 			//$.log(JSON.stringify(Settings.Verify.Content))
-			Configs.Request.headers["x-auth-key"] = Settings.Verify?.Content[0];
-			Configs.Request.headers["x-auth-email"] = Settings.Verify?.Content[1];
+			_.set(Configs, "Request.headers.x-auth-key", Settings.Verify?.Content[0]);
+			_.set(Configs, "Request.headers.x-auth-email", Settings.Verify?.Content[1]);
 			break;
 		default:
 			$.log("无可用授权方式", `Mode=${Settings.Verify?.Mode}`, `Content=${Settings.Verify?.Content}`);
