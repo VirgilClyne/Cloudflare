@@ -6,7 +6,7 @@ import URI from "./URI/URI.mjs";
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.0.1(2).request.beta");
+const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.0.1(3).request.beta");
 
 // 构造回复数据
 let $response = undefined;
@@ -22,7 +22,7 @@ $.log(`⚠ METHOD: ${METHOD}`, "");
 const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["content-type"])?.split(";")?.[0];
 $.log(`⚠ FORMAT: ${FORMAT}`, "");
 (async () => {
-	const { Settings, Caches, Configs } = setENV($, "Cloudflare", "1dot1dot1dot1", Database);
+	const { Settings, Caches, Configs } = setENV("Cloudflare", "1dot1dot1dot1", Database);
 	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
@@ -111,7 +111,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				default:
 					if ($request.headers?.Host) $request.headers.Host = URL.host;
 					$request.url = URI.stringify(URL);
-					$.log(`🚧 ${$.name}, 调试信息`, `$request.url: ${$request.url}`, "");
+					$.log(`🚧 调试信息`, `$request.url: ${$request.url}`, "");
 					break;
 				case "CONNECT":
 				case "TRACE":
@@ -126,7 +126,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	.finally(() => {
 		switch ($response) {
 			default: // 有构造回复数据，返回构造的回复数据
-				//$.log(`🚧 ${$.name}, finally`, `echo $response: ${JSON.stringify($response, null, 2)}`, "");
+				//$.log(`🚧 finally`, `echo $response: ${JSON.stringify($response, null, 2)}`, "");
 				if ($response.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
 				if ($response.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
 				if ($.isQuanX()) {
@@ -138,7 +138,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				} else $.done({ response: $response });
 				break;
 			case undefined: // 无构造回复数据，发送修改的请求数据
-				//$.log(`🚧 ${$.name}, finally`, `$request: ${JSON.stringify($request, null, 2)}`, "");
+				//$.log(`🚧 finally`, `$request: ${JSON.stringify($request, null, 2)}`, "");
 				$.done($request);
 				break;
 		};

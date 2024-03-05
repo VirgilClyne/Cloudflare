@@ -6,7 +6,7 @@ import URI from "./URI/URI.mjs";
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.0.1(2).request");
+const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.0.1(3).request");
 
 // 构造回复数据
 let $response = undefined;
@@ -22,7 +22,7 @@ $.log(`⚠ METHOD: ${METHOD}`, "");
 const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["content-type"])?.split(";")?.[0];
 $.log(`⚠ FORMAT: ${FORMAT}`, "");
 (async () => {
-	const { Settings, Caches, Configs } = setENV($, "Cloudflare", "1dot1dot1dot1", Database);
+	const { Settings, Caches, Configs } = setENV("Cloudflare", "1dot1dot1dot1", Database);
 	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:

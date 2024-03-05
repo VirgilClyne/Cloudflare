@@ -7,12 +7,12 @@ import Cloudflares from "./function/Cloudflare.mjs";
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENV("☁ Cloudflare: 🇩 DNS v2.5.0(2).beta");
+const $ = new ENV("☁ Cloudflare: 🇩 DNS v2.5.0(3).beta");
 const Cloudflare = new Cloudflares($);
 
 /***************** Processing *****************/
 (async () => {
-	const { Settings, Caches, Configs } = setENV($, "Cloudflare", "DNS", Database);
+	const { Settings, Caches, Configs } = setENV("Cloudflare", "DNS", Database);
 	// Step 1
 	let status = await Verify(Configs.Request, Settings.Verify);
 	//let status = true;

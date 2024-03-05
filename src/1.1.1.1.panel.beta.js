@@ -6,12 +6,12 @@ import Cloudflares from "./function/Cloudflare.mjs";
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v2.1.0(2).panel.beta");
+const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v2.1.0(3).panel.beta");
 const Cloudflare = new Cloudflares($);
 
 /***************** Processing *****************/
 (async () => {
-	const { Settings, Caches, Configs } = setENV($, "Cloudflare", "Panel", Database);
+	const { Settings, Caches, Configs } = setENV("Cloudflare", "Panel", Database);
 	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
@@ -102,7 +102,7 @@ const Cloudflare = new Cloudflares($);
 			$.done(Panel);
 			break;
 		case false:
-			$.log(`⚠ ${$.name}, 功能关闭`, "");
+			$.log(`⚠ 功能关闭`, "");
 			break;
 	};
 })()

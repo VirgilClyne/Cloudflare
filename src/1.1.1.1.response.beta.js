@@ -6,7 +6,7 @@ import URI from "./URI/URI.mjs";
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.1.0(2).response.beta");
+const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.1.0(3).response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -19,7 +19,7 @@ $.log(`⚠ METHOD: ${METHOD}`, "");
 const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 $.log(`⚠ FORMAT: ${FORMAT}`, "");
 (async () => {
-	const { Settings, Caches, Configs } = setENV($, "Cloudflare", "1dot1dot1dot1", Database);
+	const { Settings, Caches, Configs } = setENV("Cloudflare", "1dot1dot1dot1", Database);
 	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
@@ -149,7 +149,7 @@ async function setReserved(client_id = "AAAA") {
  * @return {Promise<*>}
  */
 async function setMessage(result, WireGuard) {
-	$.log(`⚠ ${$.name}, Set Message`, "");
+	$.log(`☑️ Set Message`, "");
 	const verify = `当前客户端公钥为:\n${result.key}\n用户设置公钥为:\n${WireGuard?.Settings?.PublicKey ?? "未设置，请到BoxJs面板中进行设置"}\n如两者一致，下列配置有效`;
 	let body = `有效性验证:\n${verify}\n\n\n⚠️注意留存本文件\n\n\n`;
 	switch ($.platform()) {
@@ -183,7 +183,7 @@ async function setMessage(result, WireGuard) {
 	const subject = encodeURIComponent(`☁️ Cloudflare for ${result?.account?.account_type}配置文件`);
 	const message = `mailto:engage@nanocat.me?subject=${subject}&body=${encodeURIComponent(body)}`;
 
-	$.log(`🎉 ${$.name}, Set Message`, `message: ${message}`, "");
+	$.log(`✅ Set Message`, `message: ${message}`, "");
 	return message;
 };
 
@@ -196,7 +196,7 @@ async function setMessage(result, WireGuard) {
  * @return {Promise<*>}
  */
 async function setConfigs(name, platform, Configs) {
-	$.log(`⚠ ${$.name}, Set Configs`, "");
+	$.log(`☑️ Set Configs`, "");
 	// 写入Caches
 	$Storage.setItem(`@${name}.${platform}.Configs.interface.addresses.v4`, Configs?.interface?.addresses?.v4);
 	$Storage.setItem(`@${name}.${platform}.Configs.interface.addresses.v6`, Configs?.interface?.addresses?.v6);
@@ -205,5 +205,5 @@ async function setConfigs(name, platform, Configs) {
 	$Storage.setItem(`@${name}.${platform}.Configs.peers[0].endpoint.host`, Configs?.peers?.[0]?.endpoint?.host);
 	$Storage.setItem(`@${name}.${platform}.Configs.peers[0].endpoint.v4`, Configs?.peers?.[0]?.endpoint?.v4);
 	$Storage.setItem(`@${name}.${platform}.Configs.peers[0].endpoint.v6`, Configs?.peers?.[0]?.endpoint?.v6);
-	return $.log(`🎉 ${$.name}, Set Configs`, "");
+	return $.log(`✅ Set Configs`, "");
 };
