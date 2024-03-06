@@ -16,12 +16,10 @@ tiles:
     content: '首次使用前请先打开1.1.1.1 app提取流量信息'
     timeout: 10
 
-
 http:
   mitm:
     - "api.cloudflareclient.com"
     - "zero-trust-client.cloudflareclient.com"
-
   script:
     - match: ^https?:\/\/(api|zero-trust-client)\.cloudflareclient\.com\/(.*)\/reg\/[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$
       name: Cloudflare.1.1.1.1.request
