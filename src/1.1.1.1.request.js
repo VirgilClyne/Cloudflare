@@ -2,11 +2,12 @@ import _ from './ENV/Lodash.mjs'
 import $Storage from './ENV/$Storage.mjs'
 import ENV from "./ENV/ENV.mjs";
 import URI from "./URI/URI.mjs";
+import getStorage from './ENV/getStorage.mjs'
 
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.0.1(3).request");
+const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.0.1(4).request");
 
 // 构造回复数据
 let $response = undefined;
@@ -27,7 +28,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
-			const WireGuard = $.getENV("WireGuard", "VPN", Database);
+			const WireGuard = getStorage("WireGuard", "VPN", Database);
 			const KIND = `/${PATHs[1]}/${PATHs[2]}` === `/reg/${Settings.Verify.RegistrationId}` ? "RegistrationId"
 				: `/${PATHs[1]}` === `/reg` ? "Registration"
 					: undefined;

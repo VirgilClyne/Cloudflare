@@ -2,11 +2,12 @@ import _ from './ENV/Lodash.mjs'
 import $Storage from './ENV/$Storage.mjs'
 import ENV from "./ENV/ENV.mjs";
 import URI from "./URI/URI.mjs";
+import getStorage from './ENV/getStorage.mjs'
 
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.1.0(3).response.beta");
+const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.1.0(4).response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -24,7 +25,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
-			const WireGuard = $.getENV("WireGuard", "VPN", Database);
+			const WireGuard = getStorage("WireGuard", "VPN", Database);
 			const TOKEN = ($request?.headers?.Authorization ?? $request?.headers?.authorization)?.match(/Bearer (\S*)/)?.[1];
 			/*
 			const KIND = RegExp(`/reg/${Settings.Verify.RegistrationId}$`, "i").test($request.url) ? "RegistrationId"
@@ -133,7 +134,7 @@ async function setReserved(client_id = "AAAA") {
 	//let base64 = Base64.parse(client_id).toString();
 	let base64 = atob(client_id.toString(16)).toString();
 	let reserved = stringToDec(base64);
-	$.log(`✅ Set Reserved`, `reserve: ${reserved}`, "");
+	$.log(`✅ Set Reserved`, `reserved: ${reserved}`, "");
 	return reserved;
 	// 字符串转十进制
 	function stringToDec(string) {
