@@ -7,7 +7,7 @@ import getStorage from './ENV/getStorage.mjs'
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.1.0(4).response.beta");
+const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.1.0(5).response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -44,7 +44,6 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					break;
 				case "application/x-www-form-urlencoded":
 				case "text/plain":
-				case "text/html":
 				default:
 					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					break;
@@ -57,6 +56,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					//$response.body = M3U8.stringify(body);
 					break;
 				case "text/xml":
+				case "text/html":
 				case "text/plist":
 				case "application/xml":
 				case "application/plist":
@@ -79,7 +79,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 						case true:
 							const result = body?.result?.[0] ?? body?.result; // body.result, body.meta
 							if (result) {
-								result.config.reserved = await setReserved(result?.config?.client_id);
+								result.config.reserved = setReserved(result?.config?.client_id);
 								await setConfigs("WireGuard", "VPN", result.config);
 								const message = await setMessage(result, WireGuard);
 								switch (KIND) {
@@ -127,9 +127,9 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
  * Set Reserved
  * @author VirgilClyne
  * @param {String} client_id - client_id
- * @return {Promise<*>}
+ * @return {Array} reserved
  */
-async function setReserved(client_id = "AAAA") {
+function setReserved(client_id = "AAAA") {
 	$.log(`☑️ Set Reserved`, `client_id: ${client_id}`, "");
 	//let base64 = Base64.parse(client_id).toString();
 	let base64 = atob(client_id.toString(16)).toString();
