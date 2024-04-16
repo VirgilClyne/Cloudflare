@@ -1212,7 +1212,7 @@ const $ = new ENV("☁ Cloudflare: 🇩 DNS v2.5.0(3).beta");
 const Cloudflare = new Cloudflare$1($);
 
 /***************** Processing *****************/
-(async () => {
+!(async () => {
 	const { Settings, Caches, Configs } = setENV("Cloudflare", "DNS", Database$1);
 	// Step 1
 	let status = await Verify(Configs.Request, Settings.Verify);

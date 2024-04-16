@@ -1,28 +1,27 @@
 import _ from './ENV/Lodash.mjs'
 import $Storage from './ENV/$Storage.mjs'
 import ENV from "./ENV/ENV.mjs";
-import URI from "./URI/URI.mjs";
 import getStorage from './ENV/getStorage.mjs'
 
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.0.1(4).request");
+const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.1.0(1).request");
 
 // 构造回复数据
 let $response = undefined;
 
 /***************** Processing *****************/
 // 解构URL
-const URL = URI.parse($request.url);
-$.log(`⚠ URL: ${JSON.stringify(URL)}`, "");
+const url = new URL($request.url);
+$.log(`⚠ url: ${url.toJSON()}`, "");
 // 获取连接参数
-const METHOD = $request.method, HOST = URL.host, PATH = URL.path, PATHs = URL.paths;
-$.log(`⚠ METHOD: ${METHOD}`, "");
+const METHOD = $request.method, HOST = url.hostname, PATH = url.pathname, PATHs = url.pathname.split("/").filter(Boolean);
+$.log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
 // 解析格式
 const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["content-type"])?.split(";")?.[0];
 $.log(`⚠ FORMAT: ${FORMAT}`, "");
-(async () => {
+!(async () => {
 	const { Settings, Caches, Configs } = setENV("Cloudflare", "1dot1dot1dot1", Database);
 	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
@@ -48,7 +47,6 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							break;
 						case "application/x-www-form-urlencoded":
 						case "text/plain":
-						case "text/html":
 						default:
 							break;
 						case "application/x-mpegURL":
@@ -57,6 +55,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 						case "audio/mpegurl":
 							break;
 						case "text/xml":
+						case "text/html":
 						case "text/plist":
 						case "application/xml":
 						case "application/plist":
@@ -93,10 +92,9 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "GET":
 				case "HEAD":
 				case "OPTIONS":
-				case undefined: // QX牛逼，script-echo-response不返回method
 				default:
-					if ($request.headers?.Host) $request.headers.Host = URL.host;
-					$request.url = URI.stringify(URL);
+					$request.url = url.toString();
+					$.log(`🚧 调试信息`, `$request.url: ${$request.url}`, "");
 					break;
 				case "CONNECT":
 				case "TRACE":

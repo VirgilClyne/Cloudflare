@@ -1,25 +1,24 @@
 import _ from './ENV/Lodash.mjs'
 import $Storage from './ENV/$Storage.mjs'
 import ENV from "./ENV/ENV.mjs";
-import URI from "./URI/URI.mjs";
 import getStorage from './ENV/getStorage.mjs'
 
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 
-const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.1.0(5).response");
+const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.2.0(1).response");
 
 /***************** Processing *****************/
 // 解构URL
-const URL = URI.parse($request.url);
-$.log(`⚠ URL: ${JSON.stringify(URL)}`, "");
+const url = new URL($request.url);
+$.log(`⚠ url: ${url.toJSON()}`, "");
 // 获取连接参数
-const METHOD = $request.method, HOST = URL.host, PATH = URL.path, PATHs = URL.paths;
-$.log(`⚠ METHOD: ${METHOD}`, "");
+const METHOD = $request.method, HOST = url.hostname, PATH = url.pathname, PATHs = url.pathname.split("/").filter(Boolean);
+$.log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
 // 解析格式
 const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 $.log(`⚠ FORMAT: ${FORMAT}`, "");
-(async () => {
+!(async () => {
 	const { Settings, Caches, Configs } = setENV("Cloudflare", "1dot1dot1dot1", Database);
 	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {

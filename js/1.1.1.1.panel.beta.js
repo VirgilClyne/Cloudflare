@@ -1210,7 +1210,7 @@ const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v2.1.0(3).panel.beta");
 const Cloudflare = new Cloudflare$1($);
 
 /***************** Processing *****************/
-(async () => {
+!(async () => {
 	const { Settings, Caches, Configs } = setENV("Cloudflare", "Panel", Database$1);
 	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {

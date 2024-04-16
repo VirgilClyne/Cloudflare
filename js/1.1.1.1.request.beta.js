@@ -710,37 +710,6 @@ class ENV {
 	}
 }
 
-class URI {
-	static name = "URI";
-	static version = "1.2.7";
-	static about() { return console.log(`\n🟧 ${this.name} v${this.version}\n`) };
-	static #json = { scheme: "", host: "", path: "", query: {} };
-
-	static parse(url) {
-		const URLRegex = /(?:(?<scheme>.+):\/\/(?<host>[^/]+))?\/?(?<path>[^?]+)?\??(?<query>[^?]+)?/;
-		let json = url.match(URLRegex)?.groups ?? null;
-		if (json?.path) json.paths = json.path.split("/"); else json.path = "";
-		//if (json?.paths?.at(-1)?.includes(".")) json.format = json.paths.at(-1).split(".").at(-1);
-		if (json?.paths) {
-			const fileName = json.paths[json.paths.length - 1];
-			if (fileName?.includes(".")) {
-				const list = fileName.split(".");
-				json.format = list[list.length - 1];
-			}
-		}
-		if (json?.query) json.query = Object.fromEntries(json.query.split("&").map((param) => param.split("=")));
-		return json
-	};
-
-	static stringify(json = this.#json) {
-		let url = "";
-		if (json?.scheme && json?.host) url += json.scheme + "://" + json.host;
-		if (json?.path) url += (json?.host) ? "/" + json.path : json.path;
-		if (json?.query) url += "?" + Object.entries(json.query).map(param => param.join("=")).join("&");
-		return url
-	};
-}
-
 /**
  * Get Storage Variables
  * @link https://github.com/NanoCat-Me/ENV/blob/main/getStorage.mjs
@@ -1130,22 +1099,22 @@ function setENV(name, platforms, database) {
 	return { Settings, Caches, Configs };
 }
 
-const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.0.1(4).request.beta");
+const $ = new ENV("☁ Cloudflare: 1️⃣ 1.1.1.1 v3.1.0(1).request.beta");
 
 // 构造回复数据
 let $response = undefined;
 
 /***************** Processing *****************/
 // 解构URL
-const URL = URI.parse($request.url);
-$.log(`⚠ URL: ${JSON.stringify(URL)}`, "");
+const url = new URL($request.url);
+$.log(`⚠ url: ${url.toJSON()}`, "");
 // 获取连接参数
-const METHOD = $request.method; URL.host; URL.path; const PATHs = URL.paths;
-$.log(`⚠ METHOD: ${METHOD}`, "");
+const METHOD = $request.method, HOST = url.hostname, PATH = url.pathname, PATHs = url.pathname.split("/").filter(Boolean);
+$.log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
 // 解析格式
 const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["content-type"])?.split(";")?.[0];
 $.log(`⚠ FORMAT: ${FORMAT}`, "");
-(async () => {
+!(async () => {
 	const { Settings, Caches, Configs } = setENV("Cloudflare", "1dot1dot1dot1", Database$1);
 	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
@@ -1176,7 +1145,6 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							break;
 						case "application/x-www-form-urlencoded":
 						case "text/plain":
-						case "text/html":
 						default:
 							//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 							break;
@@ -1189,6 +1157,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							//$response.body = M3U8.stringify(body);
 							break;
 						case "text/xml":
+						case "text/html":
 						case "text/plist":
 						case "application/xml":
 						case "application/plist":
@@ -1229,10 +1198,8 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "GET":
 				case "HEAD":
 				case "OPTIONS":
-				case undefined: // QX牛逼，script-echo-response不返回method
 				default:
-					if ($request.headers?.Host) $request.headers.Host = URL.host;
-					$request.url = URI.stringify(URL);
+					$request.url = url.toString();
 					$.log(`🚧 调试信息`, `$request.url: ${$request.url}`, "");
 					break;
 				case "CONNECT":
